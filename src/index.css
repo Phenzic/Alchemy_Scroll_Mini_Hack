@@ -8,4 +8,9 @@
   margin: 0;
   box-sizing: border-box;
   font-family: "Plus Jakarta Sans", sans-serif;
+  transition: all .5s;
+}
+
+body{
+  background: #f9f9f9;
 }

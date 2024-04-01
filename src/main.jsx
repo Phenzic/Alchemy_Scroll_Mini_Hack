@@ -3,13 +3,14 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import SellerRoot from "./roots/SellerRoot";
-import AdminRoot from "./roots/AdminRoot";
+import SellerRoot from "./wrappers/SellerRoot";
+import AdminRoot from "./wrappers/AdminRoot";
+import UserRoot from "./wrappers/UserRoot";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <UserRoot />,
     children: [
       {
         path: "",
