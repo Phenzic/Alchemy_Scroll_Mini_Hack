@@ -9,6 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { Cross as Hamburger } from "hamburger-react";
+import logo from "../assets/logo.png";
 
 const NavBar = () => {
   const [isOpen, setOpen] = useState(false);
@@ -26,20 +27,22 @@ const NavBar = () => {
   ]);
   return (
     <>
-      <div className="border-b border-b-black/20 bg-white">
-        <div className="flex items-center justify-between p-4 py-5 sticky top-0  container mx-auto">
+      <div className="border-b sticky top-0 z-[90] border-b-black/20 bg-white">
+        <div className="flex items-center justify-between p-4 py-5 sticky top-0 container mx-auto gap-10">
           <div className="w-[15%] max-md:w-fit flex items-center gap-2">
             <div className="md:hidden">
               <Hamburger rounded size={24} toggled={isOpen} toggle={setOpen} />
             </div>
-            <h1 className="text-lg">Jamazan</h1>
+            <Link to={"/"}>
+              <img className="w-[170px] max-md:w-[150px]" src={logo} alt="" />
+            </Link>
           </div>
           <div className="flex items-center gap-5 md:hidden">
             <BsPerson size={21} />
             <BsCart3 size={21} />
           </div>
           <div className="w-[85%] flex items-center gap-10 max-md:hidden">
-            <div className="border border-[#305C45] bg-[#305C45] overflow-hidden flex rounded-md w-full">
+            <div className="border border-[#086047] bg-[#086047] overflow-hidden flex rounded-md w-full">
               <input
                 type="text"
                 placeholder="Search for products, stores and categories"
@@ -69,7 +72,7 @@ const NavBar = () => {
         </div>
       </div>
       <div className="border-b border-b-black/20 bg-white max-[1100px]:hidden">
-        <div className="flex items-center justify-between p-4 py-4 max-w-[1280px] mx-auto text-[13px] text-black/80 gap-4 ">
+        <div className="flex items-center justify-between p-4 py-4 max-w-[1280px] mx-auto text-[13px] text-[#086047] gap-4 ">
           <div className="flex items-center gap-2">
             <div>
               <CgMenuLeftAlt size={22} />
@@ -81,7 +84,7 @@ const NavBar = () => {
               <Link
                 href=""
                 key={index}
-                className=" hover:text-[#2F5B44] transition-all duration-500 ease-in-out"
+                className=" text-[#086047] transition-all duration-500 ease-in-out"
               >
                 {category}
               </Link>
