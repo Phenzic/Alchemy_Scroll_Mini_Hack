@@ -7,15 +7,41 @@ import SellerRoot from "./wrappers/SellerRoot";
 import AdminRoot from "./wrappers/AdminRoot";
 import UserRoot from "./wrappers/UserRoot";
 import { Login } from "./pages/auth/Login";
+import { ForgotPassword } from "./pages/auth/ForgotPassword";
+import { Register } from "./pages/auth/Register";
+import AuthRoot from "./wrappers/AuthRoot";
+import Product from "./pages/Product";
 
 const router = createBrowserRouter([
   {
-    path: "/*",
+    path: "/",
     element: <UserRoot />,
     children: [
       {
         path: "",
         element: <App />,
+      },
+      {
+        path: "product/*",
+        element: <Product />,
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <AuthRoot />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "register",
+        element: <Register />,
       },
     ],
   },

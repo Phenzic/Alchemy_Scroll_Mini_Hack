@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 const ProductCard = ({
   id,
@@ -10,9 +11,11 @@ const ProductCard = ({
   isSpecialOffer = false,
   slashedPrice = "",
 }) => {
+  const navigate = useNavigate();
   return (
     <div
       key={id}
+      onClick={() => navigate(`/product/${id}`)}
       className="group cursor-pointer relative border rounded-lg hover:border-[#086047] min-w-[300px]"
     >
       {isNew && (
@@ -29,10 +32,8 @@ const ProductCard = ({
       <div className="flex justify-between p-5 bg-black/[5%]">
         <div className="w-full">
           <h3 className="text-sm text-gray-700 line-clamp-1 max-w-[80%]">
-            <a href={"#0"}>
-              <span aria-hidden="true" className="absolute inset-0" />
-              {title}
-            </a>
+            <span aria-hidden="true" className="absolute inset-0" />
+            {title}
           </h3>
           <p className="mt-1 text-sm text-gray-500 capitalize">{category}</p>
         </div>

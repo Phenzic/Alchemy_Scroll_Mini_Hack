@@ -4,6 +4,7 @@ import AuthButton from "../../components/auth_button";
 import AuthHeading from "../../components/auth_heading";
 import { getName } from "../../utils/helper";
 
+
 const defaultValue = {
   email_address: "",
   password: "",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BsCart3,
   BsChevronDown,
@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { Cross as Hamburger } from "hamburger-react";
 import logo from "../assets/logo.png";
+import { useLocation, useNavigate } from "react-router";
 
 const NavBar = () => {
   const [isOpen, setOpen] = useState(false);
@@ -25,6 +26,16 @@ const NavBar = () => {
     "Health & Beauty",
     "SuperMarkets",
   ]);
+  const { pathname } = useLocation();
+  const [showCategoriesNav, setShowCategoriesNav] = useState(true);
+  useEffect(() => {
+    if (pathname !== "/") {
+      setShowCategoriesNav(false);
+    } else {
+      setShowCategoriesNav(true);
+    }
+  }, [pathname]);
+
   return (
     <>
       <div className="border-b sticky top-0 z-[90] border-b-black/20 bg-white">
@@ -71,27 +82,29 @@ const NavBar = () => {
           </div>
         </div>
       </div>
-      <div className="border-b border-b-black/20 bg-white max-[1100px]:hidden">
-        <div className="flex items-center justify-between p-4 py-4 max-w-[1280px] mx-auto text-[13px] text-[#086047] gap-4 ">
-          <div className="flex items-center gap-2">
-            <div>
-              <CgMenuLeftAlt size={22} />
+      {showCategoriesNav && (
+        <div className="border-b border-b-black/20 bg-white max-[1100px]:hidden">
+          <div className="flex items-center justify-between p-4 py-4 max-w-[1280px] mx-auto text-[13px] text-[#086047] gap-4 ">
+            <div className="flex items-center gap-2">
+              <div>
+                <CgMenuLeftAlt size={22} />
+              </div>
+              All Categories
             </div>
-            All Categories
+            {allCategories.map((category, index) => {
+              return (
+                <Link
+                  href=""
+                  key={index}
+                  className=" text-[#086047] transition-all duration-500 ease-in-out"
+                >
+                  {category}
+                </Link>
+              );
+            })}
           </div>
-          {allCategories.map((category, index) => {
-            return (
-              <Link
-                href=""
-                key={index}
-                className=" text-[#086047] transition-all duration-500 ease-in-out"
-              >
-                {category}
-              </Link>
-            );
-          })}
         </div>
-      </div>
+      )}
     </>
   );
 };

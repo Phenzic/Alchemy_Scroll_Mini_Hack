@@ -80,6 +80,7 @@ function App() {
         <div className="mt-6 flex flex-nowrap overflow-auto gap-x-6 gap-y-10  xl:gap-x-6 rounded-lg">
           {productData.map((product) => (
             <ProductCard
+              id={product.id}
               isNew={true}
               title={product.title}
               key={product.id}
@@ -103,6 +104,7 @@ function App() {
         <div className="mt-6 flex flex-nowrap overflow-auto gap-x-6 gap-y-10 xl:gap-x-6 rounded-lg">
           {productData.slice(10).map((product) => (
             <ProductCard
+              id={product.id}
               title={product.title}
               key={product.id}
               image={product.image}
@@ -183,6 +185,7 @@ function App() {
             <ProductCard
               title={product.title}
               key={product.id}
+              id={product.id}
               image={product.image}
               category={product.category}
               price={product.price}
