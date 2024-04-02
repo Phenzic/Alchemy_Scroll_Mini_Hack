@@ -6,10 +6,11 @@ import App from "./App";
 import SellerRoot from "./wrappers/SellerRoot";
 import AdminRoot from "./wrappers/AdminRoot";
 import UserRoot from "./wrappers/UserRoot";
+import { Login } from "./pages/auth/Login";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/*",
     element: <UserRoot />,
     children: [
       {
