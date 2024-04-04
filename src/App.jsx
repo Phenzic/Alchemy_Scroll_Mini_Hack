@@ -54,17 +54,17 @@ function App() {
         <img
           src="https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png"
           alt=""
-          className="col-span-1 rounded-xl row-span-2 max-lg:col-span-2 max-lg:row-span-1 h-full object-cover w-full"
+          className="col-span-1 rounded-xl row-span-2 max-lg:col-span-2 max-lg:row-span-1 h-full object-cover w-full bg-black/10"
         />
         <img
           src="https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png"
           alt=""
-          className="h-full rounded-xl object-cover w-full"
+          className="h-full rounded-xl object-cover w-full bg-black/10"
         />
         <img
           src="https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png"
           alt=""
-          className="h-full rounded-xl object-cover w-full"
+          className="h-full rounded-xl object-cover w-full bg-black/10"
         />
       </div>
 
