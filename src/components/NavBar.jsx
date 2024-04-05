@@ -29,10 +29,10 @@ const NavBar = () => {
   const { pathname } = useLocation();
   const [showCategoriesNav, setShowCategoriesNav] = useState(true);
   useEffect(() => {
-    if (pathname !== "/") {
-      setShowCategoriesNav(false);
-    } else {
+    if (pathname == "/" || pathname.includes("categories")) {
       setShowCategoriesNav(true);
+    } else {
+      setShowCategoriesNav(false);
     }
   }, [pathname]);
 
@@ -74,27 +74,29 @@ const NavBar = () => {
                 <p>Account</p>
                 <BsChevronDown />
               </div>
-              <div className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
-                <BsCart3 />
-                <p>Cart</p>
-              </div>
+              <Link to={"/cart"}>
+                <div className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
+                  <BsCart3 />
+                  <p>Cart</p>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
       </div>
       {showCategoriesNav && (
-        <div className="border-b border-b-black/20 bg-white max-[1100px]:hidden">
+        <div className="border-b border-b-black/20 bg-white overflow-auto whitespace-nowrap">
           <div className="flex items-center justify-between p-4 py-4 max-w-[1280px] mx-auto text-[13px] text-[#086047] gap-4 ">
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <div>
                 <CgMenuLeftAlt size={22} />
               </div>
               All Categories
-            </div>
+            </div> */}
             {allCategories.map((category, index) => {
               return (
                 <Link
-                  href=""
+                  to={`/categories/${category.toLowerCase()}`}
                   key={index}
                   className=" text-[#086047] transition-all duration-500 ease-in-out"
                 >

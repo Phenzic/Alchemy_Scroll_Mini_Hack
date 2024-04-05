@@ -11,6 +11,8 @@ import { ForgotPassword } from "./pages/auth/ForgotPassword";
 import { Register } from "./pages/auth/Register";
 import AuthRoot from "./wrappers/AuthRoot";
 import Product from "./pages/Product";
+import Cart from "./pages/Cart";
+import Categories from "./pages/Categories";
 
 const router = createBrowserRouter([
   {
@@ -22,8 +24,16 @@ const router = createBrowserRouter([
         element: <App />,
       },
       {
-        path: "product/*",
+        path: "product/:id",
         element: <Product />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
+      },
+      {
+        path: "categories/:id",
+        element: <Categories />,
       },
     ],
   },

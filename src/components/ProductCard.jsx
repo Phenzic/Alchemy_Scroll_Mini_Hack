@@ -35,7 +35,9 @@ const ProductCard = ({
             <span aria-hidden="true" className="absolute inset-0" />
             {title}
           </h3>
-          <p className="mt-1 text-sm text-gray-500 capitalize">{category}</p>
+          <p className="mt-1 text-sm text-gray-500 capitalize line-clamp-1">
+            {category}
+          </p>
         </div>
         <p
           className={`text-md relative font-semibold text-gray-900 ${
