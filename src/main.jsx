@@ -13,6 +13,11 @@ import AuthRoot from "./wrappers/AuthRoot";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import Categories from "./pages/Categories";
+import UserProvider from "./context/UserContext";
+import AdminProvider from "./context/AdminContext";
+import SellerProvider from "./context/SellerContext";
+import { CartProvider } from "./context/CartContext";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -79,6 +84,15 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Toaster />
+    <UserProvider>
+      <AdminProvider>
+        <SellerProvider>
+          <CartProvider>
+            <RouterProvider router={router} />
+          </CartProvider>
+        </SellerProvider>
+      </AdminProvider>
+    </UserProvider>
   </React.StrictMode>
 );

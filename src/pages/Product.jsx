@@ -1,21 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsCartPlus, BsStarFill } from "react-icons/bs";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { productData } from "../utils/testData";
+import { useParams } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 const Product = () => {
+  const { cartItems, addToCart, isItemInCart, removeFromCart } = useCart();
   const [products] = useState(productData.slice(0, 4));
   const [indexValue, setIndexValue] = useState(0);
   const { image } = products[indexValue];
   const [showCard, setShowCard] = useState(0);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (productData.length > 0) {
+      setSelectedProduct(productData.filter((data) => data.id == id)[0]);
+    }
+  }, [productData]);
 
   const decreaseCount = () => {
-    count > 0 && setCount((prevCount) => prevCount - 1);
+    count > 1 && setCount((prevCount) => prevCount - 1);
   };
 
   const increaseCount = () => {
@@ -46,7 +58,6 @@ const Product = () => {
         avatarSrc:
           "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80",
       },
-      // More reviews...
     ],
   };
 
@@ -76,40 +87,55 @@ const Product = () => {
         <div className="w-full py-16 max-md:p-4">
           <p className="text-[#086047] font-bold mb-5">James Store</p>
           <h1 className="text-black text-4xl font-extrabold mb-6">
-            Fall Limited Edition Sneakers
+            {selectedProduct?.title}
           </h1>
-          <p className="text-slate-400 mb-6">
-            These two low-profile sneakers are your perfect casual wear
-            companion. Featuring a durable rubber outer sole, they will
-            withstand everything the weather can offer
+          <p className="text-slate-400 mb-6 capitalize">
+            {selectedProduct?.description}
           </p>
-          <div className="flex items-center justify-start gap-4">
-            <h1 className="text-xl font-semibold">$125.00</h1>
+          <div className="flex items-center justify-start gap-4 mb-10">
+            <h1 className="text-xl font-semibold">
+              ${(Math.round(selectedProduct?.price * 100) / 100).toFixed(2)}
+            </h1>
             <h1 className="text-[#086047] p-1 px-3 text-sm rounded-lg bg-[#086047]/10 font-bold">
               50%
             </h1>
           </div>
-          <h1 className="text-slate-400 text-lg font-semibold line-through mb-10">
+          {/* <h1 className="text-slate-400 text-lg font-semibold line-through mb-10">
             $250
-          </h1>
+          </h1> */}
           <div className="flex justify-start items-center gap-6">
-            <div className=" flex gap-4 items-center justify-evenly bg-black/[3%] rounded-lg px-4 py-3 select-none">
-              <FaMinus
-                className="flex items-center justify-center text-lg font-semibold text-[#086047] cursor-pointer"
-                onClick={decreaseCount}
-              />
-              <p className="mx-4 w-3 text-black-50 font-semibold">{count}</p>
-              <FaPlus
-                className="flex items-center justify-center text-[#086047] text-lg font-semibold cursor-pointer"
-                onClick={increaseCount}
-              />
-            </div>
-            <div>
-              <button className=" bg-[#086047] hover:bg-[#086047]/80 text-white py-3 px-6 rounded-lg flex items-center gap-3 font-semibold">
-                <BsCartPlus />
-                Add to Cart
-              </button>
-            </div>
+            {isItemInCart(selectedProduct) && (
+              <div className=" flex gap-4 items-center justify-evenly bg-black/[3%] rounded-lg px-4 py-3 select-none">
+                <FaMinus
+                  className="flex items-center justify-center text-lg font-semibold text-[#086047] cursor-pointer"
+                  onClick={() => removeFromCart(selectedProduct)}
+                />
+                <p className="mx-4 w-3 text-black-50 font-semibold">
+                  {isItemInCart(selectedProduct).quantity}
+                </p>
+                <FaPlus
+                  className="flex items-center justify-center text-[#086047] text-lg font-semibold cursor-pointer"
+                  onClick={() => addToCart(selectedProduct)}
+                />
+              </div>
+            )}
+            {isItemInCart(selectedProduct) ? (
+              <div>
+                <p>({isItemInCart(selectedProduct).quantity}) items in cart</p>
+              </div>
+            ) : (
+              <div>
+                <button
+                  onClick={() => {
+                    addToCart(selectedProduct);
+                  }}
+                  className=" bg-[#086047] hover:bg-[#086047]/80 text-white py-3 px-6 rounded-lg flex items-center gap-3 font-semibold"
+                >
+                  <BsCartPlus />
+                  Add to Cart
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

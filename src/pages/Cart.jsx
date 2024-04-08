@@ -6,53 +6,61 @@ import {
   BsX,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { FaMinus, FaPlus } from "react-icons/fa";
+import { useState } from "react";
 
 const products = [
-//   {
-//     id: 1,
-//     name: "Basic Tee",
-//     href: "#",
-//     price: "32.00",
-//     color: "Sienna",
-//     inStock: true,
-//     size: "Large",
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg",
-//     imageAlt: "Front of men's Basic Tee in sienna.",
-//   },
-//   {
-//     id: 2,
-//     name: "Basic Tee",
-//     href: "#",
-//     price: "32.00",
-//     color: "Black",
-//     inStock: false,
-//     leadTime: "3–4 weeks",
-//     size: "Large",
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg",
-//     imageAlt: "Front of men's Basic Tee in black.",
-//   },
-//   {
-//     id: 3,
-//     name: "Nomad Tumbler",
-//     href: "#",
-//     price: "35.00",
-//     color: "White",
-//     inStock: true,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-03.jpg",
-//     imageAlt: "Insulated bottle with white base and black snap lid.",
-//   },
+  //   {
+  //     id: 1,
+  //     name: "Basic Tee",
+  //     href: "#",
+  //     price: "32.00",
+  //     color: "Sienna",
+  //     inStock: true,
+  //     size: "Large",
+  //     imageSrc:
+  //       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg",
+  //     imageAlt: "Front of men's Basic Tee in sienna.",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Basic Tee",
+  //     href: "#",
+  //     price: "32.00",
+  //     color: "Black",
+  //     inStock: false,
+  //     leadTime: "3–4 weeks",
+  //     size: "Large",
+  //     imageSrc:
+  //       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg",
+  //     imageAlt: "Front of men's Basic Tee in black.",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Nomad Tumbler",
+  //     href: "#",
+  //     price: "35.00",
+  //     color: "White",
+  //     inStock: true,
+  //     imageSrc:
+  //       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-03.jpg",
+  //     imageAlt: "Insulated bottle with white base and black snap lid.",
+  //   },
 ];
 
 const Cart = () => {
+  const { cartItems, addToCart, removeFromCart, removeItemFromCart, getCartTotal } =
+    useCart();
   return (
     <div className=" py-10 max-md:py-0">
       <main className="mx-auto bg-white px-4 py-10 sm:px-6 lg:px-8 rounded-lg">
+        <h1 className="text-[26px] font-bold max-lg:text-2xl mb-5">
+          Shopping Cart
+        </h1>
         <form className="mt-0 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
-            {products.length < 1 ? (
+            {cartItems.length < 1 ? (
               <div className="w-full h-full flex flex-col items-center gap-4">
                 <img
                   className="w-[250px] h-[250px]"
@@ -63,7 +71,10 @@ const Cart = () => {
                   <h1 className="font-bold text-lg">
                     You don't have any items in your cart
                   </h1>
-                  <Link to={"/products"} className="flex items-center gap-2 text-[#086047] text-sm font-semibold">
+                  <Link
+                    to={"/"}
+                    className="flex items-center gap-2 text-[#086047] text-sm font-semibold"
+                  >
                     <span>Start Shopping</span>
                     <BsArrowRight />
                   </Link>
@@ -76,12 +87,11 @@ const Cart = () => {
                 </h2>
 
                 <ul role="list" className="divide-y divide-gray-200">
-                  {products.map((product, productIdx) => (
+                  {cartItems.map((product, productIdx) => (
                     <li key={product.id} className="flex py-6 sm:py-10">
-                      <div className="flex-shrink-0">
+                      <div className="flex-shrink-0 border rounded-lg">
                         <img
-                          src={product.imageSrc}
-                          alt={product.imageAlt}
+                          src={product.image}
                           className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                         />
                       </div>
@@ -95,17 +105,19 @@ const Cart = () => {
                                   href={product.href}
                                   className="font-medium text-gray-700 hover:text-gray-800"
                                 >
-                                  {product.name}
+                                  {product.title}
                                 </a>
                               </h3>
                             </div>
                             <div className="mt-1 flex text-sm">
-                              <p className="text-gray-500">{product.color}</p>
-                              {product.size ? (
+                              <p className="text-gray-500">
+                                {product.category}
+                              </p>
+                              {/* {product.size ? (
                                 <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
                                   {product.size}
                                 </p>
-                              ) : null}
+                              ) : null} */}
                             </div>
                             <p className="mt-1 text-sm font-medium text-gray-900">
                               ${product.price}
@@ -117,25 +129,29 @@ const Cart = () => {
                               htmlFor={`quantity-${productIdx}`}
                               className="sr-only"
                             >
-                              Quantity, {product.name}
+                              Quantity, {product.quantity}
                             </label>
-                            <select
-                              id={`quantity-${productIdx}`}
-                              name={`quantity-${productIdx}`}
-                              className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-[#086047] focus:outline-none focus:ring-1 focus:ring-[#086047] sm:text-sm"
-                            >
-                              <option value={1}>1</option>
-                              <option value={2}>2</option>
-                              <option value={3}>3</option>
-                              <option value={4}>4</option>
-                              <option value={5}>5</option>
-                              <option value={6}>6</option>
-                              <option value={7}>7</option>
-                              <option value={8}>8</option>
-                            </select>
+                            <div className=" flex gap-4 items-center justify-evenly bg-black/[3%] rounded-lg px-3 py-2 select-none text-sm w-fit">
+                              <FaMinus
+                                className="flex items-center justify-center text-sm font-semibold text-[#086047] cursor-pointer"
+                                onClick={() =>
+                                  product.quantity > 1
+                                    ? removeFromCart(product)
+                                    : {}
+                                }
+                              />
+                              <p className="mx-2 w-3 text-black-50 font-semibold">
+                                {product.quantity}
+                              </p>
+                              <FaPlus
+                                className="flex items-center justify-center text-[#086047] text-sm font-semibold cursor-pointer"
+                                onClick={() => addToCart(product)}
+                              />
+                            </div>
 
                             <div className="absolute right-0 top-0">
                               <button
+                                onClick={() => removeItemFromCart(product)}
                                 type="button"
                                 className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                               >
@@ -176,7 +192,7 @@ const Cart = () => {
           {/* Order summary */}
           <section
             aria-labelledby="summary-heading"
-            className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
+            className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8 sticky top-[7rem] max-lg:relative"
           >
             <h2
               id="summary-heading"
@@ -189,7 +205,7 @@ const Cart = () => {
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Subtotal</dt>
                 <dd className="text-sm font-medium text-gray-900">
-                  ${products.reduce((sum, { price }) => sum + Number(price), 0)}
+                  ${getCartTotal()}
                 </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
@@ -205,7 +221,7 @@ const Cart = () => {
                     <BsQuestionCircle className="h-5 w-5" aria-hidden="true" />
                   </a>
                 </dt>
-                <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                <dd className="text-sm font-medium text-gray-900">$0.00</dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="flex text-sm text-gray-600">
@@ -220,20 +236,22 @@ const Cart = () => {
                     <BsQuestionCircle className="h-5 w-5" aria-hidden="true" />
                   </a>
                 </dt>
-                <dd className="text-sm font-medium text-gray-900">$8.32</dd>
+                <dd className="text-sm font-medium text-gray-900">$0.00</dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="text-base font-medium text-gray-900">
                   Order total
                 </dt>
-                <dd className="text-base font-medium text-gray-900">$112.32</dd>
+                <dd className="text-base font-medium text-gray-900">
+                  ${getCartTotal()}
+                </dd>
               </div>
             </dl>
 
             <div className="mt-6">
               <button
                 type="submit"
-                disabled={products.length < 1}
+                disabled={cartItems.length < 1}
                 className="w-full rounded-md border border-transparent bg-[#086047] px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-[#086047] focus:outline-none focus:ring-2 focus:ring-[#086047] focus:ring-offset-2 focus:ring-offset-gray-50 disabled:opacity-50"
               >
                 Checkout
