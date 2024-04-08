@@ -3,7 +3,7 @@ import { Input } from "../../components/input";
 import AuthButton from "../../components/auth_button";
 import AuthHeading from "../../components/auth_heading";
 import { getName } from "../../utils/helper";
-
+import axios from "axios";
 
 const defaultValue = {
   email_address: "",
@@ -20,6 +20,18 @@ export const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    try {
+      const res = await axios.post("http://localhost:3000/auth/login", {
+        // username: "kiki",
+        email: "kinyi@k.com",
+        password: "12344",
+      });
+
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -28,7 +40,7 @@ export const Login = () => {
         <AuthHeading />
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {Object.keys(formField).map((key) => {
               return (
                 <Input
@@ -54,7 +66,7 @@ export const Login = () => {
             Not registered?{" "}
             <a
               href="#"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-p hover:opacity-90"
             >
               Sign Up
             </a>

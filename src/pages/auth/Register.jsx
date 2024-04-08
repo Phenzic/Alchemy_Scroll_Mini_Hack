@@ -55,7 +55,7 @@ export const Register = () => {
             Not registered?{" "}
             <a
               href="#"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-p hover:opacity-90"
             >
               Sign Up
             </a>
