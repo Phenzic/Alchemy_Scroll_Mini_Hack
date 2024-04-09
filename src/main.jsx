@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import SellerRoot from "./wrappers/SellerRoot";
+import SellerRootLayout from "./wrappers/sellerRoot/SellerRootLayout";
 import AdminRoot from "./wrappers/AdminRoot";
 import UserRoot from "./wrappers/UserRoot";
 import { Login } from "./pages/auth/Login";
@@ -62,12 +62,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/seller",
-    element: <SellerRoot />,
+    element: <SellerRootLayout/>,
     children: [
       {
         path: "",
         element: <></>,
       },
+      {
+        
+      }
     ],
   },
   {
