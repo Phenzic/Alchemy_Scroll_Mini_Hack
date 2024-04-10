@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Input } from "../../components/input";
-import AuthButton from "../../components/auth_button";
+import AuthButton from "../../components/Buttons/auth_button";
 import AuthHeading from "../../components/auth_heading";
 import { getName } from "../../utils/helper";
 import axios from "axios";

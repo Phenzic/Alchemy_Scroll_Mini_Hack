@@ -36,6 +36,8 @@ const NavBar = () => {
     }
   }, [pathname]);
 
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="border-b sticky top-0 z-[90] border-b-black/20 bg-white">
@@ -69,7 +71,12 @@ const NavBar = () => {
                 <p>Help</p>
                 <BsChevronDown />
               </div>
-              <div className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
+              <div
+                className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3"
+                onClick={() => {
+                  navigate("/account");
+                }}
+              >
                 <BsPerson size={16} />
                 <p>Account</p>
                 <BsChevronDown />
