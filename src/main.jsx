@@ -18,6 +18,9 @@ import AdminProvider from "./context/AdminContext";
 import SellerProvider from "./context/SellerContext";
 import { CartProvider } from "./context/CartContext";
 import { Toaster } from "react-hot-toast";
+import Account from "./pages/Account";
+import { Profile } from "./pages/account/Profile";
+import OrderHistory from "./pages/account/OrderHistory";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +30,32 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <App />,
+      },
+      {
+        path: "account",
+        element: <Account />,
+        children: [
+          {
+            path: "",
+            element: <Profile />,
+          },
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+          {
+            path: "orders",
+            element: <OrderHistory />,
+          },
+          {
+            path: "liked-items",
+            element: <>liked items</>,
+          },
+          {
+            path: "notifications",
+            element: <>notifications</>,
+          },
+        ],
       },
       {
         path: "product/:id",
