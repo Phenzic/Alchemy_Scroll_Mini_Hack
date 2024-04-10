@@ -8,14 +8,13 @@ const Account = () => {
     <div>
       <p className="my-5">Home {">"} Account</p>
 
-      <div className="flex gap-5 h-screen">
+      <div className="flex gap-5 min-h-screen">
         <Sidebar />
 
         <Outlet />
 
         {/** <AddAccountInfo /> */}
         {/**<AddDeliveryAddress />*/}
-     
       </div>
     </div>
   );

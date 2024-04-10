@@ -1,3 +1,13 @@
+import { useState } from "react";
+import { AccountHeader } from "./AccountHeader";
+import { Input } from "../input";
+import {
+  AccountButtonFilled,
+  AccountButtonOutline,
+} from "../Buttons/AccountButtons";
+import { getName } from "../../utils/helper";
+import { useNavigate } from "react-router-dom";
+
 const defaultValue = {
   first_name: "",
   last_name: "",
@@ -7,6 +17,7 @@ const defaultValue = {
 
 export const AddAccountInfo = () => {
   const [formField, setFormField] = useState(defaultValue);
+  const navigate = useNavigate();
   return (
     <div className="md-p-[3rem] p-4 text-[#313638] w-full gap-5 flex flex-col">
       <div className="flex md:items-center justify-between flex-col md:flex-row gap-3">
@@ -40,7 +51,9 @@ export const AddAccountInfo = () => {
       <div className="flex justify-between py-5 mt-5 border-t border-[#31363895] ">
         <AccountButtonFilled
           text="Cancel"
-          onClick={() => {}}
+          onClick={() => {
+            navigate("/account/profile");
+          }}
           className="px-5"
         />
         <AccountButtonOutline text="Save" onClick={() => {}} className="px-5" />

@@ -1,12 +1,25 @@
+import { AccountHeader } from "../../components/account/AccountHeader";
+
 const orders = [
   {
     number: "4376",
     status: "Delivered on January 22, 2021",
     href: "#",
-    invoiceHref: "#",
     products: [
       {
         id: 1,
+        name: "Machined Brass Puzzle",
+        href: "#",
+        price: "$95.00",
+        color: "Brass",
+        size: '3" x 3" x 3"',
+        imageSrc:
+          "https://tailwindui.com/img/ecommerce-images/order-history-page-07-product-01.jpg",
+        imageAlt:
+          "Brass puzzle in the shape of a jack with overlapping rounded posts.",
+      },
+      {
+        id: 2,
         name: "Machined Brass Puzzle",
         href: "#",
         price: "$95.00",
@@ -27,18 +40,11 @@ export default function OrderHistory() {
   return (
     <div className="bg-white w-full">
       <div className="  px-4 py-5 sm:px-6 ">
-        <div className="">
-          <h1
-            id="your-orders-heading"
-            className="text-3xl font-bold tracking-tight text-gray-900"
-          >
-            Your Orders
-          </h1>
-          <p className="mt-2 text-sm text-gray-500">
-            Check the status of recent orders, manage returns, and discover
-            similar products.
-          </p>
-        </div>
+        <AccountHeader
+          heading=" Your Orders"
+          text="Check the status of recent orders, manage returns, and discover
+        similar products."
+        />
 
         <div className="mt-12 space-y-16 sm:mt-16">
           {orders.map((order) => (
@@ -60,18 +66,10 @@ export default function OrderHistory() {
                   <div className="flex text-sm font-medium">
                     <a
                       href={order.href}
-                      className="text-indigo-600 hover:text-indigo-500"
+                      className="text-[#305C45]  hover:text-[#305c45ce] "
                     >
-                      Manage order
+                      View Order
                     </a>
-                    <div className="ml-4 border-l border-gray-200 pl-4 sm:ml-6 sm:pl-6">
-                      <a
-                        href={order.invoiceHref}
-                        className="text-indigo-600 hover:text-indigo-500"
-                      >
-                        View Invoice
-                      </a>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -107,13 +105,13 @@ export default function OrderHistory() {
                     <div className="mt-6 space-y-4 sm:ml-6 sm:mt-0 sm:w-40 sm:flex-none">
                       <button
                         type="button"
-                        className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-2.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-full sm:flex-grow-0"
+                        className="flex w-full items-center justify-center rounded-md border border-transparent bg-[#305c45] px-2.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#305c45ce] focus:outline-none focus:ring-2 focus:ring-[#305c45b5] focus:ring-offset-2 sm:w-full sm:flex-grow-0"
                       >
                         Buy again
                       </button>
                       <button
                         type="button"
-                        className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-full sm:flex-grow-0"
+                        className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#305c45] focus:ring-offset-2 sm:w-full sm:flex-grow-0"
                       >
                         Shop similar
                       </button>

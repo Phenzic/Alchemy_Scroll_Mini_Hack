@@ -1,3 +1,10 @@
+import { useState } from "react";
+import { AccountButtonOutline } from "../Buttons/AccountButtons";
+import Dropdown from "../Dropdown/dropdown";
+import { Input } from "../input";
+import { AccountHeader } from "./AccountHeader";
+import { getName } from "../../utils/helper";
+
 const defaultValue2 = {
   first_name: "",
   last_name: "",

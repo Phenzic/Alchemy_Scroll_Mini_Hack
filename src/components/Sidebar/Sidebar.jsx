@@ -1,6 +1,6 @@
 /*eslint-disable*/
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   FaHeart,
   FaHome,
@@ -36,18 +36,31 @@ const menu = [
   {
     icon: <CiLogout className="text-xl" />,
     title: "Log out",
-    link: "/logout",
+    link: "/auth/login",
   },
 ];
 
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = useState("hidden");
-  const [active, setactive] = useState(0);
+  const pathname = useLocation().pathname.split("/")[2];
+  const [active, setactive] = useState(
+    menu.findIndex((item) => item.link === `/${pathname}`) || 0
+  );
+
+  useLayoutEffect(() => {
+    setactive(menu.findIndex((item) => item.link === `/${pathname}`));
+  }, [pathname]);
+
   return (
     <>
       <nav className="md:left-0 md:block hidden  md:top-0 md:bottom-0 md:overflow-y-auto  md:flex-nowrap md:overflow-hidden shadow-xl bg-white  items-center justify-between relative md:w-[21.125rem] z-10 ">
         {menu.map((item, index) => (
-          <Link to={`/account${item.link}`} key={index}>
+          <Link
+            to={`${
+              "/auth/login" === item.link ? item.link : `/account${item.link}`
+            }`}
+            key={index}
+          >
             <MenuButton
               active={index === active}
               icon={item.icon}
