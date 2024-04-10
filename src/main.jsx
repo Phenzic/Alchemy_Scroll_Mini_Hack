@@ -19,6 +19,10 @@ import SellerProvider from "./context/SellerContext";
 import { CartProvider } from "./context/CartContext";
 import { Toaster } from "react-hot-toast";
 import { accountRoute } from "./routes/accountRoute";
+import Dashboard from "./pages/seller/Dashboard";
+import Products from "./pages/seller/Products";
+import Wallet from "./pages/seller/Wallet";
+import Orders from "./pages/seller/Orders";
 
 const router = createBrowserRouter([
   {
@@ -67,8 +71,20 @@ const router = createBrowserRouter([
     element: <SellerRoot />,
     children: [
       {
-        path: "",
-        element: <></>,
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "products",
+        element: <Products />,
+      },
+      {
+        path: "wallet",
+        element: <Wallet />,
+      },
+      {
+        path: "orders",
+        element: <Orders />,
       },
     ],
   },
