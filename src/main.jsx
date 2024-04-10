@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import SellerRootLayout from "./wrappers/sellerRoot/SellerRootLayout";
+import SellerRootLayout from "./pages/sellerRoot/SellerRootLayout";
 import AdminRoot from "./wrappers/AdminRoot";
 import UserRoot from "./wrappers/UserRoot";
 import { Login } from "./pages/auth/Login";
@@ -18,10 +18,10 @@ import AdminProvider from "./context/AdminContext";
 import SellerProvider from "./context/SellerContext";
 import { CartProvider } from "./context/CartContext";
 import { Toaster } from "react-hot-toast";
-import Dashboard from "./pages/seller/Dashboard";
-import Products from "./pages/seller/Products";
-import Wallet from "./pages/seller/Wallet";
-import Orders from "./pages/seller/Orders";
+import Dashboard from "./pages/sellerRoot/seller/Dashboard";
+import Products from "./pages/sellerRoot/seller/Products";
+import Wallet from "./pages/sellerRoot/seller/Wallet";
+import Orders from "./pages/sellerRoot/seller/Orders";
 
 const router = createBrowserRouter([
   {
