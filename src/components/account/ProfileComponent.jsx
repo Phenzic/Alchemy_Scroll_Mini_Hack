@@ -4,7 +4,6 @@ import { AccountHeader } from "../account/AccountHeader";
 import { useNavigate } from "react-router-dom";
 
 export const ProfileComponent = () => {
-
   const navigate = useNavigate();
 
   return (
@@ -18,7 +17,7 @@ export const ProfileComponent = () => {
         <AccountButtonOutline
           text="Edit Profile"
           onClick={() => {
-            navigate("edit-profile");
+            navigate("profile/edit-profile");
           }}
         />
       </div>
@@ -95,7 +94,7 @@ export const ProfileComponent = () => {
           <AccountButtonOutline
             text="Add new address"
             onClick={() => {
-              navigate("add-new-address");
+              navigate("profile/add-new-address");
             }}
             className="px-5"
           />

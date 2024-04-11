@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { Cross as Hamburger } from "hamburger-react";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { useLocation, useNavigate } from "react-router";
 
 const NavBar = () => {

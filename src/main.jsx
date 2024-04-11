@@ -23,6 +23,15 @@ import Dashboard from "./pages/seller/Dashboard";
 import Products from "./pages/seller/Products";
 import Wallet from "./pages/seller/Wallet";
 import Orders from "./pages/seller/Orders";
+import AdminHome from "./pages/admin/AdminHome";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminCustomers from "./pages/admin/AdminCustomers";
+import AdminVendors from "./pages/admin/AdminVendors";
+import AdminDelivery from "./pages/admin/AdminDelivery";
+import AdminStore from "./pages/admin/AdminStore";
 
 const router = createBrowserRouter([
   {
@@ -89,12 +98,50 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/admin",
+    path: "/admin/*",
     element: <AdminRoot />,
     children: [
       {
         path: "",
-        element: <></>,
+        element: <AdminHome />,
+        children: [
+          {
+            path: "",
+            element: <AdminDashboard />,
+          },
+          {
+            path: "dashboard",
+            element: <AdminDashboard />,
+          },
+          {
+            path: "analytics",
+            element: <AdminAnalytics />,
+          },
+          {
+            path: "orders",
+            element: <AdminOrders />,
+          },
+          {
+            path: "products",
+            element: <AdminProducts />,
+          },
+          {
+            path: "customers",
+            element: <AdminCustomers />,
+          },
+          {
+            path: "vendors",
+            element: <AdminVendors />,
+          },
+          {
+            path: "delivery",
+            element: <AdminDelivery />,
+          },
+          {
+            path: "my-store",
+            element: <AdminStore />,
+          },
+        ],
       },
     ],
   },

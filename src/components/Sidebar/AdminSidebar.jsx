@@ -17,32 +17,47 @@ import { MenuButton } from "../Buttons/MenuButton";
 const menu = [
   {
     icon: <FaHome className="text-xl" />,
-    title: "My Profile",
-    link: "/profile",
+    title: "Dashboard",
+    link: "/dashboard",
   },
   {
     icon: <FaShoppingCart className="text-xl" />,
+    title: "Analytics",
+    link: "/analytics",
+  },
+  {
+    icon: <FaHeart className="text-xl" />,
     title: "Orders",
     link: "/orders",
   },
   {
-    icon: <FaHeart className="text-xl" />,
-    title: "Liked items",
-    link: "/liked-items",
-  },
-  {
     icon: <IoIosNotifications className="text-xl" />,
-    title: "Notifications",
-    link: "/notifications",
+    title: "Products",
+    link: "/products",
   },
   {
     icon: <CiLogout className="text-xl" />,
-    title: "Log out",
-    link: "/auth/login",
+    title: "Customers",
+    link: "/customers",
+  },
+  {
+    icon: <CiLogout className="text-xl" />,
+    title: "Vendors",
+    link: "/vendors",
+  },
+  {
+    icon: <CiLogout className="text-xl" />,
+    title: "Delivery",
+    link: "/delivery",
+  },
+  {
+    icon: <CiLogout className="text-xl" />,
+    title: "My store",
+    link: "/my-store",
   },
 ];
 
-export default function Sidebar({ showLogo = true }) {
+export default function AdminSidebar({ showLogo = true }) {
   const [collapseShow, setCollapseShow] = useState("hidden");
   const pathname = useLocation().pathname.split("/")[2];
   const [active, setactive] = useState(
@@ -57,20 +72,20 @@ export default function Sidebar({ showLogo = true }) {
     <>
       <nav
         className="md:left-0 md:block hidden  md:top-0 md:bottom-0 
-      md:overflow-y-auto  md:flex-nowrap md:overflow-hidden shadow-xl 
+        md:overflow-y-auto  md:flex-nowrap md:overflow-hidden shadow-xl 
       bg-white  items-center justify-between relative md:w-[21.125rem] z-10
-      "
+        pb-20"
       >
         {showLogo && (
           <div className="p-8">
-            <img src={logo} alt="logo" className="  mx-auto" />
+            <img src={logo} alt="logo" className="mx-auto" />
           </div>
         )}
 
         {menu.map((item, index) => (
           <Link
             to={`${
-              "/auth/login" === item.link ? item.link : `/account${item.link}`
+              "/auth/login" === item.link ? item.link : `/admin${item.link}`
             }`}
             key={index}
           >
