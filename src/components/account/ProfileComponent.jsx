@@ -17,7 +17,7 @@ export const ProfileComponent = () => {
         <AccountButtonOutline
           text="Edit Profile"
           onClick={() => {
-            navigate("profile/edit-profile");
+            navigate("/account/profile/edit-profile");
           }}
         />
       </div>
@@ -94,7 +94,7 @@ export const ProfileComponent = () => {
           <AccountButtonOutline
             text="Add new address"
             onClick={() => {
-              navigate("profile/add-new-address");
+              navigate("/account/profile/add-new-address");
             }}
             className="px-5"
           />
