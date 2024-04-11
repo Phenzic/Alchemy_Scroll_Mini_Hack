@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import SellerRoot from "./wrappers/SellerRoot";
+import SellerRootLayout from "./pages/sellerRoot/SellerRootLayout";
 import AdminRoot from "./wrappers/AdminRoot";
 import UserRoot from "./wrappers/UserRoot";
 import { Login } from "./pages/auth/Login";
@@ -19,10 +19,6 @@ import SellerProvider from "./context/SellerContext";
 import { CartProvider } from "./context/CartContext";
 import { Toaster } from "react-hot-toast";
 import { accountRoute } from "./routes/accountRoute";
-import Dashboard from "./pages/seller/Dashboard";
-import Products from "./pages/seller/Products";
-import Wallet from "./pages/seller/Wallet";
-import Orders from "./pages/seller/Orders";
 import AdminHome from "./pages/admin/AdminHome";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
@@ -32,6 +28,10 @@ import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminVendors from "./pages/admin/AdminVendors";
 import AdminDelivery from "./pages/admin/AdminDelivery";
 import AdminStore from "./pages/admin/AdminStore";
+import Dashboard from "./pages/sellerRoot/seller/Dashboard";
+import Products from "./pages/sellerRoot/seller/Products";
+import Wallet from "./pages/sellerRoot/seller/Wallet";
+import Orders from "./pages/sellerRoot/seller/Orders";
 
 const router = createBrowserRouter([
   {
@@ -42,7 +42,6 @@ const router = createBrowserRouter([
         path: "",
         element: <App />,
       },
-      accountRoute,
       {
         path: "product/:id",
         element: <Product />,
@@ -77,7 +76,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/seller",
-    element: <SellerRoot />,
+    element: <SellerRootLayout />,
     children: [
       {
         path: "dashboard",
@@ -94,6 +93,9 @@ const router = createBrowserRouter([
       {
         path: "orders",
         element: <Orders />,
+      },
+      {
+        
       },
     ],
   },
