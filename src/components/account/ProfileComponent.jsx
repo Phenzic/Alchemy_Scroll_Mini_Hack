@@ -54,7 +54,7 @@ export const ProfileComponent = () => {
               Surulere, L.agos <br /> Contact : 0807568302
             </p>
 
-            <div className="flex gap-3 flex-col md:flex-row  items-center">
+            <div className="flex gap-3 flex-col md:flex-row  items-center ">
               <button
                 className="  px-2.5 py-1 h-fit  bg-zinc-100 
             rounded text-xs
