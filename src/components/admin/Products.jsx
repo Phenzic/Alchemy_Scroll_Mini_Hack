@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router";
 
-const Orders = () => {
-  const navigate = useNavigate()
+const Products = () => {
+  const navigate = useNavigate();
   return (
     <>
       <div className=" w-full">
@@ -33,7 +33,7 @@ const Orders = () => {
                 .map((_, key) => {
                   return (
                     <tr
-                    onClick={()=> navigate(`/admin/orders/${key}`)}
+                      onClick={() => navigate(`/admin/products/${key+1}`)}
                       className="bg-white border-b cursor-pointer hover:bg-gray-50 "
                       key={key}
                     >
@@ -53,4 +53,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default Products;

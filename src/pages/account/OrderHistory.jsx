@@ -1,15 +1,15 @@
+import { Link } from "react-router-dom";
 import { AccountHeader } from "../../components/account/AccountHeader";
 
 const orders = [
   {
     number: "4376",
     status: "Delivered on January 22, 2021",
-    href: "#",
+    id: "3",
     products: [
       {
         id: 1,
         name: "Machined Brass Puzzle",
-        href: "#",
         price: "$95.00",
         color: "Brass",
         size: '3" x 3" x 3"',
@@ -21,7 +21,6 @@ const orders = [
       {
         id: 2,
         name: "Machined Brass Puzzle",
-        href: "#",
         price: "$95.00",
         color: "Brass",
         size: '3" x 3" x 3"',
@@ -64,12 +63,12 @@ export default function OrderHistory() {
                     {order.status}
                   </p>
                   <div className="flex text-sm font-medium">
-                    <a
-                      href={order.href}
+                    <Link
+                      to={`${order.id}`}
                       className="text-[#305C45]  hover:text-[#305c45ce] "
                     >
                       View Order
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -43,7 +43,8 @@ const BarChat = ({
 }) => {
   return (
     <Bar
-      className="max-w-2xl"
+    height={500}
+      className="max-w-3xl"
       data={{
         labels: graphData.map((user) => user.date),
         datasets: [

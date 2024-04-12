@@ -6,20 +6,19 @@ import { AccountHeader } from "../../components/account/AccountHeader";
 
 const AdminDashboard = () => {
   return (
-    <div className="flex flex-col gap-10 p-5 h-[89vh] max-h-[89vh] overflow-auto">
-      <div className="flex gap-10 justify-between ">
+    <div className="flex flex-col gap-5 p-5 overflow-auto">
+      <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-1">
         <AdminInfo />
         <AdminInfo />
         <AdminInfo />
       </div>
 
-      <div className="flex gap-10 justify-between bg-white p-3 rounded-2xl">
+      <div className="flex gap-10 overflow-hidden justify-between bg-white p-4 py-6 rounded-2xl w-[100%] max-lg:w-[50%] h-[400px] max-h-[400px] border overflow-x-auto">
         <BarChat />
-
         <PieChat />
       </div>
 
-      <div className="p-5 bg-white rounded-2xl">
+      <div className="p-5 bg-white rounded-2xl border">
         <AccountHeader
           heading="Recent Orders"
           text=""
@@ -34,7 +33,7 @@ const AdminDashboard = () => {
 
   function AdminInfo() {
     return (
-      <div className="p-6 flex-col  bg-white w-full rounded-2xl">
+      <div className="p-6 flex-col  bg-white w-full rounded-2xl border">
         <p className="text-neutral-400 text-lg font-normal mb-5">Total sales</p>
 
         <h1 className="text-neutral-700 text-[28px] font-medium mb-3">

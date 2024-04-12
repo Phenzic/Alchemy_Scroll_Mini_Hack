@@ -1,42 +1,36 @@
 /*eslint-disable*/
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  FaHeart,
-  FaHome,
-  FaPersonBooth,
-  FaShoppingCart,
-  FaTimes,
-} from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
 import { CiLogout } from "react-icons/ci";
 import logo from "../../assets/logo.png";
 import { MenuButton } from "../Buttons/MenuButton";
+import { BsBell, BsCart3, BsHeart, BsHouse } from "react-icons/bs";
 // My Profile Orders Liked items Notifications Log out
 
 const menu = [
   {
-    icon: <FaHome className="text-xl" />,
+    icon: <BsHouse className="text-base" />,
     title: "My Profile",
     link: "/profile",
   },
   {
-    icon: <FaShoppingCart className="text-xl" />,
+    icon: <BsCart3 className="text-base" />,
     title: "Orders",
     link: "/orders",
   },
   {
-    icon: <FaHeart className="text-xl" />,
+    icon: <BsHeart className="text-base" />,
     title: "Liked items",
     link: "/liked-items",
   },
   {
-    icon: <IoIosNotifications className="text-xl" />,
+    icon: <BsBell className="text-base" />,
     title: "Notifications",
     link: "/notifications",
   },
   {
-    icon: <CiLogout className="text-xl" />,
+    icon: <CiLogout className="text-base" />,
     title: "Log out",
     link: "/auth/login",
   },
@@ -57,15 +51,15 @@ export default function Sidebar({ showLogo = true }) {
     <>
       <nav
         className="md:left-0 md:block hidden  md:top-0 md:bottom-0 
-      md:overflow-y-auto  md:flex-nowrap md:overflow-hidden shadow-xl 
-      bg-white  items-center justify-between relative md:w-[21.125rem] z-10
+      md:overflow-y-auto  md:flex-nowrap md:overflow-hidden border relative 
+      bg-white  items-center justify-between md:w-[21.125rem] z-10
       "
       >
-        {showLogo && (
+        {/* {showLogo && (
           <div className="p-8">
             <img src={logo} alt="logo" className="  mx-auto" />
           </div>
-        )}
+        )} */}
 
         {menu.map((item, index) => (
           <Link
