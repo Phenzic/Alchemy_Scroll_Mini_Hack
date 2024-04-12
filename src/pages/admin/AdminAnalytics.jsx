@@ -18,7 +18,7 @@ const AdminAnalytics = () => {
         <PieChat />
       </div>
 
-      <div className="p-5 bg-white rounded-2xl">
+      <div className="p-5 bg-white rounded-2xl border">
         <AccountHeader
           heading="Top selling products"
           text=""
@@ -27,7 +27,7 @@ const AdminAnalytics = () => {
         <Orders />
       </div>
 
-      <div className="p-5 bg-white rounded-2xl">
+      <div className="p-5 bg-white rounded-2xl border">
         <AccountHeader heading="Recent orders" text="" className="mb-5" />
         <Orders />
       </div>
