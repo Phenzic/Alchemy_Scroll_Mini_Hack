@@ -13,7 +13,7 @@ const AdminAnalytics = () => {
         <AdminInfo />
       </div>
 
-      <div className="flex gap-10 justify-between bg-white p-4 py-6 rounded-2xl w-[100%] max-lg:w-[50%] h-[400px] max-h-[400px] border">
+      <div className="flex gap-10 overflow-hidden justify-between bg-white p-4 py-6 rounded-2xl w-[100%] h-fit border overflow-x-auto max-lg:flex-col max-lg:items-center">
         <BarChat />
         <PieChat />
       </div>
