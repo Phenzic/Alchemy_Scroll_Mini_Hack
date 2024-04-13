@@ -80,7 +80,7 @@ export default function AdminSidebar({ showLogo = true }) {
 
   return (
     <>
-      <nav
+      <aside
         className="md:left-0 md:block hidden  md:top-0 md:bottom-0 
         md:overflow-y-auto  md:flex-nowrap md:overflow-hidden border-r 
       bg-white  items-center justify-between w-[250px] min-w-[250px] z-10
@@ -111,7 +111,7 @@ export default function AdminSidebar({ showLogo = true }) {
             />
           </Link>
         ))}
-      </nav>
+      </aside>
     </>
   );
 }

@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   BsCart3,
   BsChevronDown,
   BsPerson,
   BsQuestionCircle,
   BsSearch,
+  BsX,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { Cross as Hamburger } from "hamburger-react";
 import logo from "../../assets/logo.png";
 import { useLocation, useNavigate } from "react-router";
+import { Dialog, Transition } from "@headlessui/react";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 const NavBar = () => {
   const [isOpen, setOpen] = useState(false);
@@ -28,6 +31,7 @@ const NavBar = () => {
   ]);
   const { pathname } = useLocation();
   const [showCategoriesNav, setShowCategoriesNav] = useState(true);
+  const isMobile = useMediaQuery("min-width: 768px)");
   useEffect(() => {
     if (pathname == "/" || pathname.includes("categories")) {
       setShowCategoriesNav(true);
@@ -35,6 +39,12 @@ const NavBar = () => {
       setShowCategoriesNav(false);
     }
   }, [pathname]);
+
+  useEffect(() => {
+    if (!isMobile && open) {
+      setOpen(false);
+    }
+  }, [isMobile, open]);
 
   const navigate = useNavigate();
 
@@ -91,6 +101,59 @@ const NavBar = () => {
           </div>
         </div>
       </div>
+      <Transition.Root show={isOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          unmount={false}
+          className="relative z-[99999999] lg:hidden"
+          onClose={setOpen}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="transition-opacity ease-linear duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-300"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 z-40 flex">
+            <Transition.Child
+              as={Fragment}
+              enter="transition ease-in-out duration-300 transform"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transition ease-in-out duration-300 transform"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full"
+            >
+              <Dialog.Panel className="relative mr-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-6 shadow-xl">
+                <div className="flex items-center justify-between px-6 py-4">
+                  <Link onClick={() => setOpen(false)} to={"/"}>
+                    <img
+                      className="w-[170px] max-md:w-[150px]"
+                      src={logo}
+                      alt=""
+                    />
+                  </Link>
+                  <button
+                    type="button"
+                    className="relative -mr-2 flex h-10 w-10 items-center justify-center p-2 text-gray-400 hover:text-gray-500"
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="absolute -inset-0.5" />
+                    <span className="sr-only">Close menu</span>
+                    <BsX className="h-6 w-6" aria-hidden="true" />
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
       {showCategoriesNav && (
         <div className="border-b border-b-black/20 bg-white overflow-auto whitespace-nowrap">
           <div className="flex items-center justify-between p-4 py-4 max-w-[1280px] mx-auto text-[13px] text-[#086047] gap-4 ">

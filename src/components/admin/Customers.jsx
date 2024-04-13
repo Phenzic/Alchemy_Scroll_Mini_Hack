@@ -1,6 +1,8 @@
+import React from "react";
 import { useNavigate } from "react-router";
-const Orders = () => {
-  const navigate = useNavigate()
+
+const Customers = () => {
+  const navigate = useNavigate();
   return (
     <>
       <div className=" w-full">
@@ -9,23 +11,22 @@ const Orders = () => {
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
               <tr>
                 <th scope="col" className="px-6 py-3">
-                  Items
+                  Name
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Price ( $ )
+                  Email
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Quantity
+                  Phone Number
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Amount ($ )
+                  Joined on
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Category
+                  Status
                 </th>
                 
               </tr>
-              
             </thead>
             <tbody>
               {Array(10)
@@ -33,15 +34,15 @@ const Orders = () => {
                 .map((_, key) => {
                   return (
                     <tr
-                    onClick={()=> navigate(`/admin/orders/${key}`)}
                       className="bg-white border-b cursor-pointer hover:bg-gray-50 "
                       key={key}
                     >
-                      <td className="px-6 py-4">Luxury female handbag</td>
-                      <td className="px-6 py-4">3,000</td>
-                      <td className="px-6 py-4">x1</td>
-                      <td className="px-6 py-4">7,000</td>
-                      <td className="px-6 py-4">Fashion</td>
+                      <td className="px-6 py-4">Pysavant Codes</td>
+                      <td className="px-6 py-4">uwak123@384.com</td>
+                      <td className="px-6 py-4">+234938504853</td>
+                      <td className="px-6 py-4">24/10/2024</td>
+                      <td className="px-6 py-4 text-green-500">Active</td>
+                      
                     </tr>
                   );
                 })}
@@ -53,4 +54,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default Customers;

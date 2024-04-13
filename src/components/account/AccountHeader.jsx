@@ -5,7 +5,7 @@ export const AccountHeader = ({
 }) => {
   return (
     <div className={`flex flex-col ${className}`}>
-      <h1 className="text-sm md:text-3xl font-semibold">{heading}</h1>
+      <h1 className="text-[24px] md:text-3xl font-semibold">{heading}</h1>
       <p className="text-sm md:text-base opacity-60 mt-2">{text}</p>
     </div>
   );

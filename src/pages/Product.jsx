@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import { BsCartPlus, BsStarFill } from "react-icons/bs";
+=======
+import React, { useEffect, useState } from "react";
+import { BsCartPlus, BsChevronRight, BsStarFill } from "react-icons/bs";
+>>>>>>> e1e32eb1b774f4bc95a429069c02c3427d3de1c9
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { productData } from "../utils/testData";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
 
@@ -61,7 +66,13 @@ const Product = ({ isAdmin = false }) => {
   };
 
   return (
-    <section className="py-14">
+    <section className={`${!isAdmin && "py-14"}`}>
+      {isAdmin && (
+        <p className="flex items-center gap-2 py-5 px-5 max-md:text-sm">
+          <Link to={-1}>Products</Link> <BsChevronRight/>
+          <span className="font-semibold">{selectedProduct?.title}</span>
+        </p>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 px-4 max-md:px-4 md:items-center">
         <div className="w-full space-y-4">
           <div className="flex items-center justify-center h-[400px] bg-white rounded-xl border">
