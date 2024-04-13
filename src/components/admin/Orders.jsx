@@ -1,5 +1,3 @@
-import React from "react";
-
 const Orders = () => {
   return (
     <>
@@ -23,7 +21,9 @@ const Orders = () => {
                 <th scope="col" className="px-6 py-3">
                   Category
                 </th>
+                
               </tr>
+              
             </thead>
             <tbody>
               {Array(10)

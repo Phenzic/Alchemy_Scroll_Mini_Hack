@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { FaPersonBooth } from "react-icons/fa";
 
 export function MenuButton({

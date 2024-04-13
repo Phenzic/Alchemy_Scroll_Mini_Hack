@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import { Fragment, useState } from "react";
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { BsChevronDown, BsPlus, BsX } from "react-icons/bs";

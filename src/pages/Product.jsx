@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { BsCartPlus, BsStarFill } from "react-icons/bs";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { productData } from "../utils/testData";

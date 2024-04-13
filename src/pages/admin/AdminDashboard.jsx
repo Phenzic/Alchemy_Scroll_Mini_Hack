@@ -1,4 +1,3 @@
-import React from "react";
 import BarChat from "../../components/charts/BarChat";
 import { PieChat } from "../../components/charts/PieChat";
 import Orders from "../../components/admin/Orders";
