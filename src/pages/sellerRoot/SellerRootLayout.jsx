@@ -2,7 +2,6 @@ import React from 'react'
 import { Outlet } from 'react-router'
 import SellerHeader from './SellerHeader'
 import {useLocation} from "react-router-dom"
-import { split } from 'postcss/lib/list'
 
 const SellerRootLayout = () => {
 
