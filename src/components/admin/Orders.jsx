@@ -1,8 +1,11 @@
+import React from "react";
+import { useNavigate } from "react-router";
 const Orders = () => {
+  const navigate = useNavigate()
   return (
     <>
       <div className=" w-full">
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="relative overflow-x-auto border sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
               <tr>
@@ -31,7 +34,8 @@ const Orders = () => {
                 .map((_, key) => {
                   return (
                     <tr
-                      className="bg-white border-b  hover:bg-gray-50 "
+                    onClick={()=> navigate(`/admin/orders/${key}`)}
+                      className="bg-white border-b cursor-pointer hover:bg-gray-50 "
                       key={key}
                     >
                       <td className="px-6 py-4">Luxury female handbag</td>

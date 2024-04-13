@@ -9,7 +9,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Product = () => {
+const Product = ({ isAdmin = false }) => {
   const { cartItems, addToCart, isItemInCart, removeFromCart } = useCart();
   const [products] = useState(productData.slice(0, 4));
   const [indexValue, setIndexValue] = useState(0);
@@ -102,40 +102,44 @@ const Product = () => {
           {/* <h1 className="text-slate-400 text-lg font-semibold line-through mb-10">
             $250
           </h1> */}
-          <div className="flex justify-start items-center gap-6">
-            {isItemInCart(selectedProduct) && (
-              <div className=" flex gap-4 items-center justify-evenly bg-black/[3%] rounded-lg px-4 py-3 select-none">
-                <FaMinus
-                  className="flex items-center justify-center text-lg font-semibold text-[#086047] cursor-pointer"
-                  onClick={() => removeFromCart(selectedProduct)}
-                />
-                <p className="mx-4 w-3 text-black-50 font-semibold">
-                  {isItemInCart(selectedProduct).quantity}
-                </p>
-                <FaPlus
-                  className="flex items-center justify-center text-[#086047] text-lg font-semibold cursor-pointer"
-                  onClick={() => addToCart(selectedProduct)}
-                />
-              </div>
-            )}
-            {isItemInCart(selectedProduct) ? (
-              <div>
-                <p>({isItemInCart(selectedProduct).quantity}) items in cart</p>
-              </div>
-            ) : (
-              <div>
-                <button
-                  onClick={() => {
-                    addToCart(selectedProduct);
-                  }}
-                  className=" bg-[#086047] hover:bg-[#086047]/80 text-white py-3 px-6 rounded-lg flex items-center gap-3 font-semibold"
-                >
-                  <BsCartPlus />
-                  Add to Cart
-                </button>
-              </div>
-            )}
-          </div>
+          {!isAdmin && (
+            <div className="flex justify-start items-center gap-6">
+              {isItemInCart(selectedProduct) && (
+                <div className=" flex gap-4 items-center justify-evenly bg-black/[3%] rounded-lg px-4 py-3 select-none">
+                  <FaMinus
+                    className="flex items-center justify-center text-lg font-semibold text-[#086047] cursor-pointer"
+                    onClick={() => removeFromCart(selectedProduct)}
+                  />
+                  <p className="mx-4 w-3 text-black-50 font-semibold">
+                    {isItemInCart(selectedProduct).quantity}
+                  </p>
+                  <FaPlus
+                    className="flex items-center justify-center text-[#086047] text-lg font-semibold cursor-pointer"
+                    onClick={() => addToCart(selectedProduct)}
+                  />
+                </div>
+              )}
+              {isItemInCart(selectedProduct) ? (
+                <div>
+                  <p>
+                    ({isItemInCart(selectedProduct).quantity}) items in cart
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <button
+                    onClick={() => {
+                      addToCart(selectedProduct);
+                    }}
+                    className=" bg-[#086047] hover:bg-[#086047]/80 text-white py-3 px-6 rounded-lg flex items-center gap-3 font-semibold"
+                  >
+                    <BsCartPlus />
+                    Add to Cart
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <div className="mt-14 bg-white p-10 border rounded-xl">

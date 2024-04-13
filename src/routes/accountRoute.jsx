@@ -4,6 +4,7 @@ import { ProfileComponent } from "../components/account/ProfileComponent";
 import Account from "../pages/Account";
 import LikedItems from "../pages/account/LikedItems";
 import Notification from "../pages/account/Notification";
+import Order from "../pages/account/Order";
 import OrderHistory from "../pages/account/OrderHistory";
 import { Profile } from "../pages/account/Profile";
 
@@ -36,6 +37,10 @@ export const accountRoute = {
     {
       path: "orders",
       element: <OrderHistory />,
+    },
+    {
+      path: "orders/:id",
+      element: <Order />,
     },
     {
       path: "liked-items",

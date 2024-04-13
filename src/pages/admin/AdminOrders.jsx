@@ -42,19 +42,19 @@ const AdminOrders = () => {
   const [active, setactive] = useState(0);
 
   return (
-    <div className="flex flex-col gap-5 p-5 h-[89vh] max-h-[89vh] overflow-auto">
+    <div className="flex flex-col gap-5 p-6 overflow-auto">
       <AccountHeader heading="Recent Orders" text="" className="" />
 
-      <div className="px-5 py-3 bg-white gap-5 flex flex-col">
-        <div className="flex justify-start gap-5 border-b border-b-[#939393]">
+      <div className="p-5 rounded-md bg-white gap-5 flex flex-col">
+        <div className="flex justify-start gap-5 border-b border-b-black/10">
           {options?.map((_, i) => (
             <p
               className={`${
                 active === i
                   ? "text-[#305C45] border-b-[#305C45]"
-                  : "text-gray-400"
+                  : "text-black/40"
               } px-1 pb-3 border-b-transparent 
-              hover:text-[#305C45]  border-b-4 rounded-b-md cursor-pointer`}
+              hover:text-[#305C45] text-sm  border-b-4 rounded-b-md cursor-pointer`}
               key={_.text}
               onClick={() => setactive(i)}
             >

@@ -32,6 +32,7 @@ import Dashboard from "./pages/sellerRoot/seller/Dashboard";
 import Products from "./pages/sellerRoot/seller/Products";
 import Wallet from "./pages/sellerRoot/seller/Wallet";
 import Orders from "./pages/sellerRoot/seller/Orders";
+import Order from "./pages/account/Order";
 
 const router = createBrowserRouter([
   {
@@ -123,8 +124,16 @@ const router = createBrowserRouter([
             element: <AdminOrders />,
           },
           {
+            path: "orders/:id",
+            element: <Order />,
+          },
+          {
             path: "products",
             element: <AdminProducts />,
+          },
+          {
+            path: "products/:id",
+            element: <Product isAdmin={true} />,
           },
           {
             path: "customers",

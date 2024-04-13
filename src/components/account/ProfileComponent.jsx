@@ -23,14 +23,13 @@ export const ProfileComponent = () => {
       </div>
 
       <div
-        className="w-full md:w-[492px] h-auto 
-        md:h-56 relative bg-stone-50 bg-opacity-95
-        rounded-lg flex justify-start pl-5 md:pl-10 
+        className="w-[50%] max-md:w-full h-[200px] relative bg-[#313638]/[5%] bg-opacity-95
+        rounded-lg flex justify-start  
         items-center"
       >
         <div
-          className="w-full flex-col  items-start 
-          gap-[12px] md:gap-[37px] flex justify-between"
+          className="w-full flex flex-col  items-start 
+           p-3 px-10 justify-between gap-14"
         >
           <h1 className="text-neutral-700 text-[16px] md:text-[28px] font-normal ">
             Orders this month

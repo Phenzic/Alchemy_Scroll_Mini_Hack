@@ -5,7 +5,7 @@ export const AccountButtonOutline = ({
 }) => {
   return (
     <button
-      className={`bg-[#305C45] text-white rounded-md p-2  hover:bg-[#305c45c4] active:bg-[#305C45] ${className}`}
+      className={`bg-[#305C45] text-white rounded-md p-3 px-6 text-sm hover:bg-[#305c45c4] active:bg-[#305C45] ${className}`}
       onClick={onClick}
     >
       {text}
