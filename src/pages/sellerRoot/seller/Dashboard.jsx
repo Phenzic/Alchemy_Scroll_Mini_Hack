@@ -26,7 +26,7 @@ import SellerInfo from '../SellerInfo'
 const Dashboard = () => {
   return (
     <React.Fragment>
-      <div className=" bg-gary-100 mx-2 px-2 mt-3 py-5 rounded-md">
+      <div className="  bg-gary-100 mx-2 px-2 mt-3 py-5 rounded-md">
         {/* SELLER INFO  */}
         <section>
           <SellerInfo/>
@@ -110,14 +110,14 @@ const Dashboard = () => {
         </div>
         
         <section className=' py-5' >
-          <select name="" className=' md:hidden outline-none border-2 font-semibold text-slate-700 py-1 px-1 rounded-lg' id="">
-            <option value="">5 per page</option>
-            <option value="">10 per page</option>
-          </select>
-          <section className=' max-md:hidden'>
-            <Pagination/>
+            <select name="" className=' sm:hidden outline-none border-2 font-semibold text-slate-700 py-1 px-1 rounded-lg' id="">
+              <option value="">5 per page</option>
+              <option value="">10 per page</option>
+            </select>
+            <section className=' max-sm:hidden'>
+              <Pagination/>
+            </section>
           </section>
-        </section>
       </div>
     </React.Fragment>
   )

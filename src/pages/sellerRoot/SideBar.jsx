@@ -63,14 +63,14 @@ function SideBar({trigger,closeNavigation}) {
         <section className=' flex items-center gap-5 pb-10'>
           <img src={logo} className=' w-36' alt="JAMAZAN logo" />
         </section>
-        <main className=' flex flex-col gap-5'>
+        <main className=' bg-gy-100 flex flex-col gap-5'>
           {
             seller_pages.map(function(eachPage,index){
               return(
                 <NavLink to={`${eachPage.page}`} key={index}>
                   <div onClick={closeNavigation} className={` flex items-center text-slate-700 gap-2 px-3 rounded-md md:py-5 md:my-1 py-3 ${current_url===eachPage.page?' border-l-[6px] bg-gray-200 border-green-800 ':' text-black'}`}>
-                    <p className="md:text-3xl">{eachPage.icon}</p>
-                    <p className=" md:text-xl md:font-medium text-sm text-slate-500 font-semibold capitalize">{eachPage.page}</p>
+                    <p className="md:text-xl">{eachPage.icon}</p>
+                    <p className=" md:text-lg md:font-medium text-sm text-slate-500 font-semibold capitalize">{eachPage.page}</p>
                   </div>
                 </NavLink>
               )
