@@ -33,6 +33,7 @@ import Products from "./pages/sellerRoot/seller/Products";
 import Wallet from "./pages/sellerRoot/seller/Wallet";
 import Orders from "./pages/sellerRoot/seller/Orders";
 import Order from "./pages/account/Order";
+import Vendor from "./pages/admin/Vendor";
 
 const router = createBrowserRouter([
   {
@@ -142,6 +143,10 @@ const router = createBrowserRouter([
           {
             path: "vendors",
             element: <AdminVendors />,
+          },
+          {
+            path: "vendors/:id",
+            element: <Vendor />,
           },
           {
             path: "delivery",
