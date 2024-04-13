@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { BsCartPlus, BsStarFill } from "react-icons/bs";
-=======
 import React, { useEffect, useState } from "react";
 import { BsCartPlus, BsChevronRight, BsStarFill } from "react-icons/bs";
->>>>>>> e1e32eb1b774f4bc95a429069c02c3427d3de1c9
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { productData } from "../utils/testData";
 import { Link, useParams } from "react-router-dom";
