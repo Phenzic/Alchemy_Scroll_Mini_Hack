@@ -14,7 +14,7 @@ const SellerRootLayout = () => {
         <header className='md:w-1/4 md:h-9'>
           <SellerHeader/>
         </header>
-        <section className=' h-screen md:overflow-auto md:w-3/4'>
+        <section className=' md:h-screen md:overflow-auto md:w-3/4'>
           <div className=' md:rounded-md bg-white  my-2'>
             <header className=' items-center flex justify-between px-3 py-5 '>
               <p className=' md:text-2xl font-medium font-sans text-slate-700 capitalize'>{current_page}</p>

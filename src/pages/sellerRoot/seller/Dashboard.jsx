@@ -2,26 +2,8 @@ import React from 'react'
 import { productData } from '../../../utils/testData'
 import Pagination from "../../../components/pagination/Pagination"
 import { PieChat } from '../../../components/charts/PieChat'
+import BarChat from "../../../components/charts/BarChat"
 import SellerInfo from '../SellerInfo'
-
-// import {
-//   Button,
-//   Dropdown,
-//   DropdownItem,
-//   DropdownMenu,
-//   DropdownTrigger,
-//   // Spinner,
-//   // Tab,
-//   // Table,
-//   // TableBody,
-//   // TableCell,
-//   // TableColumn,
-//   // TableHeader,
-//   // TableRow,
-//   // Tabs,
-// } from "@nextui-org/react";
-// import { IoChevronDownOutline } from "react-icons/io5";
-
 
 const Dashboard = () => {
   return (
@@ -33,9 +15,10 @@ const Dashboard = () => {
         </section>
         
         {/* WHERE DASHBOARD ANALYTICS WOULD BE */}
-        <section className='flex gap-10 justify-between bg-white p-3 rounded-2xl'>
-          <PieChat/>
-        </section><br />
+        <div className="flex gap-10 overflow-hidden justify-between bg-white p-4 py-6 rounded-2xl w-[100%] h-fit border overflow-x-auto max-lg:flex-col max-lg:items-center">
+          <BarChat />
+          <PieChat />
+      </div><br />
         
           {/* SELLER DATA */}
         <div className=' bg-white px-3 py-4 rounded-md'>
@@ -117,7 +100,7 @@ const Dashboard = () => {
             <section className=' max-sm:hidden'>
               <Pagination/>
             </section>
-          </section>
+        </section>
       </div>
     </React.Fragment>
   )
