@@ -6,7 +6,7 @@ import { CiLogout } from "react-icons/ci";
 import logo from "../../assets/logo.png";
 import { MenuButton } from "../Buttons/MenuButton";
 import { BsBell, BsCart3, BsHeart, BsHouse } from "react-icons/bs";
-import { signOutUser } from "../../../utils/firebase";
+import { signOutUser } from "../../utils/firebase";
 // My Profile Orders Liked items Notifications Log out
 
 const menu = [
@@ -71,7 +71,6 @@ export default function Sidebar({ showLogo = true }) {
             onClick={async () => {
               if (item.title == "Log out") {
                 await signOutUser();
-                
               }
             }}
           >

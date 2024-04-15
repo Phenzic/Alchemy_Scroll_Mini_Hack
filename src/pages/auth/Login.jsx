@@ -5,7 +5,7 @@ import AuthHeading from "../../components/auth_heading";
 import { getName } from "../../utils/helper";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { signInAuthUserWithEmailAndPassword } from "../../../utils/firebase";
+import { signInAuthUserWithEmailAndPassword } from "../../utils/firebase/index";
 
 const defaultValue = {
   email_address: "",

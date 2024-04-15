@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
-} from "../../../utils/firebase";
+} from "../../utils/firebase";
 
 const defaultValue = {
   username: "",
@@ -86,7 +86,7 @@ export const Register = () => {
                     }));
                   }}
                 />
-              )
+              );
             })}
 
             <AuthButton />
