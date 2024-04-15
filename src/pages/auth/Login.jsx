@@ -4,6 +4,8 @@ import AuthButton from "../../components/Buttons/auth_button";
 import AuthHeading from "../../components/auth_heading";
 import { getName } from "../../utils/helper";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { signInAuthUserWithEmailAndPassword } from "../../../utils/firebase";
 
 const defaultValue = {
   email_address: "",
@@ -13,6 +15,7 @@ const defaultValue = {
 export const Login = () => {
   const [state, setstate] = useState("unloaded");
   const [formField, setFormField] = useState(defaultValue);
+  const navigate = useNavigate();
 
   const resetFormFields = () => {
     setFormField(defaultValue);
@@ -21,14 +24,14 @@ export const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const res = await axios.post("http://localhost:3000/auth/login", {
-        // username: "kiki",
-        email: "kinyi@k.com",
-        password: "12344",
-      });
+    const { email_address, password } = formField;
 
-      console.log(res.data);
+    try {
+      await signInAuthUserWithEmailAndPassword(email_address, password);
+
+      resetFormFields();
+
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -64,12 +67,12 @@ export const Login = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not registered?{" "}
-            <a
-              href="#"
+            <Link
+              to={"/auth/register"}
               className="font-semibold leading-6 text-p hover:opacity-90"
             >
               Sign Up
-            </a>
+            </Link>
           </p>
         </div>
       </div>
