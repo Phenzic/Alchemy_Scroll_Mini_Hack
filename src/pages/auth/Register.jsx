@@ -4,11 +4,11 @@ import AuthButton from "../../components/Buttons/auth_button";
 import AuthHeading from "../../components/auth_heading";
 import { getName } from "../../utils/helper";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from "../../utils/firebase";
+import toast from "react-hot-toast";
 
 const defaultValue = {
   username: "",
@@ -20,6 +20,7 @@ const defaultValue = {
 export const Register = () => {
   const [state, setstate] = useState("unloaded");
   const [formField, setFormField] = useState(defaultValue);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const resetFormFields = () => {
@@ -42,17 +43,19 @@ export const Register = () => {
     }
 
     try {
+      setIsLoading(true);
       const { user } = await createAuthUserWithEmailAndPassword(
         email_address,
         password
       );
 
-      console.log(user);
       await createUserDocumentFromAuth(user, username);
-      toast.success("Welcome to JAMAZAM");
+      setIsLoading(false);
+      toast.success("Welcome to JAMAZAN");
       navigate("/");
       resetFormFields();
     } catch (error) {
+      setIsLoading(false);
       if (error.code === "auth/email-already-in-use") {
         toast.error("Cannot create user, email already in use");
       } else {
@@ -76,7 +79,7 @@ export const Register = () => {
                 <Input
                   key={key}
                   name={getName(key)}
-                  type={"text"}
+                  type={getName(key)}
                   value={formField[key]}
                   placeholder={getName(key)}
                   onChange={(e) => {
@@ -89,7 +92,7 @@ export const Register = () => {
               );
             })}
 
-            <AuthButton />
+            <AuthButton title="Sign Up" isLoading={isLoading} />
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">

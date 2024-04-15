@@ -12,10 +12,12 @@ import { CgMenuLeftAlt } from "react-icons/cg";
 import { Cross as Hamburger } from "hamburger-react";
 import logo from "../../assets/logo.png";
 import { useLocation, useNavigate } from "react-router";
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { useUser } from "../../context/UserContext";
 
 const NavBar = () => {
+  const { currentUser } = useUser();
   const [isOpen, setOpen] = useState(false);
   const [allCategories, setAllCategories] = useState([
     "Furnitures",
@@ -81,16 +83,67 @@ const NavBar = () => {
                 <p>Help</p>
                 <BsChevronDown />
               </div>
-              <div
-                className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3"
-                onClick={() => {
-                  navigate("/account");
-                }}
-              >
-                <BsPerson size={16} />
-                <p>Account</p>
-                <BsChevronDown />
-              </div>
+
+              {currentUser ? (
+                <div
+                  className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3"
+                  onClick={() => {
+                    navigate("/account");
+                  }}
+                >
+                  <BsPerson size={16} />
+                  <p>Account</p>
+                </div>
+              ) : (
+                <Menu as="div" className="relative inline-block text-left">
+                  <Menu.Button className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
+                    <BsPerson size={16} />
+                    <p>Account</p>
+                    <BsChevronDown />
+                  </Menu.Button>
+                  <Transition
+                    enter="transition duration-100 ease-out"
+                    enterFrom="transform scale-95 opacity-0"
+                    enterTo="transform scale-100 opacity-100"
+                    leave="transition duration-75 ease-out"
+                    leaveFrom="transform scale-100 opacity-100"
+                    leaveTo="transform scale-95 opacity-0"
+                  >
+                    <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+                      <div className="px-2 py-2 ">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={() => navigate("/auth/login")}
+                              className={`${
+                                active
+                                  ? "bg-[#086047] text-white"
+                                  : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-4 py-2 text-sm`}
+                            >
+                              Login
+                            </button>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={() => navigate("/auth/register")}
+                              className={`${
+                                active
+                                  ? "bg-[#086047] text-white"
+                                  : "text-gray-900"
+                              } group flex w-full mt-1 items-center rounded-md px-4 py-2 text-sm`}
+                            >
+                              Register
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+              )}
               <Link to={"/cart"}>
                 <div className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
                   <BsCart3 />

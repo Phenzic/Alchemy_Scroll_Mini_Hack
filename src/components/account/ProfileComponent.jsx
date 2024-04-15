@@ -1,3 +1,4 @@
+import { useUser } from "../../context/UserContext";
 import { AccountButtonOutline } from "../Buttons/AccountButtons";
 import Dropdown from "../Dropdown/dropdown";
 import { AccountHeader } from "../account/AccountHeader";
@@ -5,13 +6,14 @@ import { useNavigate } from "react-router-dom";
 
 export const ProfileComponent = () => {
   const navigate = useNavigate();
+  const { userDetails } = useUser();
 
   return (
     <div className="md-p-[3rem] p-4 text-[#313638] w-full gap-5 flex flex-col">
       <div className="flex md:items-center justify-between flex-col md:flex-row gap-3">
         <AccountHeader
-          heading="Hello, Marvellous Richard"
-          text="07087562892 l kin@g.com"
+          heading={`Hello, ${userDetails.username}`}
+          text={`07087562892 | ${userDetails.email}`}
         />
 
         <AccountButtonOutline

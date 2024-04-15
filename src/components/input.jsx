@@ -14,7 +14,13 @@ export const Input = ({
       <div className="mt-2">
         <input
           name={name}
-          type={type}
+          type={
+            type == "Password" || type == "Confirm Password"
+              ? "password"
+              : type == "Email Address"
+              ? "email"
+              : "text"
+          }
           autoComplete="email"
           value={value}
           onChange={onChange}

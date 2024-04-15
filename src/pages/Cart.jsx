@@ -5,10 +5,12 @@ import {
   BsQuestionCircle,
   BsX,
 } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useState } from "react";
+import { useUser } from "../context/UserContext";
+import toast from "react-hot-toast";
 
 const products = [
   //   {
@@ -50,8 +52,16 @@ const products = [
 ];
 
 const Cart = () => {
-  const { cartItems, addToCart, removeFromCart, removeItemFromCart, getCartTotal } =
-    useCart();
+  const {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    removeItemFromCart,
+    getCartTotal,
+  } = useCart();
+  const { currentUser } = useUser();
+  const navigate = useNavigate();
+
   return (
     <div className=" py-10 max-md:py-0">
       <main className="mx-auto bg-white px-4 py-10 sm:px-6 lg:px-8 rounded-lg">
@@ -250,7 +260,7 @@ const Cart = () => {
 
             <div className="mt-6">
               <button
-                type="submit"
+                onClick={()=> currentUser ? navigate("/checkout") : toast.error("Please login to continue checkout")}
                 disabled={cartItems.length < 1}
                 className="w-full rounded-md border border-transparent bg-[#086047] px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-[#086047] focus:outline-none focus:ring-2 focus:ring-[#086047] focus:ring-offset-2 focus:ring-offset-gray-50 disabled:opacity-50"
               >
