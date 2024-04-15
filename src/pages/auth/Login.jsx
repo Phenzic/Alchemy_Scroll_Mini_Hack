@@ -6,6 +6,7 @@ import { getName } from "../../utils/helper";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { signInAuthUserWithEmailAndPassword } from "../../utils/firebase/index";
+import toast from "react-hot-toast";
 
 const defaultValue = {
   email_address: "",
@@ -15,6 +16,7 @@ const defaultValue = {
 export const Login = () => {
   const [state, setstate] = useState("unloaded");
   const [formField, setFormField] = useState(defaultValue);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const resetFormFields = () => {
@@ -27,13 +29,27 @@ export const Login = () => {
     const { email_address, password } = formField;
 
     try {
+      setIsLoading(true);
       await signInAuthUserWithEmailAndPassword(email_address, password);
-
+      setIsLoading(false);
       resetFormFields();
 
       navigate("/");
-    } catch (err) {
-      console.log(err);
+    } catch (e) {
+      setIsLoading(false);
+      if (e.code == "auth/network-request-failed") {
+        toast.error("No Internet Connection");
+      } else if (e.code == "auth/wrong-password") {
+        toast.error("Please Enter correct password");
+      } else if (e.code == "auth/user-not-found") {
+        toast.error("User not found");
+      } else if (e.code == "auth/too-many-requests") {
+        toast.error("Too many attempts please try later");
+      } else if (e.code == "auth/unknown") {
+        toast.error("Email and Password Fields are required");
+      } else {
+        toast.error("An error occured during sign in");
+      }
     }
   };
 
@@ -49,7 +65,7 @@ export const Login = () => {
                 <Input
                   key={key}
                   name={getName(key)}
-                  type={"text"}
+                  type={getName(key)}
                   value={formField[key]}
                   placeholder={getName(key)}
                   onChange={(e) => {
@@ -62,7 +78,7 @@ export const Login = () => {
               );
             })}
 
-            <AuthButton />
+            <AuthButton isLoading={isLoading} />
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
