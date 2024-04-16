@@ -8,7 +8,7 @@ import SellerInfo from '../SellerInfo'
 const Dashboard = () => {
   return (
     <React.Fragment>
-      <div className="  bg-gary-100 mx-2 px-2 mt-3 py-5 rounded-md">
+      <div className="pt-0 rounded-md">
         {/* SELLER INFO  */}
         <section>
           <SellerInfo/>
@@ -21,16 +21,16 @@ const Dashboard = () => {
       </div><br />
         
           {/* SELLER DATA */}
-        <div className=' bg-white px-3 py-4 rounded-md'>
+        <div className=' bg-white p-5 border rounded-md'>
           <main className='  pb-8'>
             <header className=' flex justify-between text-sm items-center'>
-              <h1 className=" font-sans font-semibold text-slate-600">Recent orders</h1>
+              <h1 className="text-lg font-semibold text-slate-600">Recent orders</h1>
               <button className=' border-[2px] px-2 py-1 font-sans rounded-md text-gray-400'>Export CSV</button>
             </header>
           </main>
           {/* MAPPING THROUGH THE FAKE API TO GET TITLE AND PRICES INORDER TO DISPLAY */}
           {/* MOBILE VIEW OF SELLERS PAGE */}
-          <div className=' sm:hidden flex flex-col gap-2'>
+          <div className=' sm:hidden flex flex-col gap-2 rounded-lg'>
             {
               productData.slice(0,5).map((eachProduct)=>{
                 return(

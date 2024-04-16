@@ -68,7 +68,7 @@ const Cart = () => {
         <h1 className="text-[26px] font-bold max-lg:text-2xl mb-5">
           Shopping Cart
         </h1>
-        <form className="mt-0 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
+        <div className="mt-0 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
             {cartItems.length < 1 ? (
               <div className="w-full h-full flex flex-col items-center gap-4">
@@ -202,7 +202,7 @@ const Cart = () => {
           {/* Order summary */}
           <section
             aria-labelledby="summary-heading"
-            className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8 sticky top-[7rem] max-lg:relative"
+            className="rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 mt-10 lg:p-8 sticky max-lg:relative"
           >
             <h2
               id="summary-heading"
@@ -268,7 +268,7 @@ const Cart = () => {
               </button>
             </div>
           </section>
-        </form>
+        </div>
       </main>
     </div>
   );

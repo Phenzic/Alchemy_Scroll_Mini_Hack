@@ -63,8 +63,12 @@ const NavBar = () => {
             </Link>
           </div>
           <div className="flex items-center gap-5 md:hidden">
-            <BsPerson size={21} />
-            <BsCart3 size={21} />
+            <Link to={"/account"}>
+              <BsPerson size={21} />
+            </Link>
+            <Link to={"/cart"}>
+              <BsCart3 size={21} />
+            </Link>
           </div>
           <div className="w-[85%] flex items-center gap-10 max-md:hidden">
             <div className="border border-[#086047] bg-[#086047] overflow-hidden flex rounded-md w-full">

@@ -1,85 +1,78 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
-import logo from "../../assets/logo.png"
-import { NavLink, useLocation } from 'react-router-dom'
-import {BsPerson} from "react-icons/bs"
-import {IoBagCheckOutline} from "react-icons/io5"
-import {CiShop,CiWallet} from "react-icons/ci"
-import {motion} from "framer-motion"
+import React, { useLayoutEffect, useState } from "react";
+import logo from "../../assets/logo.png";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { BsHouse, BsPerson } from "react-icons/bs";
+import { CiShop, CiShoppingBasket, CiWallet } from "react-icons/ci";
+import { motion } from "framer-motion";
+import { MenuButton } from "../../components/Buttons/MenuButton";
 
+function SideBar({ trigger, toggle }) {
+  const className =
+    "bg-white w-[250px] max-md:w-[270px] transition-[margin-left] ease-in-out duration-[500ms] z-40";
 
+  const appendClass = trigger ? "ml-0" : "ml-[-800px] md:ml-0";
 
-function SideBar({trigger,closeNavigation}) {
-  const seller_pages = [
-    {icon:<BsPerson/>,page:'dashboard'},
-    {icon:<IoBagCheckOutline/>,page:'orders'},
-    {icon:<CiShop/>,page:'products'},
-    {icon:<CiWallet/>,page:'wallet'}
-  ]
+  const ModalOverlay = () => (
+    <div
+      className={`flex md:hidden fixed top-0 right-0 bottom-0 left-0 bg-black/50 z-[99999]`}
+      onClick={() => {
+        toggle((oldVal) => !oldVal);
+      }}
+    />
+  );
 
-  const location = useLocation()
-  const current_url = location.pathname.split('/')[2];
+  const menu = [
+    { icon: <BsHouse className="text-lg" />, page: "dashboard" },
+    { icon: <CiShoppingBasket className="text-xl" />, page: "orders" },
+    { icon: <CiShop className="text-xl" />, page: "products" },
+    { icon: <CiWallet className="text-xl" />, page: "wallet" },
+  ];
+
+  const [collapseShow, setCollapseShow] = useState("hidden");
+  const pathname = useLocation().pathname.split("/")[2];
+  const [active, setactive] = useState(
+    menu.findIndex((item) => item.page === `${pathname}`) || 0
+  );
+
+  useLayoutEffect(() => {
+    setactive(menu.findIndex((item) => item.page === `${pathname}`));
+    if (trigger) {
+      toggle((oldVal) => !oldVal);
+    }
+  }, [pathname]);
   return (
-    <React.Fragment>
-      {/* Mobile View Seller Navigation Bar */}
-      <motion.div
-        variants={{
-          initial:{
-            x:-1000
-          },final:{
-            x:0,
-            transition:{
-              duration:0.2
-            }
-          },exit:{
-            x:-1000,
-            transition:{
-              duration:0.2
-            }
-          }
-        }}  initial="initial" animate={trigger?'final':'exit'}
-      className={` md:hidden flex flex-col gap-5 px-5 py-4 fixed bg-gray-50 w-full h-screen`}>
-        <section className=' flex items-center gap-5 '>
-          <p onClick={closeNavigation} className=' cursor-pointer text-3xl font-light'>×</p>
-          <img src={logo} className=' w-36' alt="JAMAZAN logo" />
-        </section>
-        <main className=' flex flex-col gap-5'>
-          {
-            seller_pages.map(function(eachPage,index){
-              return(
-                <NavLink to={`${eachPage.page}`} key={index}>
-                  <div onClick={closeNavigation} className={` sm:py-4 sm:my-2 flex items-center text-slate-700 gap-2 px-3 rounded-md py-3 ${current_url===eachPage.page?' border-l-[6px] bg-gray-200 border-green-800 ':' text-black'}`}>
-                    <p className=' text-2xl'>{eachPage.icon}</p>
-                    <p className=" sm:font-medium sm:text-lg text-sm text-slate-500 font-semibold capitalize">{eachPage.page}</p>
-                  </div>
-                </NavLink>
-              )
-            })
-          }
-        </main>
-      </motion.div>
-      {/* Desktop View Seller Header Section */}
-      <div className='  max-md:hidden md:border-r-2 md:border-gray-300 md:h-full md:fixed md:w-1/4 md:px-3 md:py-7'>
-        <section className=' flex items-center gap-5 pb-10'>
-          <img src={logo} className=' w-36' alt="JAMAZAN logo" />
-        </section>
-        <main className=' bg-gy-100 flex flex-col gap-5'>
-          {
-            seller_pages.map(function(eachPage,index){
-              return(
-                <NavLink to={`${eachPage.page}`} key={index}>
-                  <div onClick={closeNavigation} className={` flex items-center text-slate-700 gap-2 px-3 rounded-md md:py-5 md:my-1 py-3 ${current_url===eachPage.page?' border-l-[6px] bg-gray-200 border-green-800 ':' text-black'}`}>
-                    <p className="md:text-xl">{eachPage.icon}</p>
-                    <p className=" md:text-lg md:font-medium text-sm text-slate-500 font-semibold capitalize">{eachPage.page}</p>
-                  </div>
-                </NavLink>
-              )
-            })
-          }
-        </main>
-      </div>
-    </React.Fragment>
-  )
+    <>
+      <aside
+        className={`${className} ${appendClass} z-[999999] h-screen sticky top-0 max-md:fixed max-md:w-[65%] border-r text-white`}
+      >
+        <div className="p-10 px-11">
+          <Link to={"/"}>
+            <img src={logo} alt="logo" className="mx-auto" />
+          </Link>
+        </div>
+
+        {menu.map((item, index) => (
+          <Link
+            to={`${
+              "/auth/login" === item.link ? item.link : `/seller/${item.page}`
+            }`}
+            key={index}
+          >
+            <MenuButton
+              active={index === active}
+              icon={item.icon}
+              title={item.page}
+              setactive={setactive}
+              key={item.title}
+              index={index}
+            />
+          </Link>
+        ))}
+      </aside>
+      {trigger ? <ModalOverlay /> : <></>}
+    </>
+  );
 }
 
-export default SideBar
+export default SideBar;
