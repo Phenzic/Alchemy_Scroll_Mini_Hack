@@ -202,7 +202,7 @@ const Cart = () => {
           {/* Order summary */}
           <section
             aria-labelledby="summary-heading"
-            className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8 sticky top-[7rem] max-lg:relative"
+            className="rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 mt-10 lg:p-8 sticky max-lg:relative"
           >
             <h2
               id="summary-heading"
