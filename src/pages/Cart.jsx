@@ -68,7 +68,7 @@ const Cart = () => {
         <h1 className="text-[26px] font-bold max-lg:text-2xl mb-5">
           Shopping Cart
         </h1>
-        <form className="mt-0 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
+        <div className="mt-0 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
             {cartItems.length < 1 ? (
               <div className="w-full h-full flex flex-col items-center gap-4">
@@ -268,7 +268,7 @@ const Cart = () => {
               </button>
             </div>
           </section>
-        </form>
+        </div>
       </main>
     </div>
   );
