@@ -45,8 +45,8 @@ const AdminOrders = () => {
     <div className="flex flex-col gap-5 p-6 overflow-auto">
       <AccountHeader heading="Recent Orders" text="" className="" />
 
-      <div className="p-5 rounded-md bg-white gap-5 flex flex-col">
-        <div className="flex justify-start gap-5 border-b border-b-black/10">
+      <div className="p-5 rounded-md bg-white gap-5 flex flex-col ">
+        <div className="flex justify-start gap-5 border-b border-b-black/10 overflow-x-auto">
           {options?.map((_, i) => (
             <p
               className={`${

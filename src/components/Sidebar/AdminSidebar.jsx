@@ -21,6 +21,8 @@ import {
   BsPeople,
   BsShop,
   BsShopWindow,
+  BsWallet,
+  BsWallet2,
 } from "react-icons/bs";
 // My Profile Orders Liked items Notifications Log out
 
@@ -56,18 +58,37 @@ const menu = [
     link: "/vendors",
   },
   {
+    icon: <BsWallet2 className="text-base" />,
+    title: "Wallet",
+    link: "/wallet",
+  },
+  {
     icon: <CiDeliveryTruck className="text-xl" />,
     title: "Delivery",
     link: "/delivery",
   },
-  {
-    icon: <BsShopWindow className="text-base" />,
-    title: "My store",
-    link: "/my-store",
-  },
+  // {
+  //   icon: <BsShopWindow className="text-base" />,
+  //   title: "My store",
+  //   link: "/my-store",
+  // },
 ];
 
-export default function AdminSidebar({ showLogo = true }) {
+export default function AdminSidebar({ showLogo = true, trigger, toggle }) {
+  const className =
+    "bg-white w-[250px] max-md:w-[270px] transition-[margin-left] ease-in-out duration-[500ms] z-40";
+
+  const appendClass = trigger ? "ml-0" : "ml-[-800px] md:ml-0";
+
+  const ModalOverlay = () => (
+    <div
+      className={`flex md:hidden fixed top-0 right-0 bottom-0 left-0 bg-black/50 z-[99999]`}
+      onClick={() => {
+        toggle((oldVal) => !oldVal);
+      }}
+    />
+  );
+
   const [collapseShow, setCollapseShow] = useState("hidden");
   const pathname = useLocation().pathname.split("/")[2];
   const [active, setactive] = useState(
@@ -76,15 +97,15 @@ export default function AdminSidebar({ showLogo = true }) {
 
   useLayoutEffect(() => {
     setactive(menu.findIndex((item) => item.link === `/${pathname}`));
+    if(trigger){
+      toggle((oldVal) => !oldVal);
+    }
   }, [pathname]);
 
   return (
     <>
       <aside
-        className="md:left-0 md:block hidden  md:top-0 md:bottom-0 
-        md:overflow-y-auto  md:flex-nowrap md:overflow-hidden border-r 
-      bg-white  items-center justify-between w-[250px] min-w-[250px] z-10
-        pb-20 fixed top-0"
+        className={`${className} ${appendClass} z-[999999] h-screen sticky top-0 max-md:fixed max-md:w-[65%] border-r text-white`}
       >
         {showLogo && (
           <div className="p-10 px-11">
@@ -112,6 +133,7 @@ export default function AdminSidebar({ showLogo = true }) {
           </Link>
         ))}
       </aside>
+      {trigger ? <ModalOverlay /> : <></>}
     </>
   );
 }

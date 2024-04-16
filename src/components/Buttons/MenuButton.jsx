@@ -19,7 +19,7 @@ export function MenuButton({
     >
       <div className="w-[354px] pl-[30px] py-6 justify-start items-center gap-4 flex ">
         {icon}
-        <div className="text-base font-medium font-['League Spartan']">
+        <div className="text-base font-medium font-['League Spartan'] capitalize">
           {title}
         </div>
       </div>
