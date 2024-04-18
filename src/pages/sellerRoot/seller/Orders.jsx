@@ -3,8 +3,13 @@ import { productData } from "../../../utils/testData";
 import { FiEdit3 } from "react-icons/fi";
 import { GoTrash } from "react-icons/go";
 import Pagination from "../../../components/pagination/Pagination";
+import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const Orders = () => {
+
+  const navigate = useNavigate()
+
   return (
     <React.Fragment>
       <div className="px-3">
@@ -28,6 +33,8 @@ const Orders = () => {
           <div className=" sm:hidden flex flex-col gap-5">
             {productData.slice(0, 5).map((eachProduct) => {
               return (
+                <NavLink key={eachProduct.id} to={`${eachProduct.id}`}>
+
                 <div
                   key={eachProduct.id}
                   className=" rounded-md py-2 border-2 px-3 flex flex-col gap-5"
@@ -106,11 +113,12 @@ const Orders = () => {
                     </section>
                   </div>
                 </div>
+                </NavLink>
               );
             })}
           </div>
           {/* DESKTOP VIEW OF SELLERS ORDER PAGE */}
-          <div className="w-full">
+          <div className="w-full max-sm:hidden">
             <div className="relative overflow-x-auto border sm:rounded-lg">
               <table className="w-full text-sm text-left text-gray-500 md:table-fixed">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
@@ -143,6 +151,9 @@ const Orders = () => {
                     return (
                       <tr
                         key={eachProduct.id}
+                        onClick={function(){
+                          navigate(`${eachProduct.id}`)
+                        }}
                         className="bg-white border-b  hover:bg-gray-50 "
                       >
                         <td className="px-6 py-4 truncate">

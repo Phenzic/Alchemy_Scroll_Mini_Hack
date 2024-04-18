@@ -31,6 +31,7 @@ import AdminStore from "./pages/admin/AdminStore";
 import Dashboard from "./pages/sellerRoot/seller/Dashboard";
 import Products from "./pages/sellerRoot/seller/Products";
 import Wallet from "./pages/sellerRoot/seller/Wallet";
+import SellerOrder from "./pages/sellerRoot/seller/SellerOrder"
 import Orders from "./pages/sellerRoot/seller/Orders";
 import Order from "./pages/account/Order";
 import Vendor from "./pages/admin/Vendor";
@@ -103,7 +104,10 @@ const router = createBrowserRouter([
         path: "orders",
         element: <Orders />,
       },
-      {},
+      {
+        path:'orders/:id',
+        element:<SellerOrder/>
+      },
     ],
   },
   {

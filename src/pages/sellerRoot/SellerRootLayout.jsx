@@ -8,6 +8,7 @@ import { Cross as Hamburger } from "hamburger-react";
 const SellerRootLayout = () => {
   const location = useLocation();
   const current_page = location.pathname.split("/")[2];
+  const display_page = location.pathname.split("/")
   const navigate = useNavigate();
   const [navTrigger, setNavTrigger] = useState(false);
 
@@ -43,9 +44,9 @@ const SellerRootLayout = () => {
 
         <main className="w-full max-md:ml-0">
           <div className="p-5 max-md:p-3">
-            <header className=" items-center flex justify-between px-3 py-5 max-md:pt-3">
+            <header className={` items-center flex justify-between px-3 ${display_page.length==3&&"py-5"}  max-md:pt-3`}>
               <p className=" md:text-2xl font-medium font-sans text-slate-700 capitalize">
-                {current_page}
+                {display_page.length==3&&current_page}
               </p>
             </header>
             <Outlet />
