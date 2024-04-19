@@ -14,7 +14,7 @@ const Products = () => {
       <div className=' px-2'>
         <header className=' space-y-3'>
           <section className=' font-sans rounded-md py-1  items-center border-[1px] flex gap-5 px-2 border-gray-400'>
-            <input type="text" placeholder='Search for product&apos;s name' className=" w-full outline-none placeholder:text-sm px-2  bg-gray-100" name="" id="" />
+            <input type="text" placeholder='Search for product&apos;s name' className=" w-full outline-none placeholder:text-sm px-2 bg-transparent" name="" id="" />
             <IoIosSearch className=' text-xl'/>
           </section>
           <section className=' flex justify-between px-3 py-2'>

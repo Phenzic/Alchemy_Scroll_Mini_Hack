@@ -38,6 +38,7 @@ import Vendor from "./pages/admin/Vendor";
 import Checkout from "./pages/Checkout";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AddSellerProduct from "./pages/sellerRoot/seller/AddSellerProduct";
+import SellerAddCard from "./pages/sellerRoot/seller/SellerAddCard";
 
 const router = createBrowserRouter([
   {
@@ -112,6 +113,10 @@ const router = createBrowserRouter([
       {
         path:'products/new-product',
         element:<AddSellerProduct/>
+      },
+      {
+        path:'wallet/add-card',
+        element:<SellerAddCard/>
       }
     ],
   },
