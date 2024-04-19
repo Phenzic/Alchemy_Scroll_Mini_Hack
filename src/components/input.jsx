@@ -13,15 +13,30 @@ export const Input = ({
       </label>
       <div className="mt-2">
         <input
+          id={name}
           name={name}
           type={
             type == "Password" || type == "Confirm Password"
               ? "password"
               : type == "Email Address"
               ? "email"
+              : type == "Phone Number"
+              ? "tel"
+              : type.toLocaleLowerCase().includes("name")
+              ? "text"
               : "text"
           }
-          autoComplete="email"
+          autoComplete={
+            type == "Password" || type == "Confirm Password"
+              ? "password"
+              : type == "Email Address"
+              ? "email"
+              : type == "Phone Number"
+              ? "tel"
+              : type.toLocaleLowerCase().includes("username")
+              ? "name"
+              : "text"
+          }
           value={value}
           onChange={onChange}
           required={required}

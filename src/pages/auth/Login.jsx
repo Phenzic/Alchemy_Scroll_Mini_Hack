@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Input } from "../../components/input";
 import AuthButton from "../../components/Buttons/auth_button";
-import AuthHeading from "../../components/auth_heading";
+import AuthHeading from "../../components/auth/auth_heading";
 import { getName } from "../../utils/helper";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -77,7 +77,14 @@ export const Login = () => {
                 />
               );
             })}
-
+            <p className="text-right text-sm text-gray-500">
+              <Link
+                to={"/auth/forgot-password"}
+                className="font-semibold text-p hover:opacity-90"
+              >
+                Forgot Password?
+              </Link>
+            </p>
             <AuthButton isLoading={isLoading} />
           </form>
 
