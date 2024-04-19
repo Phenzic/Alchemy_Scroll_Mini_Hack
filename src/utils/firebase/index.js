@@ -35,9 +35,8 @@ const firebaseConfig = {
   storageBucket: "campushostels-756c8.appspot.com",
   messagingSenderId: "559872753013",
   appId: "1:559872753013:web:22c33f238813968f39273c",
-  measurementId: "G-EZX82DZ5CJ"
+  measurementId: "G-EZX82DZ5CJ",
 };
-
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -88,6 +87,42 @@ export const createUserDocumentFromAuth = async (userAuth, username) => {
         transactions: [],
         uid: userAuth.uid,
         userRole: "user",
+      });
+    } catch (error) {
+      console.log("error creating the user", error.message);
+    }
+  }
+
+  return userDocRef;
+};
+
+// create user details
+export const createSellerDocumentFromAuth = async (
+  userAuth,
+  username,
+  business_name,
+  phone_number
+) => {
+  if (!userAuth) return;
+
+  const userDocRef = doc(db, "users", userAuth.uid);
+
+  const userSnapshot = await getDoc(userDocRef);
+
+  if (!userSnapshot.exists()) {
+    const { email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await setDoc(userDocRef, {
+        email,
+        createdAt,
+        username,
+        businessName: business_name,
+        phoneNumber: phone_number,
+        transactions: [],
+        uid: userAuth.uid,
+        userRole: "seller",
       });
     } catch (error) {
       console.log("error creating the user", error.message);
