@@ -44,7 +44,7 @@ function SellerOrder() {
             filter.map((filterOrder)=>{
               return(
                 <>
-                  <div className=' lg:grid lg:grid-cols-3 lg:divide-x-2 lg:divide-y-0 divide-y-2 flex flex-col gap-5 bg-white px-3 py-4 rounded-md shadow-sm'>
+                  <div key={filterOrder.id} className=' lg:grid lg:grid-cols-3 lg:divide-x-2 lg:divide-y-0 divide-y-2 flex flex-col gap-5 bg-white px-3 py-4 rounded-md shadow-sm'>
                     <section className=' flex flex-col gap-5 pt-5 px-5'>
                       <header  className=' flex items-center gap-3'><AiOutlineUser className=' bg-gray-200 p-1 rounded-full text-2xl'/><span className=' text-xs'>Customer</span></header>
                       <main className=' text-xs space-y-2'>

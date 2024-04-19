@@ -4,8 +4,11 @@ import product from "../../../assets/shirt1.jpeg"
 import {CiEdit} from "react-icons/ci"
 import {GoTrash} from "react-icons/go"
 import Pagination from '../../../components/pagination/Pagination'
+import { useNavigate } from 'react-router'
 
 const Products = () => {
+  const navigate = useNavigate()
+
   return (
     <React.Fragment>
       <div className=' px-2'>
@@ -19,7 +22,7 @@ const Products = () => {
                 <option value="">Category</option>
                 <option value="">A-Z</option>
             </select>
-            <button className=" bg-green-800 px-4 font-light py-1 rounded-md text-white">Add new</button>
+            <button className=" bg-green-800 px-4 font-light py-1 rounded-md text-white" onClick={function(){navigate(`new-product`)}}>Add new</button>
           </section>
         </header>
 
