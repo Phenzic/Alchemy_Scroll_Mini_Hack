@@ -27,6 +27,7 @@ function SideBar({ trigger, toggle }) {
     { icon: <CiShoppingBasket className="text-xl" />, page: "orders" },
     { icon: <CiShop className="text-xl" />, page: "products" },
     { icon: <CiWallet className="text-xl" />, page: "wallet" },
+    { icon: <BsPerson className="text-xl" />, page: "profile" },
   ];
 
   const [collapseShow, setCollapseShow] = useState("hidden");

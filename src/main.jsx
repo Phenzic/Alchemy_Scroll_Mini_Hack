@@ -39,6 +39,8 @@ import Checkout from "./pages/Checkout";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AddSellerProduct from "./pages/sellerRoot/seller/AddSellerProduct";
 import SellerAddCard from "./pages/sellerRoot/seller/SellerAddCard";
+import Profile from "./pages/sellerRoot/seller/Profile";
+import EditProfile from "./pages/sellerRoot/seller/EditProfile";
 
 const router = createBrowserRouter([
   {
@@ -105,6 +107,14 @@ const router = createBrowserRouter([
       {
         path: "orders",
         element: <Orders />,
+      },
+      {
+        path:'profile',
+        element:<Profile/>
+      },
+      {
+        path:'profile/edit-profile',
+        element:<EditProfile/>
       },
       {
         path:'orders/:id',

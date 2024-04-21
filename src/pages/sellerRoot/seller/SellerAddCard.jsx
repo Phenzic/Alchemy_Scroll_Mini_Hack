@@ -9,7 +9,7 @@ function SellerAddCard() {
         <button className=' text-lg font-bold' onClick={()=>{
             navigate(-1)
           }}>←</button>
-        <div className=' space-y-6 divide-y-[1px] bg-white py-2 px-3 rounded-md mx-3 '>
+        <form className=' space-y-6 divide-y-[1px] bg-white py-2 px-3 rounded-md mx-3 '>
             <section>
                 <p className=' font-semibold py-2'>Add new card</p>
                 <form action="" className=' py-2 flex flex-col gap-3 lg:grid lg:grid-cols-2 md:gap-3'>
@@ -42,7 +42,7 @@ function SellerAddCard() {
             </section>
             <section>
                 <p className=' font-semibold py-2'>Billing address</p>
-                <form action="" className='  py-1 flex flex-col gap-5'>
+                <div className='  py-1 flex flex-col gap-5'>
                     <section className=' sm:grid sm:grid-cols-2 flex-col flex justify-between gap-3'>
                         <label htmlFor="" className=' space-y-2'>
                             <p className=' text-sm font-light'>First name</p>
@@ -61,10 +61,10 @@ function SellerAddCard() {
                         <p className=' text-sm font-light'>Street address </p>
                         <input className=' w-full px-2 py-1 border-[1px] border-gray-300 rounded-md  outline-none bg-white p-1' type="text" placeholder='Enter street address' />
                     </label>
-                    <section className=' sm:grid sm:grid-cols-2 flex justify-between items-center'>
+                    <section className=' md:grid md:grid-cols-2 flex pb-5 justify-between md:items-center'>
                         <label htmlFor="" className=' space-y-2'>
                             <p className=' text-sm font-light'>City </p>
-                            <input className=' sm:w-96 px-2 py-1 border-[1px] border-gray-300 rounded-md  outline-none bg-white p-1' type="text" placeholder='Enter city'/>
+                            <input className='sm:w-64 md:w-52 lg:w-72 w-full px-2 py-1 border-[1px] border-gray-300 rounded-md  outline-none bg-white p-1' type="text" placeholder='Enter city'/>
                         </label>
                         <label htmlFor="" className=' space-y-2'>
                             <p className=' text-sm font-light'>State</p>
@@ -79,7 +79,7 @@ function SellerAddCard() {
                                 <option value="">Select LGA</option>
                             </select>
                     </label>
-                </form>
+                </div>
             </section>
             <section className=' py-5 flex justify-between'>
                 <button onClick={()=>{
@@ -87,7 +87,7 @@ function SellerAddCard() {
           }} className=' rounded-md border-[1px] border-green-800 text-green-800 px-3 py-1'>Cancel</button>
                 <button className=' rounded-md bg-green-800 text-white px-3 py-1'>Save Card</button>
             </section>
-        </div>
+        </form>
     </React.Fragment>
   )
 }
