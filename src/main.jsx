@@ -31,7 +31,7 @@ import AdminStore from "./pages/admin/AdminStore";
 import Dashboard from "./pages/sellerRoot/seller/Dashboard";
 import Products from "./pages/sellerRoot/seller/Products";
 import Wallet from "./pages/sellerRoot/seller/Wallet";
-import SellerOrder from "./pages/sellerRoot/seller/SellerOrder"
+import SellerOrder from "./pages/sellerRoot/seller/SellerOrder";
 import Orders from "./pages/sellerRoot/seller/Orders";
 import Order from "./pages/account/Order";
 import Vendor from "./pages/admin/Vendor";
@@ -41,6 +41,7 @@ import AddSellerProduct from "./pages/sellerRoot/seller/AddSellerProduct";
 import SellerAddCard from "./pages/sellerRoot/seller/SellerAddCard";
 import Profile from "./pages/sellerRoot/seller/Profile";
 import EditProfile from "./pages/sellerRoot/seller/EditProfile";
+import { NextUIProvider } from "@nextui-org/react";
 
 const router = createBrowserRouter([
   {
@@ -109,25 +110,25 @@ const router = createBrowserRouter([
         element: <Orders />,
       },
       {
-        path:'profile',
-        element:<Profile/>
+        path: "profile",
+        element: <Profile />,
       },
       {
-        path:'profile/edit-profile',
-        element:<EditProfile/>
+        path: "profile/edit-profile",
+        element: <EditProfile />,
       },
       {
-        path:'orders/:id',
-        element:<SellerOrder/>
+        path: "orders/:id",
+        element: <SellerOrder />,
       },
       {
-        path:'products/new-product',
-        element:<AddSellerProduct/>
+        path: "products/new-product",
+        element: <AddSellerProduct />,
       },
       {
-        path:'wallet/add-card',
-        element:<SellerAddCard/>
-      }
+        path: "wallet/add-card",
+        element: <SellerAddCard />,
+      },
     ],
   },
   {
@@ -203,7 +204,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <AdminProvider>
         <SellerProvider>
           <CartProvider>
-            <RouterProvider router={router} />
+            <NextUIProvider>
+              <RouterProvider router={router} />
+            </NextUIProvider>
           </CartProvider>
         </SellerProvider>
       </AdminProvider>

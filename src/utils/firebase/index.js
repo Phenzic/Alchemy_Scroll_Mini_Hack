@@ -151,3 +151,21 @@ export const getUserDetails = async (userAuth) => {
 
   return {};
 };
+
+// get user delivery address
+
+export const getUserDeliveryAddress = async (userId) => {
+  try {
+    const q = query(collection(db, "addresses"), where("userId", "==", userId));
+    let temp = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      temp.push(doc.data());
+    });
+    return temp;
+  } catch (e) {
+    console.log(e);
+  }
+
+  return {};
+};

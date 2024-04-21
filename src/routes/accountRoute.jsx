@@ -1,5 +1,6 @@
 import { AddAccountInfo } from "../components/account/AddAccountInfo";
 import { AddDeliveryAddress } from "../components/account/AddDeliveryAddress";
+import { EditDeliveryAddress } from "../components/account/EditDeliveryAddress";
 import { ProfileComponent } from "../components/account/ProfileComponent";
 import Account from "../pages/Account";
 import LikedItems from "../pages/account/LikedItems";
@@ -31,6 +32,10 @@ export const accountRoute = {
         {
           path: "add-new-address",
           element: <AddDeliveryAddress />,
+        },
+        {
+          path: "edit-address/:id",
+          element: <EditDeliveryAddress />,
         },
       ],
     },
