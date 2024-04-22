@@ -31,7 +31,7 @@ import AdminStore from "./pages/admin/AdminStore";
 import Dashboard from "./pages/sellerRoot/seller/Dashboard";
 import Products from "./pages/sellerRoot/seller/Products";
 import Wallet from "./pages/sellerRoot/seller/Wallet";
-import SellerOrder from "./pages/sellerRoot/seller/SellerOrder";
+import SellerOrder from "./pages/sellerRoot/seller/SellerOrder";;
 import Orders from "./pages/sellerRoot/seller/Orders";
 import Order from "./pages/account/Order";
 import Vendor from "./pages/admin/Vendor";
@@ -39,13 +39,9 @@ import Checkout from "./pages/Checkout";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AddSellerProduct from "./pages/sellerRoot/seller/AddSellerProduct";
 import SellerAddCard from "./pages/sellerRoot/seller/SellerAddCard";
-import DriverRoot from "./wrappers/DriverRoot";
-import DriversHome from "./pages/driver/DriversHome";
-import DriversDashboard from "./pages/driver/DriversDashboard";
-import RideHistory from "./pages/driver/RideHistory";
-import DriversWallet from "./pages/driver/DriversWallet";
-import AvaliableRides from "./pages/driver/AvaliableRides";
-import ViewOrdersDriver from "./pages/driver/ViewOrdersDriver";
+import Profile from "./pages/sellerRoot/seller/Profile";
+import EditProfile from "./pages/sellerRoot/seller/EditProfile";
+import { NextUIProvider } from "@nextui-org/react";
 
 const router = createBrowserRouter([
   {
@@ -112,6 +108,14 @@ const router = createBrowserRouter([
       {
         path: "orders",
         element: <Orders />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      {
+        path: "profile/edit-profile",
+        element: <EditProfile />,
       },
       {
         path: "orders/:id",
@@ -236,7 +240,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <AdminProvider>
         <SellerProvider>
           <CartProvider>
-            <RouterProvider router={router} />
+            <NextUIProvider>
+              <RouterProvider router={router} />
+            </NextUIProvider>
           </CartProvider>
         </SellerProvider>
       </AdminProvider>

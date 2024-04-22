@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getUserDetails, onAuthStateChangedListener } from "../utils/firebase";
+import {
+  getUserDeliveryAddress,
+  getUserDetails,
+  onAuthStateChangedListener,
+} from "../utils/firebase";
 
 const UserContext = createContext();
 
@@ -10,6 +14,21 @@ export const useUser = () => {
 const UserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [userDetails, setUserDetails] = useState({});
+  const [deliveryAddresses, setDeliveryAddresses] = useState([]);
+  const [loadingAddress, setLoadingAddress] = useState(false);
+
+  const fetchAddresses = async () => {
+    if (currentUser) {
+      setLoadingAddress(true);
+      const addresses = await getUserDeliveryAddress(userDetails.uid);
+      setLoadingAddress(false);
+      setDeliveryAddresses(addresses);
+    }
+  };
+
+  useEffect(() => {
+    fetchAddresses();
+  }, [currentUser, userDetails]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener(async (user) => {
@@ -24,9 +43,17 @@ const UserProvider = ({ children }) => {
     return unsubscribe;
   }, [currentUser]);
 
-  console.log(userDetails);
-
-  const value = { currentUser, setCurrentUser, userDetails, setUserDetails };
+  const value = {
+    currentUser,
+    setCurrentUser,
+    userDetails,
+    setUserDetails,
+    deliveryAddresses,
+    setDeliveryAddresses,
+    fetchAddresses,
+    loadingAddress,
+    setLoadingAddress
+  };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 

@@ -1,12 +1,26 @@
+import { BsChevronLeft } from "react-icons/bs";
+import { useNavigate } from "react-router";
+
 export const AccountHeader = ({
   heading = "Hello, Marvellous Richard",
   text = "07087562892 l mamihub@gmail.com",
   className = "",
+  hasBack = false,
 }) => {
+  const navigate = useNavigate();
   return (
-    <div className={`flex flex-col ${className}`}>
-      <h1 className="text-[24px] md:text-3xl font-semibold">{heading}</h1>
-      <p className="text-sm md:text-base opacity-60 mt-2">{text}</p>
+    <div className={`flex items-center gap-4 ${className}`}>
+      {hasBack && (
+        <BsChevronLeft
+          className="cursor-pointer"
+          onClick={() => navigate(-1)}
+          size={25}
+        />
+      )}
+      <div>
+        <h1 className="text-[24px] md:text-3xl font-semibold">{heading}</h1>
+        <p className="text-sm md:text-base opacity-60 mt-2">{text}</p>
+      </div>
     </div>
   );
 };

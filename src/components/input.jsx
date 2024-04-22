@@ -5,6 +5,7 @@ export const Input = ({
   onChange = () => {},
   placeholder = "john",
   required = true,
+  disabled = false,
 }) => {
   return (
     <div>
@@ -13,6 +14,7 @@ export const Input = ({
       </label>
       <div className="mt-2">
         <input
+          disabled={disabled}
           id={name}
           name={name}
           type={
@@ -44,7 +46,7 @@ export const Input = ({
           className="block w-full text-base rounded-md border-0 py-2 px-4
    text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
     placeholder:text-gray-400 focus:ring-2 focus:ring-inset
-     focus:ring-[#305C45] sm:text-sm sm:leading-6 outline-none"
+     focus:ring-[#305C45] sm:text-sm sm:leading-6 outline-none disabled:opacity-50"
         />
       </div>
     </div>
