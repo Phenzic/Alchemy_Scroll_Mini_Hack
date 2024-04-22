@@ -31,7 +31,7 @@ import AdminStore from "./pages/admin/AdminStore";
 import Dashboard from "./pages/sellerRoot/seller/Dashboard";
 import Products from "./pages/sellerRoot/seller/Products";
 import Wallet from "./pages/sellerRoot/seller/Wallet";
-import SellerOrder from "./pages/sellerRoot/seller/SellerOrder";;
+import SellerOrder from "./pages/sellerRoot/seller/SellerOrder";
 import Orders from "./pages/sellerRoot/seller/Orders";
 import Order from "./pages/account/Order";
 import Vendor from "./pages/admin/Vendor";
@@ -49,7 +49,6 @@ import RideHistory from "./pages/driver/RideHistory";
 import AvaliableRides from "./pages/driver/AvaliableRides";
 import DriversWallet from "./pages/driver/DriversWallet";
 import ViewOrdersDriver from "./pages/driver/ViewOrdersDriver";
-
 
 const router = createBrowserRouter([
   {
