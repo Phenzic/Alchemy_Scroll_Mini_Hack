@@ -42,6 +42,14 @@ import SellerAddCard from "./pages/sellerRoot/seller/SellerAddCard";
 import Profile from "./pages/sellerRoot/seller/Profile";
 import EditProfile from "./pages/sellerRoot/seller/EditProfile";
 import { NextUIProvider } from "@nextui-org/react";
+import DriverRoot from "./wrappers/DriverRoot";
+import DriversHome from "./pages/driver/DriversHome";
+import DriversDashboard from "./pages/driver/DriversDashboard";
+import RideHistory from "./pages/driver/RideHistory";
+import AvaliableRides from "./pages/driver/AvaliableRides";
+import DriversWallet from "./pages/driver/DriversWallet";
+import ViewOrdersDriver from "./pages/driver/ViewOrdersDriver";
+
 
 const router = createBrowserRouter([
   {
