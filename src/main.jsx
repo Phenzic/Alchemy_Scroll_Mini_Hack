@@ -31,7 +31,7 @@ import AdminStore from "./pages/admin/AdminStore";
 import Dashboard from "./pages/sellerRoot/seller/Dashboard";
 import Products from "./pages/sellerRoot/seller/Products";
 import Wallet from "./pages/sellerRoot/seller/Wallet";
-import SellerOrder from "./pages/sellerRoot/seller/SellerOrder"
+import SellerOrder from "./pages/sellerRoot/seller/SellerOrder";
 import Orders from "./pages/sellerRoot/seller/Orders";
 import Order from "./pages/account/Order";
 import Vendor from "./pages/admin/Vendor";
@@ -39,6 +39,13 @@ import Checkout from "./pages/Checkout";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AddSellerProduct from "./pages/sellerRoot/seller/AddSellerProduct";
 import SellerAddCard from "./pages/sellerRoot/seller/SellerAddCard";
+import DriverRoot from "./wrappers/DriverRoot";
+import DriversHome from "./pages/driver/DriversHome";
+import DriversDashboard from "./pages/driver/DriversDashboard";
+import RideHistory from "./pages/driver/RideHistory";
+import DriversWallet from "./pages/driver/DriversWallet";
+import AvaliableRides from "./pages/driver/AvaliableRides";
+import ViewOrdersDriver from "./pages/driver/ViewOrdersDriver";
 
 const router = createBrowserRouter([
   {
@@ -107,17 +114,17 @@ const router = createBrowserRouter([
         element: <Orders />,
       },
       {
-        path:'orders/:id',
-        element:<SellerOrder/>
+        path: "orders/:id",
+        element: <SellerOrder />,
       },
       {
-        path:'products/new-product',
-        element:<AddSellerProduct/>
+        path: "products/new-product",
+        element: <AddSellerProduct />,
       },
       {
-        path:'wallet/add-card',
-        element:<SellerAddCard/>
-      }
+        path: "wallet/add-card",
+        element: <SellerAddCard />,
+      },
     ],
   },
   {
@@ -179,6 +186,42 @@ const router = createBrowserRouter([
           {
             path: "my-store",
             element: <AdminStore />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/driver/*",
+    element: <DriverRoot />,
+    children: [
+      {
+        path: "",
+        element: <DriversHome />,
+        children: [
+          {
+            path: "",
+            element: <DriversDashboard />,
+          },
+          {
+            path: "dashboard",
+            element: <DriversDashboard />,
+          },
+          {
+            path: "ridehistory",
+            element: <RideHistory />,
+          },
+          {
+            path: "availablerides",
+            element: <AvaliableRides />,
+          },
+          {
+            path: "wallet",
+            element: <DriversWallet />,
+          },
+          {
+            path: "orders/:id",
+            element: <ViewOrdersDriver />,
           },
         ],
       },
