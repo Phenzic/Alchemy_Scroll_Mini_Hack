@@ -47,7 +47,7 @@ const AdminNavbar = ({ navTrigger, handleNavbarTrigger }) => {
           <div className="border border-[#086047] bg-[#086047] overflow-hidden flex rounded-md w-full">
             <input
               type="text"
-              placeholder="Search for products, stores and categories"
+              placeholder="Search for anything"
               className="p-3 px-4 text-sm w-full outline-none"
             />
             <div className="flex items-center justify-center px-5 text-lg cursor-pointer hover:opacity-70">
