@@ -136,12 +136,9 @@ export const createSellerDocumentFromAuth = async (
 
 export const getUserDetails = async (userAuth) => {
   if (!userAuth) return "";
-
   try {
     const userDocRef = doc(db, "users", userAuth.uid);
-
     const userSnapshot = await getDoc(userDocRef);
-
     if (userSnapshot.exists()) {
       return userSnapshot.data();
     }

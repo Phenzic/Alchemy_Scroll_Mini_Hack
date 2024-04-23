@@ -8,6 +8,7 @@ function classNames(...classes) {
 
 export default function Dropdown({
   header = "Options",
+  isHome = true,
   children = [
     {
       text: "Account settings",
@@ -37,7 +38,11 @@ export default function Dropdown({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute z-10 mt-2 -left-36 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items
+          className={`absolute z-10 mt-2 ${
+            isHome ? "max-md:left-0 -left-36" : "left-0"
+          } w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+        >
           <div className="py-1">
             {children?.map((_, i) => {
               return (

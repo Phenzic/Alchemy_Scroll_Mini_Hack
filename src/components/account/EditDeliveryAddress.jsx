@@ -76,7 +76,7 @@ export const EditDeliveryAddress = () => {
       formField.first_name.trim() == "" ||
       formField.last_name.trim() == "" ||
       formField.phone_number.trim() == "" ||
-      formField.street.trim() == 0
+      formField.street.trim() == ""
     ) {
       toast.error("Please fill in all fields");
     } else {
