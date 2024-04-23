@@ -13,29 +13,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const deliveryMethods = [
-  {
-    id: 1,
-    title: "Standard",
-    turnaround: "4–10 business days",
-    price: "$5.00",
-  },
-  { id: 2, title: "Express", turnaround: "2–5 business days", price: "$16.00" },
-];
-const paymentMethods = [
-  { id: "credit-card", title: "Credit card" },
-  { id: "paypal", title: "PayPal" },
-  { id: "etransfer", title: "eTransfer" },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const Checkout = () => {
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
-    deliveryMethods[0]
-  );
   const { cartItems, addToCart, removeFromCart, getCartTotal } = useCart();
   const { currentUser, userDetails } = useUser();
   const navigate = useNavigate();
@@ -135,119 +114,6 @@ const Checkout = () => {
                       className="px-5"
                     />
                   </div>
-                </div>
-
-                <div className="mt-10 border-t border-gray-200 pt-10">
-                  <RadioGroup
-                    value={selectedDeliveryMethod}
-                    onChange={setSelectedDeliveryMethod}
-                  >
-                    <RadioGroup.Label className="text-lg font-medium text-gray-900">
-                      Delivery method
-                    </RadioGroup.Label>
-
-                    <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                      {deliveryMethods.map((deliveryMethod) => (
-                        <RadioGroup.Option
-                          key={deliveryMethod.id}
-                          value={deliveryMethod}
-                          className={({ checked, active }) =>
-                            classNames(
-                              checked
-                                ? "border-transparent"
-                                : "border-gray-300",
-                              active ? "ring-2 ring-[#086047]" : "",
-                              "relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-                            )
-                          }
-                        >
-                          {({ checked, active }) => (
-                            <>
-                              <span className="flex flex-1">
-                                <span className="flex flex-col">
-                                  <RadioGroup.Label
-                                    as="span"
-                                    className="block text-sm font-medium text-gray-900"
-                                  >
-                                    {deliveryMethod.title}
-                                  </RadioGroup.Label>
-                                  <RadioGroup.Description
-                                    as="span"
-                                    className="mt-1 flex items-center text-sm text-gray-500"
-                                  >
-                                    {deliveryMethod.turnaround}
-                                  </RadioGroup.Description>
-                                  <RadioGroup.Description
-                                    as="span"
-                                    className="mt-6 text-sm font-medium text-gray-900"
-                                  >
-                                    {deliveryMethod.price}
-                                  </RadioGroup.Description>
-                                </span>
-                              </span>
-                              {checked ? (
-                                <CheckCircleIcon
-                                  className="h-5 w-5 text-[#086047]"
-                                  aria-hidden="true"
-                                />
-                              ) : null}
-                              <span
-                                className={classNames(
-                                  active ? "border" : "border-2",
-                                  checked
-                                    ? "border-[#086047]"
-                                    : "border-transparent",
-                                  "pointer-events-none absolute -inset-px rounded-lg"
-                                )}
-                                aria-hidden="true"
-                              />
-                            </>
-                          )}
-                        </RadioGroup.Option>
-                      ))}
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                {/* Payment */}
-                <div className="mt-10 border-t border-gray-200 pt-10">
-                  <h2 className="text-lg font-medium text-gray-900">Payment</h2>
-
-                  <fieldset className="mt-4">
-                    <legend className="sr-only">Payment type</legend>
-                    <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
-                      {paymentMethods.map((paymentMethod, paymentMethodIdx) => (
-                        <div
-                          key={paymentMethod.id}
-                          className="flex items-center"
-                        >
-                          {paymentMethodIdx === 0 ? (
-                            <input
-                              id={paymentMethod.id}
-                              name="payment-type"
-                              type="radio"
-                              defaultChecked
-                              className="h-4 w-4 border-gray-300 text-[#086047] focus:ring-[#086047]"
-                            />
-                          ) : (
-                            <input
-                              id={paymentMethod.id}
-                              name="payment-type"
-                              type="radio"
-                              className="h-4 w-4 border-gray-300 text-[#086047] focus:ring-[#086047]"
-                            />
-                          )}
-
-                          <label
-                            htmlFor={paymentMethod.id}
-                            className="ml-3 block text-sm font-medium text-gray-700"
-                          >
-                            {paymentMethod.title}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </fieldset>
                 </div>
               </div>
 

@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
 import { AccountHeader } from "../../components/account/AccountHeader";
+import { useCart } from "../../context/CartContext";
+import { useEffect } from "react";
+import { useQuery } from "../../utils/useQuery";
+import toast from "react-hot-toast";
 
 const orders = [
   {
@@ -36,6 +40,15 @@ const orders = [
 ];
 
 export default function OrderHistory() {
+  const { clearCart } = useCart();
+  let query = useQuery();
+
+  useEffect(() => {
+    if (query.get("status") == "true") {
+      toast.success("Order added Successfully");
+      clearCart();
+    }
+  }, [query]);
   return (
     <div className="bg-white w-full">
       <div className="  px-4 py-5 sm:px-6 ">

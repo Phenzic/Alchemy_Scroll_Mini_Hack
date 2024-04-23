@@ -8,7 +8,6 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { FaMinus, FaPlus } from "react-icons/fa";
-import { useState } from "react";
 import { useUser } from "../context/UserContext";
 import toast from "react-hot-toast";
 

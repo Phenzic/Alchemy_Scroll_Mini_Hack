@@ -1,4 +1,3 @@
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useUser } from "../../context/UserContext";
 import { AccountButtonOutline } from "../Buttons/AccountButtons";
 import { AccountHeader } from "../account/AccountHeader";
