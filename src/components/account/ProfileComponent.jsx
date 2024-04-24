@@ -6,7 +6,7 @@ import DeliveryAddress from "./DeliveryAddress";
 
 export const ProfileComponent = () => {
   const navigate = useNavigate();
-  const { userDetails } = useUser();
+  const { userDetails, orders } = useUser();
 
   return (
     <div className="md-p-[3rem] p-4 text-[#313638] w-full gap-5 flex flex-col">
@@ -25,20 +25,20 @@ export const ProfileComponent = () => {
       </div>
 
       <div
-        className="w-[50%] max-md:w-full h-[200px] relative bg-[#313638]/[5%] bg-opacity-95
+        className="w-[50%] max-md:w-full h-[200px] relative bg-[#313638]/[3%] bg-opacity-95
         rounded-lg flex justify-start  
-        items-center"
+        items-center border"
       >
         <div
           className="w-full flex flex-col  items-start 
-           p-3 px-10 justify-between gap-14"
+           p-2 px-10 justify-between gap-14"
         >
           <h1 className="text-neutral-700 text-[16px] md:text-[28px] font-normal ">
-            Orders this month
+            Total Orders
           </h1>
 
           <p className="text-neutral-700 text-[16px] md:text-[28px] font-medium ">
-            0
+            {orders.length}
           </p>
         </div>
       </div>

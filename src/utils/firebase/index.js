@@ -166,3 +166,19 @@ export const getUserDeliveryAddress = async (userId) => {
 
   return {};
 };
+
+export const getUserOrders = async (userId) => {
+  try {
+    const q = query(collection(db, "orders"), where("userId", "==", userId));
+    let temp = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      temp.push(doc.data());
+    });
+    return temp;
+  } catch (e) {
+    console.log(e);
+  }
+
+  return {};
+};
