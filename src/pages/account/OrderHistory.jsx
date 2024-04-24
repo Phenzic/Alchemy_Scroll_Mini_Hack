@@ -53,7 +53,7 @@ export default function OrderHistory() {
   // }, [query]);
 
   return (
-    <div className="bg-white w-full">
+    <div className="bg-white w-full min-h-[50vh]">
       <div className="  px-4 py-5 sm:px-6 ">
         <AccountHeader
           heading=" Your Orders"
