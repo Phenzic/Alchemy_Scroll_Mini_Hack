@@ -33,11 +33,11 @@ export const ProfileComponent = () => {
           className="w-full flex flex-col  items-start 
            p-2 px-10 justify-between gap-14"
         >
-          <h1 className="text-neutral-700 text-[16px] md:text-[28px] font-normal ">
+          <h1 className="text-neutral-700 text-[20px] md:text-[28px] font-normal ">
             Total Orders
           </h1>
 
-          <p className="text-neutral-700 text-[16px] md:text-[28px] font-medium ">
+          <p className="text-neutral-700 text-[28px] md:text-[28px] font-medium ">
             {orders.length}
           </p>
         </div>
