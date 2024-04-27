@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   getUserDeliveryAddress,
   getUserDetails,
+  getUserOrders,
   onAuthStateChangedListener,
 } from "../utils/firebase";
 
@@ -16,6 +17,8 @@ const UserProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState({});
   const [deliveryAddresses, setDeliveryAddresses] = useState([]);
   const [loadingAddress, setLoadingAddress] = useState(false);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [orders, setOrders] = useState([]);
 
   const fetchAddresses = async () => {
     if (currentUser) {
@@ -25,9 +28,18 @@ const UserProvider = ({ children }) => {
       setDeliveryAddresses(addresses);
     }
   };
+  const fetchOrders = async () => {
+    if (currentUser) {
+      setLoadingOrders(true);
+      const ordersLocal = await getUserOrders(userDetails.uid);
+      setLoadingOrders(false);
+      setOrders(ordersLocal);
+    }
+  };
 
   useEffect(() => {
     fetchAddresses();
+    fetchOrders();
   }, [currentUser, userDetails]);
 
   useEffect(() => {
@@ -52,7 +64,10 @@ const UserProvider = ({ children }) => {
     setDeliveryAddresses,
     fetchAddresses,
     loadingAddress,
-    setLoadingAddress
+    setLoadingAddress,
+    loadingOrders,
+    setLoadingOrders,
+    orders
   };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

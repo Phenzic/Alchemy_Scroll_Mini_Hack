@@ -27,6 +27,13 @@ import {
   increment,
 } from "firebase/firestore";
 import axios from "axios";
+import {
+  equalTo,
+  get,
+  getDatabase,
+  orderByChild,
+  ref,
+} from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZ66atUo9ldac_rdj_y1m5MucDmPQkqEo",
@@ -49,6 +56,7 @@ googleProvider.setCustomParameters({
 export const auth = getAuth();
 
 export const db = getFirestore();
+export const rdb = getDatabase(firebaseApp);
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
@@ -188,5 +196,27 @@ export const getUserDeliveryAddress = async (userId) => {
     console.log(e);
   }
   
+  return {};
+};
+
+export const getUserOrders = async (userId) => {
+  try {
+    const orders = query(ref(rdb, "orders"), orderByChild("userId"));
+
+    let temp = [];
+    await get(orders)
+      .then((snapshot) => {
+        Object.values(snapshot.val()).map((order) => {
+          temp.push(order);
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    return temp;
+  } catch (e) {
+    console.log(e);
+  }
+
   return {};
 };

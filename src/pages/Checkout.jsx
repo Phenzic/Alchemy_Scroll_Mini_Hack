@@ -139,7 +139,7 @@ const Checkout = () => {
                           <div className="relative flex justify-between max-xl:flex-col sm:gap-x-6 sm:pr-0">
                             <div>
                               <div className="flex justify-between">
-                                <h3 className="text-sm">
+                                <h3 className="text-sm line-clamp-3">
                                   <a
                                     href={product.href}
                                     className="font-medium text-gray-700 hover:text-gray-800"
