@@ -1,8 +1,9 @@
 import { useUser } from "../../context/UserContext";
 import { AccountButtonOutline } from "../Buttons/AccountButtons";
 import { AccountHeader } from "../account/AccountHeader";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DeliveryAddress from "./DeliveryAddress";
+import { BsArrowRight } from "react-icons/bs";
 
 export const ProfileComponent = () => {
   const navigate = useNavigate();
@@ -16,12 +17,22 @@ export const ProfileComponent = () => {
           text={`${userDetails.phoneNumber || ""} | ${userDetails.email}`}
         />
 
-        <AccountButtonOutline
-          text="Edit Profile"
-          onClick={() => {
-            navigate("/account/profile/edit-profile");
-          }}
-        />
+        <div className="flex gap-5 items-center text-[#305C45] max-lg:flex-col max-lg:gap-2 max-md:justify-between max-md:flex-row max-md:items-center max-lg:items-end">
+          <AccountButtonOutline
+            text="Edit Profile"
+            onClick={() => {
+              navigate("/account/profile/edit-profile");
+            }}
+          />
+          {userDetails.userRole == "seller" && (
+            <Link
+              to={"/seller/dashboard"}
+              className="font-bold flex items-center gap-2"
+            >
+              Seller's Panel <BsArrowRight />
+            </Link>
+          )}
+        </div>
       </div>
 
       <div

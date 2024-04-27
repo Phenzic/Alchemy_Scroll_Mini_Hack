@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BsArrowRight } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 
 const CheckoutSuccess = () => {
+  const { clearCart } = useCart();
+  useEffect(() => {
+    clearCart();
+  }, []);
+  
   return (
     <div className="w-full h-full flex flex-col items-center gap-4 py-24 text-center">
       <div className="w-full h-full flex flex-col items-center gap-4 p-5">
