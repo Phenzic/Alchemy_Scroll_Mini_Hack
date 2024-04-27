@@ -21,6 +21,19 @@ import CategoriesCard from "./components/CategoriesCard";
 import { Link } from "react-router-dom";
 
 function App() {
+
+  const [screenSizes, setscreenSizes] = useState({tablet:0,phone:0,laptop:0})
+
+  if( window.innerWidth>=320 && window.innerWidth<=500){
+    console.log("Mobile Phone")
+  }else if(window.innerWidth>=501 && window.innerWidth<=1025){
+    console.log("Ipadss")
+  }else if(window.innerWidth>=1200){
+    console.log("Lapyyoop")
+  }else{
+    console.log("other Screens")
+  }
+  // console.log(window.innerWidth)
   const categories = [
     {
       category: "Fashion",

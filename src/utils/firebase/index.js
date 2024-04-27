@@ -132,8 +132,22 @@ export const createSellerDocumentFromAuth = async (
   return userDocRef;
 };
 
-// get user details
+// get all users in  collection
+export const totalUsers = async ()=>{
+  const data = []
+  try{
+    const usersCollection = collection(db,"users")
+    const eachUser = await getDocs(usersCollection)
+    eachUser.forEach(function(user){
+      data.push(user.data());
+    })
+    return(data)
+  }catch(error){
+    console.log(error);
+  }
+}
 
+// get user details
 export const getUserDetails = async (userAuth) => {
   if (!userAuth) return "";
   try {
@@ -148,6 +162,16 @@ export const getUserDetails = async (userAuth) => {
 
   return {};
 };
+// get user based on uid
+const getUserByUid = function(user_id){
+
+}
+
+// get screen collection
+const getScreenCollections = async function(){
+  
+}
+
 
 // get user delivery address
 
@@ -163,6 +187,6 @@ export const getUserDeliveryAddress = async (userId) => {
   } catch (e) {
     console.log(e);
   }
-
+  
   return {};
 };
