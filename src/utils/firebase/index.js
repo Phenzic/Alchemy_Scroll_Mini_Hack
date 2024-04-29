@@ -141,19 +141,19 @@ export const createSellerDocumentFromAuth = async (
 };
 
 // get all users in  collection
-export const totalUsers = async ()=>{
-  const data = []
-  try{
-    const usersCollection = collection(db,"users")
-    const eachUser = await getDocs(usersCollection)
-    eachUser.forEach(function(user){
+export const totalUsers = async () => {
+  const data = [];
+  try {
+    const usersCollection = collection(db, "users");
+    const eachUser = await getDocs(usersCollection);
+    eachUser.forEach(function (user) {
       data.push(user.data());
-    })
-    return(data)
-  }catch(error){
+    });
+    return data;
+  } catch (error) {
     console.log(error);
   }
-}
+};
 
 // get user details
 export const getUserDetails = async (userAuth) => {
@@ -170,6 +170,7 @@ export const getUserDetails = async (userAuth) => {
 
   return {};
 };
+
 
 // get screen collection
 export const getScreenCollections = async function(){
@@ -197,6 +198,7 @@ export const updateScreenCollection = async function(object){
     console.log(error)
   }
 }
+
 // get user delivery address
 
 export const getUserDeliveryAddress = async (userId) => {
@@ -211,24 +213,18 @@ export const getUserDeliveryAddress = async (userId) => {
   } catch (e) {
     console.log(e);
   }
-  
+
   return {};
 };
 
 export const getUserOrders = async (userId) => {
   try {
-    const orders = query(ref(rdb, "orders"), orderByChild("userId"));
-
+    const q = query(collection(db, "orders"), where("userId", "==", userId));
     let temp = [];
-    await get(orders)
-      .then((snapshot) => {
-        Object.values(snapshot.val()).map((order) => {
-          temp.push(order);
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      temp.push(doc.data());
+    });
     return temp;
   } catch (e) {
     console.log(e);

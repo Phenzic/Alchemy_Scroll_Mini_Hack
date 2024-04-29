@@ -3,6 +3,7 @@ import { AddDeliveryAddress } from "../components/account/AddDeliveryAddress";
 import { EditDeliveryAddress } from "../components/account/EditDeliveryAddress";
 import { ProfileComponent } from "../components/account/ProfileComponent";
 import Account from "../pages/Account";
+import CheckoutSuccess from "../pages/account/CheckoutSuccess";
 import LikedItems from "../pages/account/LikedItems";
 import Notification from "../pages/account/Notification";
 import Order from "../pages/account/Order";
@@ -42,6 +43,10 @@ export const accountRoute = {
     {
       path: "orders",
       element: <OrderHistory />,
+    },
+    {
+      path: "checkout-successful",
+      element: <CheckoutSuccess />,
     },
     {
       path: "orders/:id",
