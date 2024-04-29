@@ -9,18 +9,17 @@ import { totalUsers } from "../../utils/firebase";
 
 const Vendor = () => {
   const {id}=useParams();
-  const joined_date = new Date()
   const [vendor,setVendor] = useState([])
   console.log(id)
 
   useEffect(function(){
     const vendorFunction = async function(){
       const vendor = await totalUsers()
-      const filter_vednor_based_on_uid = vendor.filter(function(vendor){
+      const filter_vendor_based_on_uid = vendor.filter(function(vendor){
         return vendor.uid==id
       })
-      setVendor(filter_vednor_based_on_uid);
-
+      setVendor(filter_vendor_based_on_uid);
+      console.log(filter_vendor_based_on_uid);
     }
 
     vendorFunction()
@@ -32,15 +31,6 @@ const Vendor = () => {
         <Link to={-1}>Vendors</Link> <BsChevronRight />
         <span className="font-semibold">Pysavant Codes</span>
       </p>
-      {/* {loading ? (
-        <section className="h-[70vh] w-full flex items-center justify-center">
-          <Spinner size="lg" label="Fetching vendor details..." />
-        </section>
-      ) : !loading && !vendorDetails ? (
-        <section className="h-[70vh] w-full flex items-center justify-center">
-          <h3>Cannot find vendor details</h3>
-        </section>
-      ) : ( */}
       {vendor.length===0?<p>Loading Vendor</p>:
       vendor.map(function(vendor){
         return(
@@ -59,13 +49,10 @@ const Vendor = () => {
                   <p className="opacity-60">Store Name:</p>
                   <p>{vendor.businessName}</p>
                 </div>
-                <div className="w-full flex flex-wrap items-center justify-between mb-3">
+                <div className=" space-y-2 w-full flex flex-wrap items-center justify-between mb-3">
                   <p className="opacity-60">Store Description:</p>
                   <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum
-                    pariatur sit tempora eos! Tempora vitae quo iusto quisquam
-                    voluptatem quas totam molestiae, officia, quasi magnam
-                    temporibus non eos nemo sequi.
+                    {vendor.storeDescription}
                   </p>
                 </div>
                 <div className="w-full flex flex-wrap items-center justify-between mb-3">
@@ -75,11 +62,11 @@ const Vendor = () => {
 
                 <div className="w-full flex flex-wrap items-center justify-between mb-3">
                   <p className="opacity-60">Joined on:</p>
-                  <p>{joined_date.toLocaleDateString(vendor.createdAt.seconds*1000)}</p>
+                  <p>{}</p>
                 </div>
                 <div className="flex gap-3 mt-5">
                   <button
-                    onClick={() => navigate(`${key}`)}
+                    // onClick={() => navigate(`${key}`)}
                     type="button"
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-[#F32013] px-2.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#F32013] focus:outline-none focus:ring-2 focus:ring-[#F32013] focus:ring-offset-2 sm:w-full sm:flex-grow-0"
                   >

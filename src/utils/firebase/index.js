@@ -170,17 +170,33 @@ export const getUserDetails = async (userAuth) => {
 
   return {};
 };
-// get user based on uid
-const getUserByUid = function(user_id){
-
-}
 
 // get screen collection
-const getScreenCollections = async function(){
-  
+export const getScreenCollections = async function(){
+  const data = [] 
+  const screenCollection = collection(db,"piechart")
+  try{
+    const screenSnap = await getDocs(screenCollection)
+    screenSnap.forEach(function(eachData){
+      data.push(eachData.data())
+    })
+    return data
+  }catch(error){
+    console.log(error)
+  }
+
 }
 
-
+// update screenCollection 
+export const updateScreenCollection = async function(object){
+  const screenRef = doc(db,"piechart","UCTclap25Sp9bDPZUnFx")
+  try{
+    const updateScreen = await updateDoc(screenRef, object)
+    return updateScreen;
+  }catch(error){
+    console.log(error)
+  }
+}
 // get user delivery address
 
 export const getUserDeliveryAddress = async (userId) => {
