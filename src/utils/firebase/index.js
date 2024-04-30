@@ -27,6 +27,7 @@ import {
   increment,
 } from "firebase/firestore";
 import axios from "axios";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZ66atUo9ldac_rdj_y1m5MucDmPQkqEo",
@@ -48,7 +49,9 @@ googleProvider.setCustomParameters({
 
 export const auth = getAuth();
 
-export const db = getFirestore();
+export const db = getFirestore(firebaseApp);
+
+export const storage = getStorage(firebaseApp);
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
