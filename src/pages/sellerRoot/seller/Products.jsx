@@ -114,13 +114,15 @@ const Products = () => {
                     key={index + "123"}
                     className=" space-y-2 border-[1px] border-gray-300 rounded-md"
                   >
-                    <div className="w-full h-[70%] flex justify-center items-center">
+                   {eachProduct.imageUrls.length > 0 && <div className="w-full h-[70%] flex justify-center items-center">
                       <img
                         src={eachProduct.imageUrls[0].url}
                         alt=""
                         className=" w-full rounded-md"
                       />
-                    </div>
+                    </div>} 
+
+                    
 
                     <div className=" pb-4 px-2 w-full h-[30%]">
                       <section className=" flex justify-between">

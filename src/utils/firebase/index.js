@@ -34,6 +34,7 @@ import {
   orderByChild,
   ref,
 } from "firebase/database";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZ66atUo9ldac_rdj_y1m5MucDmPQkqEo",
@@ -56,6 +57,8 @@ googleProvider.setCustomParameters({
 export const auth = getAuth();
 
 export const db = getFirestore();
+export const storage = getStorage(firebaseApp);
+export const rdb = getDatabase(firebaseApp);
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;

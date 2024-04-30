@@ -11,15 +11,35 @@ function AddSellerProduct() {
   const params = new URLSearchParams(window.location.search);
   const paramValue = params.get("param");
 
+  React.useEffect(() => {
+    let isMounted = true;
+
+    console.log("ADD SELLER PRODUCT " + isMounted)
+
+
+    // Cleanup function to set isMounted to false when the component unmounts
+    return () => {
+      isMounted = false;
+      setProductDetails(resetFields);
+      setParam(null)
+      setSelectedFiles([]);
+      setTags([]);
+      setVariations([]);
+      console.log("ADD SELLER PRODUCT " + isMounted)
+    };
+  }, []);
+
+
   const {
-    categories,
     isLoading,
+    categories,
     setSelectedFiles,
     selectedFiles,
     productDetails,
     dragOver,
     resetFields,
     param,
+    setParam,
     setProductDetails,
     getProductDetailsFromDatabase,
     variations,
@@ -36,6 +56,7 @@ function AddSellerProduct() {
     handleAddVariation,
     handleProductDetailsInputChange,
     addProductToDatabase,
+    deleteParticularImageFromStorage,
     handleDeleteItemsFromArray,
     handleDrop,
   } = useContext(SellerContext);
@@ -43,6 +64,7 @@ function AddSellerProduct() {
   React.useEffect(() => {
     getProductDetailsFromDatabase(paramValue);
   }, []);
+
   return (
     <React.Fragment>
       {isLoading ? (
@@ -56,7 +78,7 @@ function AddSellerProduct() {
               className=" text-lg font-bold"
               onClick={() => {
                 navigate(-1);
-                setProductDetails(resetFields);
+              
               }}
             >
               ←
@@ -126,9 +148,9 @@ function AddSellerProduct() {
                       <div key={index} className="w-28 h-28 m-2 relative">
                             <div
                             onClick={() =>
-                              handleDeleteItemsFromArray(
+                              deleteParticularImageFromStorage(
                                 index,
-                                setProductDetails
+                                setProductDetails.imageUrls
                               )
                             }
                             className="w-6 h-6 flex justify-center items-center rounded-full cursor-pointer  bg-green-500 absolute right-0 top-0"
@@ -513,12 +535,15 @@ function AddSellerProduct() {
                 <button className=" self-end border-[1px] border-yellow-600 text-sm px-5 py-2 text-yellow-600 rounded-md">
                   Cancel
                 </button>
+                
                 <button
                   className=" self-end border-[1px]  text-sm px-5 py-2 text-white bg-green-800 rounded-md"
                   onClick={() => addProductToDatabase()}
                 >
-                  Create Product
+                 {( param === null )? "Create Product"  : "Edit Product" }
                 </button>
+
+                <p>{param}</p>
               </section>
             </main>
           </div>

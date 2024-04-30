@@ -2,7 +2,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { db, storage } from "../utils/firebase";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { v4 } from "uuid";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { useNavigate } from "react-router";
 
 export const SellerContext = createContext();
@@ -17,7 +22,10 @@ const SellerProvider = ({ children }) => {
   // const navigate = useNavigate();
   const [param, setParam] = useState("");
 
-  
+  const [
+    imagesToDeleteFromStorageAfterEditing,
+    setImagesToDeleteFromStorageAfterEditing,
+  ] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [variations, setVariations] = useState([]);
@@ -63,23 +71,29 @@ const SellerProvider = ({ children }) => {
   const [dragOver, setDragOver] = React.useState(false);
 
   const getProductDetailsFromDatabase = async (urlParam) => {
-    setIsLoading(true)
+    setIsLoading(true);
     if (urlParam === null) {
       setIsLoading(true);
-      setProductDetails(resetFields)
+      setProductDetails(resetFields);
       console.log("no param");
       setIsLoading(false);
       return;
     }
     console.log(urlParam);
-    setParam(urlParam)
+    setParam(urlParam);
 
     try {
       setIsLoading(true);
-      const productDocumentRef = doc(db, 'users', '9XSNjvRBTrI3fwHRBIpu', 'products', urlParam);
+      const productDocumentRef = doc(
+        db,
+        "users",
+        "9XSNjvRBTrI3fwHRBIpu",
+        "products",
+        urlParam
+      );
       const productDocumentSnapshot = await getDoc(productDocumentRef);
       const productData = productDocumentSnapshot.data();
-      console.log(productData)
+      console.log(productData);
       setProductDetails(productData);
       setIsLoading(false);
     } catch (error) {
@@ -87,30 +101,27 @@ const SellerProvider = ({ children }) => {
     }
   };
 
+  const getCategoriesFromDb = async () => {
+    try {
+      setIsLoading(true);
+      const categoriesDocumentReference = doc(
+        db,
+        "jamazan-options",
+        "categories"
+      );
+      const categoriesDocumentSnapshot = await getDoc(
+        categoriesDocumentReference
+      );
+      const categoriesData = categoriesDocumentSnapshot.data();
+      setCategories(categoriesData.categories);
+      console.log(categoriesData.categories);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const getCategoriesFromDb = async () => {
-      try {
-        setIsLoading(true);
-        const categoriesDocumentReference = doc(
-          db,
-          "jamazan-options",
-          "categories"
-        );
-        const categoriesDocumentSnapshot = await getDoc(
-          categoriesDocumentReference
-        );
-        const categoriesData = categoriesDocumentSnapshot.data();
-        if (categoriesData && categoriesData.categories) {
-          setCategories(categoriesData.categories);
-          console.log(categoriesData.categories);
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     getCategoriesFromDb();
   }, []);
 
@@ -199,7 +210,6 @@ const SellerProvider = ({ children }) => {
     ]);
   };
 
-
   //////////////////////////////////////////////////////////////// HANDLERS FOR HANDLING INPUT TAGS //////////////////////////////////////////////////////////////////
 
   const handleProductDetailsInputChange = (e) => {
@@ -258,15 +268,33 @@ const SellerProvider = ({ children }) => {
             filename: fileName,
             url: downloadURL,
           });
+
+          console.log("PUSHED ...............................");
         })
       );
+
+      setProductDetails((prevState) => ({
+        ...prevState,
+        imageUrls: [
+          ...prevState.imageUrls,
+          prevState.imageUrls.concat(
+            downloadURLs.map((item) => ({
+              filename: item.filename,
+              url: item.url,
+            }))
+          ),
+        ],
+      }));
+      if (param !== null) {
+        return;
+      }
 
       console.log(downloadURLs);
 
       // Update productDetails with imageUrls
       const updatedProductDetails = {
         ...productDetails,
-        imageUrls: downloadURLs,
+        // imageUrls: downloadURLs,
         variations: variations,
         tags: tags,
       };
@@ -293,52 +321,69 @@ const SellerProvider = ({ children }) => {
 
   const deleteImageFromStorage = async ({ fileArray, productName }) => {
     try {
-      await Promise.all(fileArray.map(async (item) => {
-        // Create a reference to the file in Firebase Storage
-        const fileRef = ref(
-          storage,
-          `Imgs/9XSNjvRBTrI3fwHRBIpu/${productName}/${item.filename}`
-        );
-        // Delete the file from Firebase Storage
-        await deleteObject(fileRef);
-  
-        console.log("Image deleted successfully.");
-      }));
+      await Promise.all(
+        fileArray.map(async (item) => {
+          // Create a reference to the file in Firebase Storage
+          const fileRef = ref(
+            storage,
+            `Imgs/9XSNjvRBTrI3fwHRBIpu/${productName}/${item.filename}`
+          );
+          // Delete the file from Firebase Storage
+          await deleteObject(fileRef);
+
+          console.log("Image deleted successfully.");
+        })
+      );
     } catch (error) {
       console.error("Error deleting image:", error);
     }
   };
 
-  const deleteParticularImageFromStorage = async ( fileName, productName ) => {
+  const deleteParticularImageFromStorage = (indexToRemove) => {
     try {
-      const fileRef = ref(
-        storage,
-        `Imgs/9XSNjvRBTrI3fwHRBIpu/${productName}/${fileName}`
+      setImagesToDeleteFromStorageAfterEditing((prevState) =>
+        prevState.concat(productDetails.imageUrls[indexToRemove].filename)
       );
-      // Delete the file from Firebase Storage
-      await deleteObject(fileRef);
 
+      const updatedImageUrls = [
+        ...productDetails.imageUrls.slice(0, indexToRemove),
+        ...productDetails.imageUrls.slice(indexToRemove + 1),
+      ];
+
+      setProductDetails((prevState) => ({
+        ...prevState,
+        imageUrls: updatedImageUrls,
+      }));
       console.log("Image deleted successfully.");
     } catch (error) {
       console.error("Error deleting image:", error);
     }
   };
 
-  const deleteImageFromFirestore = async(image) => {
-    try {
-      const productDocumentRef = doc(db, "users", "9XSNjvRBTrI3fwHRBIpu", 'products', productId);
-      deleteImageFromStorage({fileArray:fileArray, productName:productName})
-      await deleteDoc(productDocumentRef);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // const deleteImageFromFirestore = async(image) => {
+  //   try {
+  //     const productDocumentRef = doc(db, "users", "9XSNjvRBTrI3fwHRBIpu", 'products', productId);
+  //     deleteImageFromStorage({fileArray:fileArray, productName:productName})
+  //     await deleteDoc(productDocumentRef);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
   useEffect(() => {
     console.log(variations);
     console.log(tags);
     console.log(productDetails);
     console.log("Selected Files:", selectedFiles);
-  }, [variations, tags, productDetails, selectedFiles]);
+    console.log(
+      "images to delete from storage" + imagesToDeleteFromStorageAfterEditing
+    );
+  }, [
+    variations,
+    tags,
+    productDetails,
+    selectedFiles,
+    imagesToDeleteFromStorageAfterEditing,
+  ]);
 
   const values = {
     categories,
@@ -354,6 +399,7 @@ const SellerProvider = ({ children }) => {
     setVariations,
     tags,
     setTags,
+    deleteParticularImageFromStorage,
     setProductDetails,
     setSelectedFiles,
     handleFileSelect,
