@@ -18,8 +18,10 @@ export const AccountHeader = ({
         />
       )}
       <div>
-        <h1 className="text-[24px] md:text-3xl font-semibold">{heading}</h1>
-        <p className="text-sm md:text-base opacity-60 mt-2">{text}</p>
+        <h1 className="text-[24px] md:text-3xl font-bold">{heading}</h1>
+        {text !== "" && (
+          <p className="text-sm md:text-base opacity-60 mt-2">{text}</p>
+        )}
       </div>
     </div>
   );

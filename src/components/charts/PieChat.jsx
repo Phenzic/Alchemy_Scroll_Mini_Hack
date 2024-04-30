@@ -1,4 +1,6 @@
-import React, { useLayoutEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import { getScreenCollections } from "../../utils/firebase";
+import React, { useLayoutEffect,useEffect, useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -20,22 +22,34 @@ ChartJS.register(
 );
 
 export function PieChat({
-  totalVisits = {
-    dextop: 3000,
-    mobile: 4500,
-    tablet: 10000,
-    unknown: 89,
-  },
+  // totalVisits = {
+  //   dextop: 3000,
+  //   mobile: 4500,
+  //   tablet: 10000,
+  //   unknown: 89,
+  // },
   graphData,
 }) {
+  const [totalVisits,setTotalVisits] =  useState({laptop:1,phone:5,tablet:3,unknown:2})
+  
+  useEffect(function(){
+    const screenCollectionFunction = async function(){
+      const screenCollection = await getScreenCollections()
+      console.log(screenCollection)
+      setTotalVisits(screenCollection[0])
+    }
+
+    screenCollectionFunction()
+  },[])
+
   const pieData = {
-    labels: ["Dextop", "Mobile", "Tablet", "Unknown"],
+    labels: ["Laptop", "Mobile", "Tablet", "Unknown"],
     datasets: [
       {
         label: "Number of visitors",
         data: [
-          totalVisits.dextop,
-          totalVisits.mobile,
+          totalVisits.laptop,
+          totalVisits.phone,
           totalVisits.tablet,
           totalVisits.unknown,
         ],

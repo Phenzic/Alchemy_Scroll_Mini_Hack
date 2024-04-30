@@ -1,8 +1,39 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
+import {totalUsers} from "../../utils/firebase/index"
+
+
 
 const BarChart = () => {
+
+  const [months, setMonths] = useState([[],[],[],[4,5],[],[],[],[],[],[],[],[]])
+  const [loadingData,setLoadingData] = useState(false);
+  
+  useEffect(function(){
+    setLoadingData(true)
+    const all_users = async function(){
+      const data = await totalUsers()
+      const test = data.map(function(each){
+        const timeStampInSeconds = each.createdAt.seconds
+        const date = new Date(timeStampInSeconds*1000)
+        const month = date.getMonth( ) 
+        return (month);       
+      })
+      // console.log(test);
+      // console.log(months[test[0]])
+      // setMonths(function(prev){
+      //   return(
+      //     [...prev,months[test[0]]?.concat(test)]
+      //   )
+      // })
+      setLoadingData(false)
+      
+    }
+    all_users();
+    
+  },[])
+
   const options = {
     chart: {
       id: "basic-bar",
@@ -57,18 +88,23 @@ const BarChart = () => {
   const series = [
     {
       name: "Amount",
-      data: [275, 470, 350, 375, 275, 350, 225, 325, 275, 200, 500, 300,300],
+      data: months.map(function(_,index){return months[index]?.length}),
     },
   ];
 
   return (
-    <ReactApexChart
+    <React.Fragment>
+      {
+        loadingData?<p>Loading the Admin BarChart</p>:
+      <ReactApexChart
       className={"w-full"}
       options={options}
       series={series}
       type="bar"
       height={350}
-    />
+      />
+      }
+    </React.Fragment>
   );
 };
 

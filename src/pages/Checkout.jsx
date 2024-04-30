@@ -5,64 +5,71 @@ import { useCart } from "../context/CartContext";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { BsArrowRight, BsCheck, BsClock, BsX } from "react-icons/bs";
 import { useUser } from "../context/UserContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AccountHeader } from "../components/account/AccountHeader";
+import DeliveryAddress from "../components/account/DeliveryAddress";
+import { AccountButtonOutline } from "../components/Buttons/AccountButtons";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-const products = [
-  {
-    id: 1,
-    title: "Basic Tee",
-    href: "#",
-    price: "$32.00",
-    color: "Black",
-    size: "Large",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-  },
-  // More products...
-];
-const deliveryMethods = [
-  {
-    id: 1,
-    title: "Standard",
-    turnaround: "4–10 business days",
-    price: "$5.00",
-  },
-  { id: 2, title: "Express", turnaround: "2–5 business days", price: "$16.00" },
-];
-const paymentMethods = [
-  { id: "credit-card", title: "Credit card" },
-  { id: "paypal", title: "PayPal" },
-  { id: "etransfer", title: "eTransfer" },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const Checkout = () => {
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
-    deliveryMethods[0]
-  );
-  const {
-    cartItems,
-    addToCart,
-    removeFromCart,
-    removeItemFromCart,
-    getCartTotal,
-  } = useCart();
-  const { currentUser } = useUser();
+  const { cartItems, addToCart, removeFromCart, getCartTotal } = useCart();
+  const { currentUser, userDetails } = useUser();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState("");
+
+  const makePayment = async () => {
+    if (email == "" || selectedAddress == "") {
+      toast.error(
+        "Please fill in all fields and make sure an address is selected to continue"
+      );
+    } else {
+      setIsLoading(true);
+      const stripe = await loadStripe(
+        "pk_test_51P81xGRsmFh9wreMAPKsFUb4rxicJJyWp347tq7y0qgksvvXJC2EVepIwk2SkzENu8InXzOUSHyAYFV1j0w3BG0q00Gk8PmyRr"
+      );
+
+      const body = {
+        products: cartItems.map((item) => {
+          let newObj = { ...item, name: item.title };
+          delete newObj["title"];
+          delete newObj["description"];
+          return { ...newObj };
+        }),
+        customerEmail: email,
+        userId: userDetails.uid,
+        addressId: selectedAddress,
+      };
+
+      const response = await axios.post(
+        `https://jamazan-backend.vercel.app/create-checkout-session`,
+        body
+      );
+
+      const session = await response.data;
+      const result = stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        toast.error("An error occured while making payment");
+        console.log(result.error);
+      }
+    }
+  };
 
   return (
     <>
       {currentUser ? (
         <div className="">
-          <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h1 className="text-[26px] font-bold max-lg:text-2xl mb-5">
-              Checkout
-            </h1>
+          <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 max-md:pt-5 sm:px-6 lg:max-w-7xl lg:px-8">
+            <AccountHeader hasBack text="" heading={`Checkout`} />
 
-            <form className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+            <div className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16 mt-5">
               <div>
                 <div>
                   <h2 className="text-lg font-medium text-gray-900">
@@ -78,6 +85,8 @@ const Checkout = () => {
                     </label>
                     <div className="mt-1">
                       <input
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         type="email"
                         id="email-address"
                         name="email-address"
@@ -89,197 +98,21 @@ const Checkout = () => {
                 </div>
 
                 <div className="mt-10 border-t border-gray-200 pt-10">
-                  <h2 className="text-lg font-medium text-gray-900">
+                  <h2 className="text-lg font-medium text-gray-900 mb-4">
                     Delivery Information
                   </h2>
-
-                  
-                </div>
-
-                <div className="mt-10 border-t border-gray-200 pt-10">
-                  <RadioGroup
-                    value={selectedDeliveryMethod}
-                    onChange={setSelectedDeliveryMethod}
-                  >
-                    <RadioGroup.Label className="text-lg font-medium text-gray-900">
-                      Delivery method
-                    </RadioGroup.Label>
-
-                    <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                      {deliveryMethods.map((deliveryMethod) => (
-                        <RadioGroup.Option
-                          key={deliveryMethod.id}
-                          value={deliveryMethod}
-                          className={({ checked, active }) =>
-                            classNames(
-                              checked
-                                ? "border-transparent"
-                                : "border-gray-300",
-                              active ? "ring-2 ring-[#086047]" : "",
-                              "relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-                            )
-                          }
-                        >
-                          {({ checked, active }) => (
-                            <>
-                              <span className="flex flex-1">
-                                <span className="flex flex-col">
-                                  <RadioGroup.Label
-                                    as="span"
-                                    className="block text-sm font-medium text-gray-900"
-                                  >
-                                    {deliveryMethod.title}
-                                  </RadioGroup.Label>
-                                  <RadioGroup.Description
-                                    as="span"
-                                    className="mt-1 flex items-center text-sm text-gray-500"
-                                  >
-                                    {deliveryMethod.turnaround}
-                                  </RadioGroup.Description>
-                                  <RadioGroup.Description
-                                    as="span"
-                                    className="mt-6 text-sm font-medium text-gray-900"
-                                  >
-                                    {deliveryMethod.price}
-                                  </RadioGroup.Description>
-                                </span>
-                              </span>
-                              {checked ? (
-                                <CheckCircleIcon
-                                  className="h-5 w-5 text-[#086047]"
-                                  aria-hidden="true"
-                                />
-                              ) : null}
-                              <span
-                                className={classNames(
-                                  active ? "border" : "border-2",
-                                  checked
-                                    ? "border-[#086047]"
-                                    : "border-transparent",
-                                  "pointer-events-none absolute -inset-px rounded-lg"
-                                )}
-                                aria-hidden="true"
-                              />
-                            </>
-                          )}
-                        </RadioGroup.Option>
-                      ))}
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                {/* Payment */}
-                <div className="mt-10 border-t border-gray-200 pt-10">
-                  <h2 className="text-lg font-medium text-gray-900">Payment</h2>
-
-                  <fieldset className="mt-4">
-                    <legend className="sr-only">Payment type</legend>
-                    <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
-                      {paymentMethods.map((paymentMethod, paymentMethodIdx) => (
-                        <div
-                          key={paymentMethod.id}
-                          className="flex items-center"
-                        >
-                          {paymentMethodIdx === 0 ? (
-                            <input
-                              id={paymentMethod.id}
-                              name="payment-type"
-                              type="radio"
-                              defaultChecked
-                              className="h-4 w-4 border-gray-300 text-[#086047] focus:ring-[#086047]"
-                            />
-                          ) : (
-                            <input
-                              id={paymentMethod.id}
-                              name="payment-type"
-                              type="radio"
-                              className="h-4 w-4 border-gray-300 text-[#086047] focus:ring-[#086047]"
-                            />
-                          )}
-
-                          <label
-                            htmlFor={paymentMethod.id}
-                            className="ml-3 block text-sm font-medium text-gray-700"
-                          >
-                            {paymentMethod.title}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </fieldset>
-
-                  <div className="mt-6 grid grid-cols-4 gap-x-4 gap-y-6">
-                    <div className="col-span-4">
-                      <label
-                        htmlFor="card-number"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Card number
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          id="card-number"
-                          name="card-number"
-                          autoComplete="cc-number"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#086047] focus:ring-[#086047] sm:text-sm p-3 border"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-span-4">
-                      <label
-                        htmlFor="name-on-card"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Name on card
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          id="name-on-card"
-                          name="name-on-card"
-                          autoComplete="cc-name"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#086047] focus:ring-[#086047] sm:text-sm p-3 border"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-span-3">
-                      <label
-                        htmlFor="expiration-date"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Expiration date (MM/YY)
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          name="expiration-date"
-                          id="expiration-date"
-                          autoComplete="cc-exp"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#086047] focus:ring-[#086047] sm:text-sm p-3 border"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="cvc"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        CVC
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          name="cvc"
-                          id="cvc"
-                          autoComplete="csc"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#086047] focus:ring-[#086047] sm:text-sm p-3 border"
-                        />
-                      </div>
-                    </div>
+                  <DeliveryAddress
+                    onAddressSelected={(address) => setSelectedAddress(address)}
+                    isHome={false}
+                  />
+                  <div className="flex justify-end mt-5 py-3">
+                    <AccountButtonOutline
+                      text="Add new address"
+                      onClick={() => {
+                        navigate("/account/profile/add-new-address");
+                      }}
+                      className="px-5"
+                    />
                   </div>
                 </div>
               </div>
@@ -306,7 +139,7 @@ const Checkout = () => {
                           <div className="relative flex justify-between max-xl:flex-col sm:gap-x-6 sm:pr-0">
                             <div>
                               <div className="flex justify-between">
-                                <h3 className="text-sm">
+                                <h3 className="text-sm line-clamp-3">
                                   <a
                                     href={product.href}
                                     className="font-medium text-gray-700 hover:text-gray-800"
@@ -409,15 +242,27 @@ const Checkout = () => {
 
                   <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                     <button
-                      disabled={cartItems.length < 1}
+                      disabled={cartItems.length < 1 || isLoading}
+                      onClick={() => makePayment()}
                       className="w-full rounded-md border border-transparent bg-[#086047] px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-[#086047] focus:outline-none focus:ring-2 focus:ring-[#086047] focus:ring-offset-2 focus:ring-offset-gray-50 disabled:opacity-50"
                     >
-                      Confirm order
+                      {isLoading ? (
+                        <div
+                          className="inline-block h-4 w-4 animate-spin rounded-full border-[3px] border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                          role="status"
+                        >
+                          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                            Loading...
+                          </span>
+                        </div>
+                      ) : (
+                        "Confirm Order"
+                      )}
                     </button>
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       ) : (

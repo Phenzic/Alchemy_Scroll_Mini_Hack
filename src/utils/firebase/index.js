@@ -27,7 +27,13 @@ import {
   increment,
 } from "firebase/firestore";
 import axios from "axios";
-import { getStorage } from "firebase/storage";
+import {
+  equalTo,
+  get,
+  getDatabase,
+  orderByChild,
+  ref,
+} from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZ66atUo9ldac_rdj_y1m5MucDmPQkqEo",
@@ -49,9 +55,7 @@ googleProvider.setCustomParameters({
 
 export const auth = getAuth();
 
-export const db = getFirestore(firebaseApp);
-
-export const storage = getStorage(firebaseApp);
+export const db = getFirestore();
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
@@ -135,16 +139,27 @@ export const createSellerDocumentFromAuth = async (
   return userDocRef;
 };
 
-// get user details
+// get all users in  collection
+export const totalUsers = async () => {
+  const data = [];
+  try {
+    const usersCollection = collection(db, "users");
+    const eachUser = await getDocs(usersCollection);
+    eachUser.forEach(function (user) {
+      data.push(user.data());
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
+// get user details
 export const getUserDetails = async (userAuth) => {
   if (!userAuth) return "";
-
   try {
     const userDocRef = doc(db, "users", userAuth.uid);
-
     const userSnapshot = await getDoc(userDocRef);
-
     if (userSnapshot.exists()) {
       return userSnapshot.data();
     }
@@ -155,11 +170,55 @@ export const getUserDetails = async (userAuth) => {
   return {};
 };
 
+
+// get screen collection
+export const getScreenCollections = async function(){
+  const data = [] 
+  const screenCollection = collection(db,"piechart")
+  try{
+    const screenSnap = await getDocs(screenCollection)
+    screenSnap.forEach(function(eachData){
+      data.push(eachData.data())
+    })
+    return data
+  }catch(error){
+    console.log(error)
+  }
+
+}
+
+// update screenCollection 
+export const updateScreenCollection = async function(object){
+  const screenRef = doc(db,"piechart","UCTclap25Sp9bDPZUnFx")
+  try{
+    const updateScreen = await updateDoc(screenRef, object)
+    return updateScreen;
+  }catch(error){
+    console.log(error)
+  }
+}
+
 // get user delivery address
 
 export const getUserDeliveryAddress = async (userId) => {
   try {
     const q = query(collection(db, "addresses"), where("userId", "==", userId));
+    let temp = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      temp.push(doc.data());
+    });
+    return temp;
+  } catch (e) {
+    console.log(e);
+  }
+
+  return {};
+};
+
+export const getUserOrders = async (userId) => {
+  try {
+    const q = query(collection(db, "orders"), where("userId", "==", userId));
     let temp = [];
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {

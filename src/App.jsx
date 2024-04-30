@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { productData } from "./utils/testData";
 import ProductCard from "./components/ProductCard";
@@ -19,8 +19,39 @@ import {
 import { CiApple, CiDumbbell } from "react-icons/ci";
 import CategoriesCard from "./components/CategoriesCard";
 import { Link } from "react-router-dom";
+import { getScreenCollections, updateScreenCollection } from "./utils/firebase";
 
 function App() {
+  const screenWidth = window.innerWidth;
+  const [test,setTest] = useState({tablet:0,phone:0,laptop:0,unknown:0})
+  
+  useEffect(function(){
+    const screenCollectionFunction = async function(){
+      const screenCollection = await getScreenCollections()
+      console.log(screenCollection)
+      setTest(screenCollection[0])
+    }
+    screenCollectionFunction()
+    console.log(test)
+
+    if (screenWidth>=1200){
+      updateScreenCollection({laptop:test.laptop+=1})
+      console.log("Laptop")
+    }
+    else if(screenWidth>500 && screenWidth<1200){
+      updateScreenCollection({tablet:test.tablet+=1})
+      console.log("Tablet")
+    }else if (screenWidth>=300 && screenWidth<500){
+      updateScreenCollection({phone:test.phone+=1})
+
+      console.log("Phone")
+    }else{
+      console.log("Unknown")
+      updateScreenCollection({unknown:test.unknown+=1})
+
+    }
+  },[])
+  
   const categories = [
     {
       category: "Fashion",
@@ -47,6 +78,8 @@ function App() {
       icon: <CiApple size={30} />,
     },
   ];
+
+  
   return (
     <section className="p-4 py-10">
       {/* Banners */}
