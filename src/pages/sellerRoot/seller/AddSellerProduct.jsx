@@ -25,6 +25,7 @@ function AddSellerProduct() {
       setSelectedFiles([]);
       setTags([]);
       setVariations([]);
+    setImagesToDeleteFromStorageAfterEditing([])
       console.log("ADD SELLER PRODUCT " + isMounted)
     };
   }, []);
@@ -40,6 +41,7 @@ function AddSellerProduct() {
     resetFields,
     param,
     setParam,
+    Adddd,
     setProductDetails,
     getProductDetailsFromDatabase,
     variations,
@@ -47,6 +49,8 @@ function AddSellerProduct() {
     tags,
     setTags,
     setVariations,
+    setImagesToDeleteFromStorageAfterEditing,
+
     handleFileSelect,
     enterTagEvent,
     handleTagChange,
@@ -543,6 +547,10 @@ function AddSellerProduct() {
                  {( param === null )? "Create Product"  : "Edit Product" }
                 </button>
 
+                <button onClick={() => Adddd()} className=" self-end border-[1px] border-yellow-600 text-sm px-5 py-2 text-yellow-600 rounded-md">
+                  Cancel
+                </button>
+                
                 <p>{param}</p>
               </section>
             </main>

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { db, storage } from "../utils/firebase";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { v4 } from "uuid";
 import {
   deleteObject,
@@ -33,6 +33,7 @@ const SellerProvider = ({ children }) => {
   const [tagInputValue, setTagInputValue] = useState("");
   const [productDetails, setProductDetails] = useState({
     name: "",
+    imageStorageFileName: "",
     description: "",
     otherInformation: "",
     price: 0,
@@ -52,6 +53,7 @@ const SellerProvider = ({ children }) => {
 
   const resetFields = {
     name: "",
+    imageStorageFileName: "",
     description: "",
     otherInformation: "",
     price: 0,
@@ -256,7 +258,7 @@ const SellerProvider = ({ children }) => {
       await Promise.all(
         selectedFiles.map(async (file) => {
           const fileName = v4();
-          const filePath = `Imgs/9XSNjvRBTrI3fwHRBIpu/${productDetails.name}/${fileName}`;
+          const filePath = `Imgs/9XSNjvRBTrI3fwHRBIpu/${(param !== null)?productDetails.imageStorageFileName:productDetails.name}/${fileName}`;
           const storageRef = ref(storage, filePath);
           const snapshot = await uploadBytes(storageRef, file);
           console.log("File Uploaded");
@@ -273,40 +275,59 @@ const SellerProvider = ({ children }) => {
         })
       );
 
-      setProductDetails((prevState) => ({
-        ...prevState,
-        imageUrls: [
-          ...prevState.imageUrls,
-          prevState.imageUrls.concat(
-            downloadURLs.map((item) => ({
-              filename: item.filename,
-              url: item.url,
-            }))
-          ),
-        ],
-      }));
-      if (param !== null) {
-        return;
-      }
-
-      console.log(downloadURLs);
-
       // Update productDetails with imageUrls
       const updatedProductDetails = {
         ...productDetails,
-        // imageUrls: downloadURLs,
-        variations: variations,
-        tags: tags,
+        imageStorageFileName:
+          param !== null
+            ? productDetails.imageStorageFileName
+            : productDetails.name,
+        imageUrls: [
+          ...productDetails.imageUrls,
+          ...downloadURLs.map((item) => ({
+            filename: item.filename,
+            url: item.url,
+          })),
+        ],
+        tags: [...productDetails.tags, ...tags.map((item) => item)],
+        variations: [
+          ...productDetails.variations,
+          ...variations.map((item) => ({
+            type: item.type,
+            variation: item.variation,
+          })),
+        ],
       };
 
-      // Add product details to the Firestore collection
-      await addDoc(collectionRef, updatedProductDetails);
+      if (param !== null) {
+        const productRef = doc(
+          db,
+          "users",
+          "9XSNjvRBTrI3fwHRBIpu",
+          "products",
+          param
+        );
+        deleteImageFromStorage()
+        await updateDoc(productRef, updatedProductDetails);
+        console.log("PRODUCT UPDATED");
+        // setProductDetails(resetFields);
+        // setSelectedFiles([]);
+        // setTags([]);
+        // setVariations([]);
+        // navigate("/seller/products");
+        setIsLoading(false);
+        return;
+      }
+
+      // Add product details (including imageUrls) to Firestore
+      const productRef = await addDoc(collectionRef, updatedProductDetails);
+      console.log("PRODUCT UPLOADED with ID:", productRef.id);
 
       console.log("PRODUCT UPLOADED");
-      setProductDetails(resetFields);
-      setSelectedFiles([]);
-      setTags([]);
-      setVariations([]);
+      // setProductDetails(resetFields);
+      // setSelectedFiles([]);
+      // setTags([]);
+      // setVariations([]);
       // navigate("/seller/products");
       setIsLoading(false);
     } catch (error) {
@@ -314,19 +335,22 @@ const SellerProvider = ({ children }) => {
     }
   };
 
+  const Adddd = () => {
+    console.log(productDetails);
+  };
   //////////////////////////////////////////////////////////////// HANDLER FOR DELETING ITEMS FROM ANY ARRAY INPUT //////////////////////////////////////////////////////////////////
   const handleDeleteItemsFromArray = (index, setArray) => {
     setArray((prevValues) => prevValues.filter((_, i) => i !== index));
   };
 
-  const deleteImageFromStorage = async ({ fileArray, productName }) => {
+  const deleteImageFromStorage = async () => {
     try {
       await Promise.all(
-        fileArray.map(async (item) => {
+        imagesToDeleteFromStorageAfterEditing.map(async (item) => {
           // Create a reference to the file in Firebase Storage
           const fileRef = ref(
             storage,
-            `Imgs/9XSNjvRBTrI3fwHRBIpu/${productName}/${item.filename}`
+            `Imgs/9XSNjvRBTrI3fwHRBIpu/${productDetails.imageStorageFileName}/${item}`
           );
           // Delete the file from Firebase Storage
           await deleteObject(fileRef);
@@ -339,7 +363,7 @@ const SellerProvider = ({ children }) => {
     }
   };
 
-  const deleteParticularImageFromStorage = (indexToRemove) => {
+  const deleteParticularImageFromStorage = async (indexToRemove) => {
     try {
       setImagesToDeleteFromStorageAfterEditing((prevState) =>
         prevState.concat(productDetails.imageUrls[indexToRemove].filename)
@@ -397,8 +421,10 @@ const SellerProvider = ({ children }) => {
     getProductDetailsFromDatabase,
     setParam,
     setVariations,
+    Adddd,
     tags,
     setTags,
+    setImagesToDeleteFromStorageAfterEditing,
     deleteParticularImageFromStorage,
     setProductDetails,
     setSelectedFiles,
