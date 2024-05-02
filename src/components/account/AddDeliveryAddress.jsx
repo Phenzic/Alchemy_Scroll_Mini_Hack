@@ -10,12 +10,15 @@ import { db } from "../../utils/firebase";
 import toast from "react-hot-toast";
 import { useUser } from "../../context/UserContext";
 import { useNavigate } from "react-router";
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
 
 const defaultValue2 = {
   first_name: "",
   last_name: "",
   phone_number: "",
-  street: "",
 };
 
 const cities = [
@@ -40,7 +43,30 @@ export const AddDeliveryAddress = () => {
   const [formField, setFormField] = useState(defaultValue2);
   const [city, setCity] = useState("");
   const [saving, setSaving] = useState(false);
+  const [street, setStreet] = useState("");
   const navigate = useNavigate();
+  const {
+    ready,
+    value,
+    setValue,
+    suggestions: { status, data },
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    requestOptions: {
+      componentRestrictions: {
+        country: "jm",
+      },
+    },
+  });
+
+  const handleSelect1 = async (address) => {
+    setValue(address, false);
+    clearSuggestions();
+
+    const results = await getGeocode({ address });
+    const { lat, lng } = await getLatLng(results[0]);
+    console.log(lat, lng, address);
+  };
 
   const clearFields = () => {
     setFormField(defaultValue2);
@@ -52,7 +78,8 @@ export const AddDeliveryAddress = () => {
       formField.first_name.trim() == "" ||
       formField.last_name.trim() == "" ||
       formField.phone_number.trim() == "" ||
-      formField.street.trim() == "" || city == ""
+      formField.street.trim() == "" ||
+      city == ""
     ) {
       toast.error("Please fill in all fields");
     } else {
@@ -113,6 +140,41 @@ export const AddDeliveryAddress = () => {
             />
           );
         })}
+
+        <div className="relative">
+          <label className="block text-sm leading-6 text-start text-gray-600">
+            Street Description
+          </label>
+          <div className="mt-2">
+            <input
+              disabled={saving || !ready}
+              id={"street"}
+              name={"street"}
+              type={"text"}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              required={true}
+              placeholder={"Street"}
+              className="block w-full text-base rounded-md border-0 py-2 px-4
+   text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
+    placeholder:text-gray-400 focus:ring-2 focus:ring-inset
+     focus:ring-[#305C45] sm:text-sm sm:leading-6 outline-none disabled:opacity-50"
+            />
+          </div>
+          {status}
+          <div>
+            {status === "OK" &&
+              data.map(({ place_id, description }) => {
+                return (
+                  <div key={place_id}>
+                    <p onClick={() => handleSelect1(description)}>
+                      {description}
+                    </p>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
 
         <div className="">
           <Select
