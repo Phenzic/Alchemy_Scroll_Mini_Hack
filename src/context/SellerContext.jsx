@@ -1,6 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { db, storage } from "../utils/firebase";
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { v4 } from "uuid";
 import {
   deleteObject,
@@ -86,13 +93,7 @@ const SellerProvider = ({ children }) => {
 
     try {
       setIsLoading(true);
-      const productDocumentRef = doc(
-        db,
-        "users",
-        "9XSNjvRBTrI3fwHRBIpu",
-        "products",
-        urlParam
-      );
+      const productDocumentRef = doc(db, "products", urlParam);
       const productDocumentSnapshot = await getDoc(productDocumentRef);
       const productData = productDocumentSnapshot.data();
       console.log(productData);
@@ -243,22 +244,21 @@ const SellerProvider = ({ children }) => {
   };
 
   //////////////////////////////////////////////////////////////// ADDING PRODUCT TO DATABASE //////////////////////////////////////////////////////////////////
-  const addProductToDatabase = async () => {
+  const addProductToDatabase = async (uid) => {
     try {
       setIsLoading(true);
-      const collectionRef = collection(
-        db,
-        "users",
-        "9XSNjvRBTrI3fwHRBIpu",
-        "products"
-      );
+      const collectionRef = collection(db, "products");
       let downloadURLs = [];
 
       // Use Promise.all to await all async operations inside map
       await Promise.all(
         selectedFiles.map(async (file) => {
           const fileName = v4();
-          const filePath = `Imgs/9XSNjvRBTrI3fwHRBIpu/${(param !== null)?productDetails.imageStorageFileName:productDetails.name}/${fileName}`;
+          const filePath = `Imgs/${uid}/${
+            param !== null
+              ? productDetails.imageStorageFileName
+              : productDetails.name
+          }/${fileName}`;
           const storageRef = ref(storage, filePath);
           const snapshot = await uploadBytes(storageRef, file);
           console.log("File Uploaded");
@@ -278,6 +278,8 @@ const SellerProvider = ({ children }) => {
       // Update productDetails with imageUrls
       const updatedProductDetails = {
         ...productDetails,
+        sellerId: uid,
+        updatedAt: serverTimestamp(),
         imageStorageFileName:
           param !== null
             ? productDetails.imageStorageFileName
@@ -300,14 +302,8 @@ const SellerProvider = ({ children }) => {
       };
 
       if (param !== null) {
-        const productRef = doc(
-          db,
-          "users",
-          "9XSNjvRBTrI3fwHRBIpu",
-          "products",
-          param
-        );
-        deleteImageFromStorage()
+        const productRef = doc(db, "products", param);
+        deleteImageFromStorage(uid);
         await updateDoc(productRef, updatedProductDetails);
         console.log("PRODUCT UPDATED");
         // setProductDetails(resetFields);
@@ -343,14 +339,14 @@ const SellerProvider = ({ children }) => {
     setArray((prevValues) => prevValues.filter((_, i) => i !== index));
   };
 
-  const deleteImageFromStorage = async () => {
+  const deleteImageFromStorage = async (uid) => {
     try {
       await Promise.all(
         imagesToDeleteFromStorageAfterEditing.map(async (item) => {
           // Create a reference to the file in Firebase Storage
           const fileRef = ref(
             storage,
-            `Imgs/9XSNjvRBTrI3fwHRBIpu/${productDetails.imageStorageFileName}/${item}`
+            `Imgs/${uid}/${productDetails.imageStorageFileName}/${item}`
           );
           // Delete the file from Firebase Storage
           await deleteObject(fileRef);

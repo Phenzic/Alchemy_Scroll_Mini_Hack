@@ -3,10 +3,12 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { CiImageOn } from "react-icons/ci";
 import { SellerContext, useSeller } from "../../../context/SellerContext";
-
-import spinner from "../../../assets/spinner.svg";
+import { BsChevronLeft } from "react-icons/bs";
+import { useUser } from "../../../context/UserContext";
+import { ClipLoader } from "react-spinners";
 
 function AddSellerProduct() {
+  const { userDetails } = useUser();
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const paramValue = params.get("param");
@@ -14,22 +16,20 @@ function AddSellerProduct() {
   React.useEffect(() => {
     let isMounted = true;
 
-    console.log("ADD SELLER PRODUCT " + isMounted)
-
+    console.log("ADD SELLER PRODUCT " + isMounted);
 
     // Cleanup function to set isMounted to false when the component unmounts
     return () => {
       isMounted = false;
       setProductDetails(resetFields);
-      setParam(null)
+      setParam(null);
       setSelectedFiles([]);
       setTags([]);
       setVariations([]);
-    setImagesToDeleteFromStorageAfterEditing([])
-      console.log("ADD SELLER PRODUCT " + isMounted)
+      setImagesToDeleteFromStorageAfterEditing([]);
+      console.log("ADD SELLER PRODUCT " + isMounted);
     };
   }, []);
-
 
   const {
     isLoading,
@@ -67,30 +67,33 @@ function AddSellerProduct() {
 
   React.useEffect(() => {
     getProductDetailsFromDatabase(paramValue);
-  }, []);
+  }, [userDetails]);
 
   return (
     <React.Fragment>
       {isLoading ? (
-        <div className="w-full h-screen flex justify-center items-center">
-          <img src={spinner} alt="spinner" className="animate-spin" />
+        <div className="w-full h-screen flex gap-4 justify-center items-center">
+          <ClipLoader color="#086047"/>
+          <p>Loading Products</p>
         </div>
       ) : (
         productDetails && (
           <div>
             <button
-              className=" text-lg font-bold"
+              className=" bg-[#305C45]/[5%] border text-lg font-bold px-3 py-2 mb-3 rounded-lg flex items-center gap-4"
               onClick={() => {
                 navigate(-1);
-              
               }}
             >
-              ←
+              <BsChevronLeft /> Back
             </button>
 
             <main className=" space-y-5">
               {/* PRODUCT DETAILS */}
-              <section className=" min-[450px]: sm: bg-white px-2 py-4 rounded-md space-y-6">
+              <section className=" bg-white p-5 space-y-6 rounded-lg">
+                <p className="min-[450px]:text-lg text-base font-bold">
+                  Product Info
+                </p>
                 <label htmlFor="" className=" flex flex-col gap-2">
                   <p className=" text-sm font-medium text-gray-700">
                     Product Name
@@ -136,13 +139,14 @@ function AddSellerProduct() {
               </section>
 
               {/* PRODUCT MEDIA */}
-              <section className=" space-y-2 bg-white px-2 py-4 rounded-md">
-                <p className=" text-xs  min-[450px]:text-sm font-semibold">
+              <section className=" bg-white p-5 space-y-2 rounded-lg">
+                <p className="min-[450px]:text-lg text-base font-bold">
                   Product Media &nbsp;{" "}
                   <span className=" text-[10px] min-[450px]:text-sm text-gray-500">
                     "Minium of 2 images must be added"
                   </span>
                 </p>
+
                 <p className=" text-xs min-[450px]:text-sm text-gray-700 font-semibold py-2">
                   Product Photos
                 </p>
@@ -150,18 +154,18 @@ function AddSellerProduct() {
                   <div className="gap-x-4 flex my-9 relative">
                     {productDetails.imageUrls.map((imageUrl, index) => (
                       <div key={index} className="w-28 h-28 m-2 relative">
-                            <div
-                            onClick={() =>
-                              deleteParticularImageFromStorage(
-                                index,
-                                setProductDetails.imageUrls
-                              )
-                            }
-                            className="w-6 h-6 flex justify-center items-center rounded-full cursor-pointer  bg-green-500 absolute right-0 top-0"
-                          >
-                            <p className="font-bold mb-1">x</p>
-                          </div>
-                        
+                        <div
+                          onClick={() =>
+                            deleteParticularImageFromStorage(
+                              index,
+                              setProductDetails.imageUrls
+                            )
+                          }
+                          className="w-6 h-6 flex justify-center items-center rounded-full cursor-pointer  bg-green-500 absolute right-0 top-0"
+                        >
+                          <p className="font-bold mb-1">x</p>
+                        </div>
+
                         <img
                           src={imageUrl.url} // Set src to the URL created using URL.createObjectURL
                           alt={`Preview ${index}`}
@@ -240,8 +244,8 @@ function AddSellerProduct() {
               </section>
 
               {/* PRICING */}
-              <section className=" space-y-3  bg-white px-2 py-4 rounded-md">
-                <p className=" min-[450px]:text-sm text-xs font-semibold">
+              <section className=" bg-white p-5 space-y-2 rounded-lg">
+                <p className="min-[450px]:text-lg text-base font-bold">
                   Pricing
                 </p>
                 <main className="  space-y-3 md:grid md:grid-cols-4 md:justify-between md:items-center">
@@ -306,8 +310,8 @@ function AddSellerProduct() {
               </section>
 
               {/* INVENTORY */}
-              <section className="space-y-2 md:flex md:flex-col bg-white px-2 py-4 rounded-md">
-                <p className="min-[450px]:text-base text-sm font-semibold">
+              <section className=" bg-white p-5 space-y-2 rounded-lg">
+                <p className="min-[450px]:text-lg text-base font-bold">
                   Inventory
                 </p>
                 <main className=" md:grid md:grid-cols-2 md:gap-5 md:items-center md:space-y-0 space-y-3">
@@ -342,8 +346,10 @@ function AddSellerProduct() {
               </section>
 
               {/* VARIATIONS */}
-              <section className=" flex flex-col space-y-3 bg-white px-2 py-4 rounded-md">
-                <p className=" text-base font-semibold">Variation</p>
+              <section className=" bg-white p-5 space-y-2 rounded-lg">
+                <p className="min-[450px]:text-lg text-base font-bold">
+                  Variation
+                </p>
                 <main className=" space-y-5">
                   {variations && variations.length > 0
                     ? variations.map((variation, index) => (
@@ -408,8 +414,8 @@ function AddSellerProduct() {
               </section>
 
               {/* PRODUCT EXTRA DETAILS */}
-              <section className=" space-y-2 bg-white px-2 py-4 rounded-md">
-                <p className="min-[450px]:text-base text-sm font-semibold">
+              <section className=" bg-white p-5 space-y-2 rounded-lg">
+                <p className="min-[450px]:text-lg pb-2 text-sm font-bold">
                   Product Extra Details
                 </p>
                 <main className=" space-y-3">
@@ -471,8 +477,8 @@ function AddSellerProduct() {
               </section>
 
               {/* SHIPPING */}
-              <section className=" bg-white px-2 py-4 space-y-2 rounded-md">
-                <p className="min-[450px]:text-base text-sm font-semibold">
+              <section className=" bg-white p-5 space-y-2 rounded-lg">
+                <p className="min-[450px]:text-lg text-sm font-bold pb-2">
                   Shipping
                 </p>
                 <main className=" space-y-3">
@@ -535,23 +541,22 @@ function AddSellerProduct() {
                 </main>
               </section>
 
-              <section className=" md:justify-end md:gap-10 flex justify-between bg-white px-2 py-4 rounded-md">
-                <button className=" self-end border-[1px] border-yellow-600 text-sm px-5 py-2 text-yellow-600 rounded-md">
-                  Cancel
-                </button>
-                
+              <section className="md:justify-end md:gap-3 flex justify-between bg-white px-4 py-4 rounded-md sticky bottom-2 border items-center">
                 <button
-                  className=" self-end border-[1px]  text-sm px-5 py-2 text-white bg-green-800 rounded-md"
-                  onClick={() => addProductToDatabase()}
+                  className="border-[1px]  text-sm px-5 py-2 text-white bg-green-800 rounded-md"
+                  onClick={() => addProductToDatabase(userDetails.uid)}
                 >
-                 {( param === null )? "Create Product"  : "Edit Product" }
+                  {param === null ? "Create Product" : "Edit Product"}
                 </button>
 
-                <button onClick={() => Adddd()} className=" self-end border-[1px] border-yellow-600 text-sm px-5 py-2 text-yellow-600 rounded-md">
+                <button
+                  onClick={() => Adddd()}
+                  className="border-[1px] border-yellow-600 text-sm px-5 py-2 text-yellow-600 rounded-md"
+                >
                   Cancel
                 </button>
-                
-                <p>{param}</p>
+
+                {param && <p>{param}</p>}
               </section>
             </main>
           </div>

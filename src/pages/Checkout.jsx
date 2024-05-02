@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { RadioGroup } from "@headlessui/react";
-import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useCart } from "../context/CartContext";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { BsArrowRight, BsCheck, BsClock, BsX } from "react-icons/bs";
@@ -9,55 +7,91 @@ import { Link, useNavigate } from "react-router-dom";
 import { AccountHeader } from "../components/account/AccountHeader";
 import DeliveryAddress from "../components/account/DeliveryAddress";
 import { AccountButtonOutline } from "../components/Buttons/AccountButtons";
-import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import { numberWithCommas, validateEmail } from "../utils/helper";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../utils/firebase";
+import CardInput from "../components/CardInput";
 
 const Checkout = () => {
-  const { cartItems, addToCart, removeFromCart, getCartTotal } = useCart();
+  const {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    getCartTotal,
+    getCartTotalRaw,
+  } = useCart();
   const { currentUser, userDetails } = useUser();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [cardName, setCardName] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
+  const stripe = useStripe();
+  const elements = useElements();
 
   const makePayment = async () => {
-    if (email == "" || selectedAddress == "") {
-      toast.error(
-        "Please fill in all fields and make sure an address is selected to continue"
-      );
+    if (!validateEmail(email)) {
+      toast.error("Please enter a valid email");
     } else {
+      if (!stripe || !elements) {
+        return;
+      }
+
       setIsLoading(true);
-      const stripe = await loadStripe(
-        "pk_test_51P81xGRsmFh9wreMAPKsFUb4rxicJJyWp347tq7y0qgksvvXJC2EVepIwk2SkzENu8InXzOUSHyAYFV1j0w3BG0q00Gk8PmyRr"
-      );
+      try {
+        const res = await axios.post("https://jamazan-backend.vercel.app/pay", {
+          email: email.trim(),
+          amount: Number(getCartTotalRaw() * 100),
+          id: cardName,
+        });
 
-      const body = {
-        products: cartItems.map((item) => {
-          let newObj = { ...item, name: item.title };
-          delete newObj["title"];
-          delete newObj["description"];
-          return { ...newObj };
-        }),
-        customerEmail: email,
-        userId: userDetails.uid,
-        addressId: selectedAddress,
-      };
+        const clientSecret = res.data["client_secret"];
 
-      const response = await axios.post(
-        `https://jamazan-backend.vercel.app/create-checkout-session`,
-        body
-      );
+        const result = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: elements.getElement(CardElement),
+            billing_details: {
+              email: email,
+            },
+          },
+        });
 
-      const session = await response.data;
-      const result = stripe.redirectToCheckout({
-        sessionId: session.id,
-      });
-
-      if (result.error) {
-        toast.error("An error occured while making payment");
-        console.log(result.error);
+        if (result.error) {
+          toast.error(result.error.message);
+          setIsLoading(false);
+        } else {
+          if (result.paymentIntent.status === "succeeded") {
+            await addDoc(collection(db, "orders"), {
+              userId: userDetails.uid,
+              paymentIntentId: result.paymentIntent.id,
+              products: cartItems.map((item) => {
+                let newObj = {
+                  id: item.id,
+                  name: item.name,
+                  price: item.price,
+                  category: item.category,
+                  image: item.imageUrls[0].url,
+                  quantity: item.quantity,
+                };
+                return { ...newObj };
+              }),
+              addressId: selectedAddress,
+              deliveryStatus: "pending",
+              createdOn: serverTimestamp(),
+            }).then((doc) => {
+              toast.success("Order has been created Successful");
+              navigate("/account/checkout-successful");
+              setIsLoading(false);
+            });
+          }
+        }
+      } catch (error) {
+        setIsLoading(false);
+        console.log(error);
+        toast.error("An error occured");
       }
     }
   };
@@ -115,6 +149,41 @@ const Checkout = () => {
                     />
                   </div>
                 </div>
+                <div className="mt-10 border-t border-gray-200 pt-10">
+                  <h2 className="text-lg font-medium text-gray-900 mb-4">
+                    Payment
+                  </h2>
+                  <div className="mt-4">
+                    <label
+                      htmlFor="email-address"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Card Details
+                    </label>
+                    <div className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#086047] focus:ring-[#086047] sm:text-sm p-3 border mt-1">
+                      <CardInput />
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Name on Card
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      value={cardName}
+                      onChange={(e) => setCardName(e.target.value)}
+                      type="text"
+                      id="name"
+                      name="name"
+                      autoComplete="cc-name"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#086047] focus:ring-[#086047] sm:text-sm p-3 border"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Order summary */}
@@ -130,7 +199,7 @@ const Checkout = () => {
                       <li key={product.id} className="flex py-6 sm:py-6">
                         <div className="flex-shrink-0 border rounded-lg">
                           <img
-                            src={product.image}
+                            src={product.imageUrls[0].url}
                             className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                           />
                         </div>
@@ -139,12 +208,12 @@ const Checkout = () => {
                           <div className="relative flex justify-between max-xl:flex-col sm:gap-x-6 sm:pr-0">
                             <div>
                               <div className="flex justify-between">
-                                <h3 className="text-sm line-clamp-3">
+                                <h3 className="text-sm line-clamp-2">
                                   <a
                                     href={product.href}
                                     className="font-medium text-gray-700 hover:text-gray-800"
                                   >
-                                    {product.title}
+                                    {product.name}
                                   </a>
                                 </h3>
                               </div>
@@ -159,7 +228,7 @@ const Checkout = () => {
                               ) : null} */}
                               </div>
                               <p className="mt-1 text-sm font-medium text-gray-900">
-                                ${product.price}
+                                ${numberWithCommas(product.price)}
                               </p>
                             </div>
 

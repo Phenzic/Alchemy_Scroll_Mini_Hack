@@ -20,38 +20,45 @@ import { CiApple, CiDumbbell } from "react-icons/ci";
 import CategoriesCard from "./components/CategoriesCard";
 import { Link } from "react-router-dom";
 import { getScreenCollections, updateScreenCollection } from "./utils/firebase";
+import { useUser } from "./context/UserContext";
+import { numberWithCommas } from "./utils/helper";
+import { BeatLoader } from "react-spinners";
+import ProductLoader from "./components/ProductLoader";
 
 function App() {
   const screenWidth = window.innerWidth;
-  const [test,setTest] = useState({tablet:0,phone:0,laptop:0,unknown:0})
-  
-  useEffect(function(){
-    const screenCollectionFunction = async function(){
-      const screenCollection = await getScreenCollections()
-      console.log(screenCollection)
-      setTest(screenCollection[0])
-    }
-    screenCollectionFunction()
-    console.log(test)
+  const [test, setTest] = useState({
+    tablet: 0,
+    phone: 0,
+    laptop: 0,
+    unknown: 0,
+  });
+  const { allProducts, fetchingAllProducts } = useUser();
 
-    if (screenWidth>=1200){
-      updateScreenCollection({laptop:test.laptop+=1})
-      console.log("Laptop")
-    }
-    else if(screenWidth>500 && screenWidth<1200){
-      updateScreenCollection({tablet:test.tablet+=1})
-      console.log("Tablet")
-    }else if (screenWidth>=300 && screenWidth<500){
-      updateScreenCollection({phone:test.phone+=1})
+  useEffect(function () {
+    const screenCollectionFunction = async function () {
+      const screenCollection = await getScreenCollections();
+      setTest(screenCollection[0]);
+    };
+    screenCollectionFunction();
+    console.log(test);
 
-      console.log("Phone")
-    }else{
-      console.log("Unknown")
-      updateScreenCollection({unknown:test.unknown+=1})
+    if (screenWidth >= 1200) {
+      updateScreenCollection({ laptop: (test.laptop += 1) });
+      console.log("Laptop");
+    } else if (screenWidth > 500 && screenWidth < 1200) {
+      updateScreenCollection({ tablet: (test.tablet += 1) });
+      console.log("Tablet");
+    } else if (screenWidth >= 300 && screenWidth < 500) {
+      updateScreenCollection({ phone: (test.phone += 1) });
 
+      console.log("Phone");
+    } else {
+      console.log("Unknown");
+      updateScreenCollection({ unknown: (test.unknown += 1) });
     }
-  },[])
-  
+  }, []);
+
   const categories = [
     {
       category: "Fashion",
@@ -79,7 +86,6 @@ function App() {
     },
   ];
 
-  
   return (
     <section className="p-4 py-10">
       {/* Banners */}
@@ -110,18 +116,22 @@ function App() {
             <BsArrowRight />
           </Link>
         </div>
-        <div className="mt-6 flex flex-nowrap overflow-auto gap-x-6 gap-y-10  xl:gap-x-6 rounded-lg">
-          {productData.map((product) => (
-            <ProductCard
-              id={product.id}
-              isNew={true}
-              title={product.title}
-              key={product.id}
-              image={product.image}
-              category={product.category}
-              price={product.price}
-            />
-          ))}
+        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-6 gap-y-10 xl:gap-x-6 gap-3 rounded-lg">
+          {fetchingAllProducts
+            ? Array.from({ length: 4 }).map((id) => {
+                return <ProductLoader key={id} />;
+              })
+            : allProducts.map((product) => (
+                <ProductCard
+                  id={product.id}
+                  isNew={true}
+                  name={product.name}
+                  key={product.id}
+                  image={product.imageUrls[0].url}
+                  category={product.category}
+                  price={numberWithCommas(product.price)}
+                />
+              ))}
         </div>
       </div>
 
@@ -134,17 +144,21 @@ function App() {
             <BsArrowRight />
           </Link>
         </div>
-        <div className="mt-6 flex flex-nowrap overflow-auto gap-x-6 gap-y-10 xl:gap-x-6 rounded-lg">
-          {productData.slice(10).map((product) => (
-            <ProductCard
-              id={product.id}
-              title={product.title}
-              key={product.id}
-              image={product.image}
-              category={product.category}
-              price={product.price}
-            />
-          ))}
+        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-6 gap-y-10 xl:gap-x-6 gap-3 rounded-lg">
+          {fetchingAllProducts
+            ? Array.from({ length: 4 }).map((id) => {
+                return <ProductLoader key={id} />;
+              })
+            : allProducts.map((product) => (
+                <ProductCard
+                  id={product.id}
+                  name={product.name}
+                  key={product.id}
+                  image={product.imageUrls[0].url}
+                  category={product.category}
+                  price={numberWithCommas(product.price)}
+                />
+              ))}
         </div>
       </div>
 
@@ -213,19 +227,26 @@ function App() {
             <BsArrowRight />
           </Link>
         </div>
-        <div className="mt-6 flex flex-nowrap overflow-auto gap-x-6 gap-y-10 xl:gap-x-6 rounded-lg">
-          {productData.slice(10).map((product) => (
-            <ProductCard
-              title={product.title}
-              key={product.id}
-              id={product.id}
-              image={product.image}
-              category={product.category}
-              price={product.price}
-              isSpecialOffer={true}
-              slashedPrice="500"
-            />
-          ))}
+        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-6 gap-y-10 xl:gap-x-6 gap-3 rounded-lg">
+          {fetchingAllProducts
+            ? Array.from({ length: 4 }).map((id) => {
+                return <ProductLoader key={id} />;
+              })
+            : allProducts
+                .filter((dt) => dt.discountRate !== 0)
+                .map((product) => (
+                  <ProductCard
+                    id={product.id}
+                    name={product.name}
+                    key={product.id}
+                    image={product.imageUrls[0].url}
+                    category={product.category}
+                    isSpecialOffer
+                    discount={product.discountRate}
+                    slashedPrice={numberWithCommas(product.discountedPrice)}
+                    price={numberWithCommas(product.price)}
+                  />
+                ))}
         </div>
       </div>
     </section>

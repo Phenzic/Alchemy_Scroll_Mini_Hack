@@ -1,19 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 // import product from "../../../assets/shirt1.jpeg";
 import { CiEdit } from "react-icons/ci";
 import { GoTrash } from "react-icons/go";
 import Pagination from "../../../components/pagination/Pagination";
 import { useNavigate } from "react-router";
-import { collection, deleteDoc, doc, getDocs, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { db, storage } from "../../../utils/firebase";
 import { deleteObject, listAll, ref } from "firebase/storage";
+import { useUser } from "../../../context/UserContext";
+import { ClipLoader } from "react-spinners";
+import { numberWithCommas } from "../../../utils/helper";
 
 const Products = () => {
   const navigate = useNavigate();
+  const [loadingProducts, setLoadingProducts] = useState(true);
   const [products, setProducts] = React.useState([]);
+  const { userDetails } = useUser();
 
-  const getProductsFromDatabase = async ({snapshot}) => {
+  const getProductsFromDatabase = async ({ snapshot }) => {
     try {
       // const productsCollectionRef = collection(
       //   db,
@@ -33,43 +46,55 @@ const Products = () => {
     }
   };
 
-
-
-    const deleteImageFromStorage = async ({ fileArray, productName }) => {
+  const deleteImageFromStorage = async ({ fileArray, productName }) => {
     try {
-      await Promise.all(fileArray.map(async (item) => {
-        // Create a reference to the file in Firebase Storage
-        const fileRef = ref(
-          storage,
-          `Imgs/9XSNjvRBTrI3fwHRBIpu/${productName}/${item.filename}`
-        );
-        // Delete the file from Firebase Storage
-        await deleteObject(fileRef);
-  
-        console.log("Image deleted successfully.");
-      }));
+      await Promise.all(
+        fileArray.map(async (item) => {
+          // Create a reference to the file in Firebase Storage
+          const fileRef = ref(
+            storage,
+            `Imgs/${userDetails.uid}/${productName}/${item.filename}`
+          );
+          // Delete the file from Firebase Storage
+          await deleteObject(fileRef);
+
+          console.log("Image deleted successfully.");
+        })
+      );
     } catch (error) {
       console.error("Error deleting image:", error);
     }
   };
-  
-  const deleteProductFromDatabase = async ({productId,fileArray,productName}) => {
+
+  const deleteProductFromDatabase = async ({
+    productId,
+    fileArray,
+    productName,
+  }) => {
     try {
-      const productDocumentRef = doc(db, "users", "9XSNjvRBTrI3fwHRBIpu", 'products', productId);
-      deleteImageFromStorage({fileArray:fileArray, productName:productName})
+      const productDocumentRef = doc(db, "products", productId);
+      deleteImageFromStorage({
+        fileArray: fileArray,
+        productName: productName,
+      });
       await deleteDoc(productDocumentRef);
     } catch (error) {
       console.log(error);
     }
-  }
-  
+  };
+
   // Usage:
 
   React.useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "users","9XSNjvRBTrI3fwHRBIpu", "products" ), (onsnapshot) => {
-      getProductsFromDatabase({snapshot:onsnapshot});
-    })
-    
+    const q = query(
+      collection(db, "products"),
+      where("sellerId", "==", userDetails.uid)
+    );
+    const unsubscribe = onSnapshot(q, (onsnapshot) => {
+      getProductsFromDatabase({ snapshot: onsnapshot });
+      setLoadingProducts(false);
+    });
+
     return () => {
       unsubscribe();
     };
@@ -105,44 +130,58 @@ const Products = () => {
           </section>
         </header>
 
-        <main className=" bg-white px-2 my-3 py-5 mx-2 rounded-md">
-          <div className=" grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 gap-x-2 gap-y-5">
-            {products.length > 0 ? (
-              products.map(function (eachProduct, index) {
+        <main className=" bg-white px-2 my-3 py-5 rounded-md">
+          {loadingProducts ? (
+            <div className="flex gap-4 items-center justify-center py-4">
+              <ClipLoader color="#086047" size={30} />
+              <p>Loading Products</p>
+            </div>
+          ) : products.length > 0 ? (
+            <div className="grid p-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 gap-x-2 gap-y-5">
+              {products.map((eachProduct, index) => {
                 return (
                   <div
                     key={index + "123"}
-                    className=" space-y-2 border-[1px] border-gray-300 rounded-md"
+                    className="border-[1px] border-gray-300 rounded-md"
                   >
-                   {eachProduct.imageUrls.length > 0 && <div className="w-full h-[70%] flex justify-center items-center">
-                      <img
-                        src={eachProduct.imageUrls[0].url}
-                        alt=""
-                        className=" w-full rounded-md"
-                      />
-                    </div>} 
+                    {eachProduct.imageUrls.length > 0 && (
+                      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-md bg-black/10 lg:aspect-none group-hover:opacity-75 max-h-60 h-full">
+                        <img
+                          src={eachProduct.imageUrls[0].url}
+                          alt=""
+                          className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                        />
+                      </div>
+                    )}
 
-                    
-
-                    <div className=" pb-4 px-2 w-full h-[30%]">
-                      <section className=" flex justify-between">
-                        <p className=" text-[10px]">{eachProduct.name}</p>
-                        <p className=" text-[10px]">Sold:7</p>
+                    <div className="p-3 py-3 w-full">
+                      <section className=" flex justify-between mb-3">
+                        <p className=" text-[10px] text-sm line-clamp-2">{eachProduct.name}</p>
+                        {/* <p className=" text-[10px]">Sold:7</p> */}
                       </section>
-                      <section className="pb-2 flex justify-between">
-                        <p className=" text-[10px]">₦{eachProduct.price}</p>
+                      <section className="pb-2 flex justify-between items-center">
+                        <p className=" text-sm font-semibold">₦{numberWithCommas(eachProduct.price)}</p>
                         <p className=" text-[10px]">
-                          {eachProduct.quantity} units left
+                          {eachProduct.quantity} units left - 0 Sold
                         </p>
                       </section>
                       <div className=" flex sm:grid sm:grid-cols-2 flex-col gap-2">
-                        <button onClick={() => navigate(`new-product?param=${eachProduct.id}`)} className=" border-[1px] flex items-center justify-center gap-2 font-sans text-sm rounded-md py-1 px-1 text-gray-600 border-gray-500">
+                        <button
+                          onClick={() =>
+                            navigate(`new-product?param=${eachProduct.id}`)
+                          }
+                          className=" border-[1px] flex items-center justify-center gap-2 font-sans text-sm rounded-md py-1 px-1 text-gray-600 border-gray-500"
+                        >
                           <CiEdit />
                           <span>Edit</span>
                         </button>
                         <button
                           onClick={() =>
-                            deleteProductFromDatabase({ productId:eachProduct.id, fileArray:eachProduct.imageUrls, productName:eachProduct.name})
+                            deleteProductFromDatabase({
+                              productId: eachProduct.id,
+                              fileArray: eachProduct.imageUrls,
+                              productName: eachProduct.name,
+                            })
                           }
                           className=" text-yellow-500 border-[1px] flex items-center justify-center gap-2 font-sans text-sm rounded-md py-1 px-1 border-yellow-500"
                         >
@@ -153,13 +192,13 @@ const Products = () => {
                     </div>
                   </div>
                 );
-              })
-            ) : (
-              <div className="w-full h-full flex justify-center items-center">
-                <p className="text-xl text-green-800">No Products.</p>
-              </div>
-            )}
-          </div>
+              })}
+            </div>
+          ) : (
+            <div className="w-full h-full flex justify-center items-center">
+              <p className="text-xl text-green-800">No Products.</p>
+            </div>
+          )}
         </main>
         <section className=" py-5">
           <select

@@ -15,22 +15,12 @@ import { useLocation, useNavigate } from "react-router";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useUser } from "../../context/UserContext";
+import { useSeller } from "../../context/SellerContext";
 
 const NavBar = () => {
   const { currentUser } = useUser();
   const [isOpen, setOpen] = useState(false);
-  const [allCategories, setAllCategories] = useState([
-    "Furnitures",
-    "Phones",
-    "Laptops",
-    "Fashion",
-    "Baby and Toys",
-    "Gaming",
-    "Sports & Fitness",
-    "Home & Office",
-    "Health & Beauty",
-    "SuperMarkets",
-  ]);
+  const { categories } = useSeller();
   const { pathname } = useLocation();
   const [showCategoriesNav, setShowCategoriesNav] = useState(true);
   const isMobile = useMediaQuery("min-width: 768px)");
@@ -220,17 +210,26 @@ const NavBar = () => {
               </div>
               All Categories
             </div> */}
-            {allCategories.map((category, index) => {
-              return (
-                <Link
-                  to={`/categories/${category.toLowerCase()}`}
-                  key={index}
-                  className=" text-[#086047] transition-all duration-500 ease-in-out"
-                >
-                  {category}
-                </Link>
-              );
-            })}
+            {categories.length < 1
+              ? Array.from({ length: 10 }).map((id) => {
+                  return (
+                    <div
+                      key={id}
+                      className="w-[60px] rounded-sm h-[15px] animate-pulse bg-black/[7%]"
+                    ></div>
+                  );
+                })
+              : categories.map((category, index) => {
+                  return (
+                    <Link
+                      to={`/categories/${category.toLowerCase()}`}
+                      key={index}
+                      className=" text-[#086047] transition-all duration-500 ease-in-out"
+                    >
+                      {category}
+                    </Link>
+                  );
+                })}
           </div>
         </div>
       )}

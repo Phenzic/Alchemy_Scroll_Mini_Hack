@@ -1,10 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
+  auth,
+  db,
+  getAllProducts,
   getUserDeliveryAddress,
   getUserDetails,
   getUserOrders,
   onAuthStateChangedListener,
 } from "../utils/firebase";
+import { collection } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 const UserContext = createContext();
 
@@ -19,6 +24,8 @@ const UserProvider = ({ children }) => {
   const [loadingAddress, setLoadingAddress] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [fetchingAllProducts, setFetchingAllProducts] = useState(false);
 
   const fetchAddresses = async () => {
     if (currentUser) {
@@ -36,24 +43,32 @@ const UserProvider = ({ children }) => {
       setOrders(ordersLocal);
     }
   };
+  const fetchAllProducts = async () => {
+    setFetchingAllProducts(true);
+    const productsLocal = await getAllProducts();
+    setAllProducts(productsLocal);
+    setFetchingAllProducts(false);
+  };
 
   useEffect(() => {
-    fetchAddresses();
-    fetchOrders();
+    fetchAllProducts();
+    if (Object.keys(userDetails).length > 0) {
+      fetchAddresses();
+      fetchOrders();
+    }
   }, [currentUser, userDetails]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener(async (user) => {
+    auth.onAuthStateChanged(async (user) => {
+      localStorage.setItem("authUser", JSON.stringify(user));
+      setCurrentUser(user);
+
       if (user) {
-        // fetch user data
         const userData = await getUserDetails(user);
         setUserDetails(userData);
       }
-      setCurrentUser(user);
     });
-
-    return unsubscribe;
-  }, [currentUser]);
+  }, [auth]);
 
   const value = {
     currentUser,
@@ -67,7 +82,10 @@ const UserProvider = ({ children }) => {
     setLoadingAddress,
     loadingOrders,
     setLoadingOrders,
-    orders
+    orders,
+    allProducts,
+    fetchingAllProducts,
+    fetchOrders,
   };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
