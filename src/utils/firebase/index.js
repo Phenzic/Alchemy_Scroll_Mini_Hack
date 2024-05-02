@@ -34,6 +34,7 @@ import {
   orderByChild,
   ref,
 } from "firebase/database";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZ66atUo9ldac_rdj_y1m5MucDmPQkqEo",
@@ -56,6 +57,7 @@ googleProvider.setCustomParameters({
 export const auth = getAuth();
 
 export const db = getFirestore();
+export const storage = getStorage(firebaseApp);
 export const rdb = getDatabase(firebaseApp);
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -170,11 +172,34 @@ export const getUserDetails = async (userAuth) => {
 
   return {};
 };
-// get user based on uid
-const getUserByUid = function (user_id) {};
+
 
 // get screen collection
-const getScreenCollections = async function () {};
+export const getScreenCollections = async function(){
+  const data = [] 
+  const screenCollection = collection(db,"piechart")
+  try{
+    const screenSnap = await getDocs(screenCollection)
+    screenSnap.forEach(function(eachData){
+      data.push(eachData.data())
+    })
+    return data
+  }catch(error){
+    console.log(error)
+  }
+
+}
+
+// update screenCollection 
+export const updateScreenCollection = async function(object){
+  const screenRef = doc(db,"piechart","UCTclap25Sp9bDPZUnFx")
+  try{
+    const updateScreen = await updateDoc(screenRef, object)
+    return updateScreen;
+  }catch(error){
+    console.log(error)
+  }
+}
 
 // get user delivery address
 
