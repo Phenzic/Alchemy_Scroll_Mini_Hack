@@ -28,13 +28,6 @@ const Products = () => {
 
   const getProductsFromDatabase = async ({ snapshot }) => {
     try {
-      // const productsCollectionRef = collection(
-      //   db,
-      //   "users",
-      //   "9XSNjvRBTrI3fwHRBIpu",
-      //   "products"
-      // );
-      // const productsCollectionSnapshot = await getDocs(productsCollectionRef);
       const productsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -156,11 +149,15 @@ const Products = () => {
 
                     <div className="p-3 py-3 w-full">
                       <section className=" flex justify-between mb-3">
-                        <p className=" text-[10px] text-sm line-clamp-2">{eachProduct.name}</p>
+                        <p className=" text-[10px] text-sm line-clamp-2">
+                          {eachProduct.name}
+                        </p>
                         {/* <p className=" text-[10px]">Sold:7</p> */}
                       </section>
                       <section className="pb-2 flex justify-between items-center">
-                        <p className=" text-sm font-semibold">₦{numberWithCommas(eachProduct.price)}</p>
+                        <p className=" text-sm font-semibold">
+                          ₦{numberWithCommas(eachProduct.price)}
+                        </p>
                         <p className=" text-[10px]">
                           {eachProduct.quantity} units left - 0 Sold
                         </p>

@@ -48,9 +48,10 @@ function AddSellerProduct() {
     tagInputValue,
     tags,
     setTags,
+    setTagsToDeleteFromDbAfterEditing,
     setVariations,
     setImagesToDeleteFromStorageAfterEditing,
-
+    setVariationsToDeleteFromDbAfterEditing,
     handleFileSelect,
     enterTagEvent,
     handleTagChange,
@@ -60,7 +61,7 @@ function AddSellerProduct() {
     handleAddVariation,
     handleProductDetailsInputChange,
     addProductToDatabase,
-    deleteParticularImageFromStorage,
+    deleteParticularObjectFromStorage,
     handleDeleteItemsFromArray,
     handleDrop,
   } = useContext(SellerContext);
@@ -73,7 +74,7 @@ function AddSellerProduct() {
     <React.Fragment>
       {isLoading ? (
         <div className="w-full h-screen flex gap-4 justify-center items-center">
-          <ClipLoader color="#086047"/>
+          <ClipLoader color="#086047" />
           <p>Loading Products</p>
         </div>
       ) : (
@@ -156,9 +157,11 @@ function AddSellerProduct() {
                       <div key={index} className="w-28 h-28 m-2 relative">
                         <div
                           onClick={() =>
-                            deleteParticularImageFromStorage(
+                            deleteParticularObjectFromStorage(
                               index,
-                              setProductDetails.imageUrls
+                              "imageUrls",
+                              productDetails.imageUrls,
+                              setImagesToDeleteFromStorageAfterEditing
                             )
                           }
                           className="w-6 h-6 flex justify-center items-center rounded-full cursor-pointer  bg-green-500 absolute right-0 top-0"
@@ -351,6 +354,31 @@ function AddSellerProduct() {
                   Variation
                 </p>
                 <main className=" space-y-5">
+                  {param && param !== null ? (
+                    <div className="gap-x-4 flex my-9 relative">
+                      {productDetails.variations.map((variation, index) => (
+                        <div
+                          key={index}
+                          onClick={() =>
+                            deleteParticularObjectFromStorage(
+                              index,
+                              "variations",
+                              productDetails.variations,
+                              setVariationsToDeleteFromDbAfterEditing
+                            )
+                          }
+                          className="w-fit py-3 px-3 rounded-xl text-sm text-white flex justify-center items-center gap-x-5 h-7 bg-green-700"
+                        >
+                          <p>
+                            {variation.type} : {variation.variation}
+                          </p>
+                          <p className="cursor-pointer mb-[0.12rem]">x</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   {variations && variations.length > 0
                     ? variations.map((variation, index) => (
                         <label
@@ -443,6 +471,30 @@ function AddSellerProduct() {
                     <p className="min-[450px]:text-sm text-xs font-semibold">
                       Product Tags
                     </p>
+                    {param && param !== null ? (
+                      <div className="gap-x-4 flex my-2 relative">
+                        {productDetails.tags.map((tag, index) => (
+                          <div
+                            key={index}
+                            onClick={() =>
+                              deleteParticularObjectFromStorage(
+                                index,
+                                "tags",
+                                productDetails.tags,
+                                setTagsToDeleteFromDbAfterEditing
+                              )
+                            }
+                            className="w-fit py-3 px-3 rounded-xl text-sm text-white flex justify-center items-center gap-x-5 h-7 bg-green-700"
+                          >
+                            <p>{tag}</p>
+                            <p className="cursor-pointer mb-[0.12rem]">x</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
                     {tags && tags.length > 0 ? (
                       <div className="flex gap-x-2 gap-y-2 flex-wrap">
                         {tags.map((tag, index) => (

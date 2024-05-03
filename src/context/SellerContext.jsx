@@ -28,10 +28,21 @@ const SellerProvider = ({ children }) => {
   const [retrievedProductData, setRetrievedProductData] = useState();
   // const navigate = useNavigate();
   const [param, setParam] = useState("");
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [products, setProducts] = useState([]);
+  const { userDetails } = useUser();
 
   const [
     imagesToDeleteFromStorageAfterEditing,
     setImagesToDeleteFromStorageAfterEditing,
+  ] = useState([]);
+  const [
+    variationsToDeleteFromDbAfterEditing,
+    setVariationsToDeleteFromDbAfterEditing,
+  ] = useState([]);
+  const [
+    tagsToDeleteFromDbAfterEditing,
+    setTagsToDeleteFromDbAfterEditing,
   ] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -306,10 +317,10 @@ const SellerProvider = ({ children }) => {
         deleteImageFromStorage(uid);
         await updateDoc(productRef, updatedProductDetails);
         console.log("PRODUCT UPDATED");
-        // setProductDetails(resetFields);
-        // setSelectedFiles([]);
-        // setTags([]);
-        // setVariations([]);
+        setProductDetails(resetFields);
+        setSelectedFiles([]);
+        setTags([]);
+        setVariations([]);
         // navigate("/seller/products");
         setIsLoading(false);
         return;
@@ -320,10 +331,10 @@ const SellerProvider = ({ children }) => {
       console.log("PRODUCT UPLOADED with ID:", productRef.id);
 
       console.log("PRODUCT UPLOADED");
-      // setProductDetails(resetFields);
-      // setSelectedFiles([]);
-      // setTags([]);
-      // setVariations([]);
+      setProductDetails(resetFields);
+      setSelectedFiles([]);
+      setTags([]);
+      setVariations([]);
       // navigate("/seller/products");
       setIsLoading(false);
     } catch (error) {
@@ -359,20 +370,20 @@ const SellerProvider = ({ children }) => {
     }
   };
 
-  const deleteParticularImageFromStorage = async (indexToRemove) => {
+  const deleteParticularObjectFromStorage = async (indexToRemove,objectKey, arrayToRemoveFrom, setAlternateArrayToStoreImagesToDelete) => {
     try {
-      setImagesToDeleteFromStorageAfterEditing((prevState) =>
-        prevState.concat(productDetails.imageUrls[indexToRemove].filename)
+      setAlternateArrayToStoreImagesToDelete((prevState) =>
+        prevState.concat(arrayToRemoveFrom[indexToRemove].filename)
       );
 
-      const updatedImageUrls = [
-        ...productDetails.imageUrls.slice(0, indexToRemove),
-        ...productDetails.imageUrls.slice(indexToRemove + 1),
+      const updatedUrls = [
+        ...arrayToRemoveFrom.slice(0, indexToRemove),
+        ...arrayToRemoveFrom.slice(indexToRemove + 1),
       ];
 
       setProductDetails((prevState) => ({
         ...prevState,
-        imageUrls: updatedImageUrls,
+        [objectKey]: updatedUrls,
       }));
       console.log("Image deleted successfully.");
     } catch (error) {
@@ -420,8 +431,12 @@ const SellerProvider = ({ children }) => {
     Adddd,
     tags,
     setTags,
+    tagsToDeleteFromDbAfterEditing,
+    setTagsToDeleteFromDbAfterEditing,
     setImagesToDeleteFromStorageAfterEditing,
-    deleteParticularImageFromStorage,
+    variationsToDeleteFromDbAfterEditing,
+    setVariationsToDeleteFromDbAfterEditing,
+    deleteParticularObjectFromStorage,
     setProductDetails,
     setSelectedFiles,
     handleFileSelect,
