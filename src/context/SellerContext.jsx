@@ -3,6 +3,7 @@ import { db, storage } from "../utils/firebase";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
@@ -15,7 +16,8 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { useNavigate } from "react-router";
+import { useUser } from "./UserContext";
+import PropTypes from 'prop-types';
 
 export const SellerContext = createContext();
 
@@ -25,10 +27,10 @@ export const useSeller = () => {
 
 const SellerProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
-  const [retrievedProductData, setRetrievedProductData] = useState();
+  const [navigateToProductsPage, setNavigateToProductsPage] = useState(false)
+
   // const navigate = useNavigate();
   const [param, setParam] = useState("");
-  
 
   const [
     imagesToDeleteFromStorageAfterEditing,
@@ -38,11 +40,17 @@ const SellerProvider = ({ children }) => {
     variationsToDeleteFromDbAfterEditing,
     setVariationsToDeleteFromDbAfterEditing,
   ] = useState([]);
-  const [
-    tagsToDeleteFromDbAfterEditing,
-    setTagsToDeleteFromDbAfterEditing,
-  ] = useState([]);
+  const [tagsToDeleteFromDbAfterEditing, setTagsToDeleteFromDbAfterEditing] =
+    useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [deleteProductModal, setDeleteProductModal] = useState(false);
+  const [productToDeleteDetails, setProductToDeleteDetails] = useState({
+    productId: "",
+    fileArray: " ",
+    productName: "",
+  });
+  const { userDetails } = useUser();
+
   const [isLoading, setIsLoading] = useState(false);
   const [variations, setVariations] = useState([]);
   const [tags, setTags] = useState([]);
@@ -184,14 +192,14 @@ const SellerProvider = ({ children }) => {
   //HANDLES WHEN THE OBJECT BEING DRAGGED IS DROPPED OR RELEASED on THE DRAG COMPONENT
   const handleDrop = (event) => {
     event.preventDefault();
-    const files = event.dataTransfer.files;
-    const fileArray = Array.from(files).map((file) =>
-      URL.createObjectURL(file)
-    );
-    setSelectedFiles((prevFiles) => prevFiles.concat(fileArray));
-    setDragOver(false);
+    for (let index = 0; index < event.dataTransfer.files.length; index++) {
+      const file = event.dataTransfer.files[index];
+      const fileURL = URL.createObjectURL(file);
+      setSelectedFiles((prevFiles) => [...prevFiles, file]); // Update state using the callback function syntax
+      console.log(fileURL);
+      setDragOver(false);
+    }
   };
-
   //////////////////////////////////////////////////////////////// HANDLERS FOR CHOOSNG AND ADDING VARIATION //////////////////////////////////////////////////////////////////
   const updatePropertyAtIndex = (array, index, propertyName, value) => {
     return array.map((item, idx) => {
@@ -321,6 +329,7 @@ const SellerProvider = ({ children }) => {
         setVariations([]);
         // navigate("/seller/products");
         setIsLoading(false);
+        setNavigateToProductsPage(true)
         return;
       }
 
@@ -334,6 +343,7 @@ const SellerProvider = ({ children }) => {
       setTags([]);
       setVariations([]);
       // navigate("/seller/products");
+      setNavigateToProductsPage(true)
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -344,6 +354,44 @@ const SellerProvider = ({ children }) => {
     console.log(productDetails);
   };
   //////////////////////////////////////////////////////////////// HANDLER FOR DELETING ITEMS FROM ANY ARRAY INPUT //////////////////////////////////////////////////////////////////
+  const deleteProductFromDatabase = async () => {
+    try {
+      const productDocumentRef = doc(
+        db,
+        "products",
+        productToDeleteDetails.productId
+      );
+      deleteImageFolderFromStorage({
+        fileArray: productToDeleteDetails.fileArray,
+        productName: productToDeleteDetails.productName,
+      });
+      await deleteDoc(productDocumentRef);
+      setDeleteProductModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteImageFolderFromStorage = async ({ fileArray, productName }) => {
+    try {
+      await Promise.all(
+        fileArray.map(async (item) => {
+          // Create a reference to the file in Firebase Storage
+          const fileRef = ref(
+            storage,
+            `Imgs/${userDetails.uid}/${productName}/${item.filename}`
+          );
+          // Delete the file from Firebase Storage
+          await deleteObject(fileRef);
+
+          console.log("Image deleted successfully.");
+        })
+      );
+    } catch (error) {
+      console.error("Error deleting image:", error);
+    }
+  };
+
   const handleDeleteItemsFromArray = (index, setArray) => {
     setArray((prevValues) => prevValues.filter((_, i) => i !== index));
   };
@@ -368,7 +416,12 @@ const SellerProvider = ({ children }) => {
     }
   };
 
-  const deleteParticularObjectFromStorage = async (indexToRemove,objectKey, arrayToRemoveFrom, setAlternateArrayToStoreImagesToDelete) => {
+  const deleteParticularObjectFromStorage = async (
+    indexToRemove,
+    objectKey,
+    arrayToRemoveFrom,
+    setAlternateArrayToStoreImagesToDelete
+  ) => {
     try {
       setAlternateArrayToStoreImagesToDelete((prevState) =>
         prevState.concat(arrayToRemoveFrom[indexToRemove].filename)
@@ -389,15 +442,7 @@ const SellerProvider = ({ children }) => {
     }
   };
 
-  // const deleteImageFromFirestore = async(image) => {
-  //   try {
-  //     const productDocumentRef = doc(db, "users", "9XSNjvRBTrI3fwHRBIpu", 'products', productId);
-  //     deleteImageFromStorage({fileArray:fileArray, productName:productName})
-  //     await deleteDoc(productDocumentRef);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+
   useEffect(() => {
     console.log(variations);
     console.log(tags);
@@ -433,6 +478,12 @@ const SellerProvider = ({ children }) => {
     setTagsToDeleteFromDbAfterEditing,
     setImagesToDeleteFromStorageAfterEditing,
     variationsToDeleteFromDbAfterEditing,
+    deleteProductModal,
+    setDeleteProductModal,
+    productToDeleteDetails,
+    setProductToDeleteDetails,
+    navigateToProductsPage, setNavigateToProductsPage,
+    deleteProductFromDatabase,
     setVariationsToDeleteFromDbAfterEditing,
     deleteParticularObjectFromStorage,
     setProductDetails,
@@ -452,6 +503,10 @@ const SellerProvider = ({ children }) => {
   return (
     <SellerContext.Provider value={values}>{children}</SellerContext.Provider>
   );
+};
+
+SellerProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default SellerProvider;

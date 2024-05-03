@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 // import product from "../../../assets/shirt1.jpeg";
 import { CiEdit } from "react-icons/ci";
@@ -7,24 +7,24 @@ import Pagination from "../../../components/pagination/Pagination";
 import { useNavigate } from "react-router";
 import {
   collection,
-  deleteDoc,
-  doc,
-  getDocs,
   onSnapshot,
   query,
   where,
 } from "firebase/firestore";
-import { db, storage } from "../../../utils/firebase";
-import { deleteObject, listAll, ref } from "firebase/storage";
+import { db } from "../../../utils/firebase";
 import { useUser } from "../../../context/UserContext";
 import { ClipLoader } from "react-spinners";
 import { numberWithCommas } from "../../../utils/helper";
+import { SellerContext } from "../../../context/SellerContext";
+import Modal from "../../../components/seller/Modal";
 
 const Products = () => {
   const navigate = useNavigate();
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [products, setProducts] = React.useState([]);
   const { userDetails } = useUser();
+  const { setDeleteProductModal,  setProductToDeleteDetails, } =
+    useContext(SellerContext);
 
   const getProductsFromDatabase = async ({ snapshot }) => {
     try {
@@ -39,43 +39,9 @@ const Products = () => {
     }
   };
 
-  const deleteImageFromStorage = async ({ fileArray, productName }) => {
-    try {
-      await Promise.all(
-        fileArray.map(async (item) => {
-          // Create a reference to the file in Firebase Storage
-          const fileRef = ref(
-            storage,
-            `Imgs/${userDetails.uid}/${productName}/${item.filename}`
-          );
-          // Delete the file from Firebase Storage
-          await deleteObject(fileRef);
 
-          console.log("Image deleted successfully.");
-        })
-      );
-    } catch (error) {
-      console.error("Error deleting image:", error);
-    }
-  };
 
-  const deleteProductFromDatabase = async ({
-    productId,
-    fileArray,
-    productName,
-  }) => {
-    try {
-      const productDocumentRef = doc(db, "products", productId);
-      deleteImageFromStorage({
-        fileArray: fileArray,
-        productName: productName,
-      });
-      await deleteDoc(productDocumentRef);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  
   // Usage:
 
   React.useEffect(() => {
@@ -96,6 +62,7 @@ const Products = () => {
   return (
     <React.Fragment>
       <div className=" px-2">
+        <Modal />
         <header className=" space-y-3">
           <section className=" font-sans rounded-md py-1  items-center border-[1px] flex gap-5 px-2 border-gray-400">
             <input
@@ -173,12 +140,15 @@ const Products = () => {
                           <span>Edit</span>
                         </button>
                         <button
-                          onClick={() =>
-                            deleteProductFromDatabase({
-                              productId: eachProduct.id,
-                              fileArray: eachProduct.imageUrls,
-                              productName: eachProduct.name,
-                            })
+                          onClick={
+                            () => {
+                              setProductToDeleteDetails({
+                                productId: eachProduct.id,
+                                fileArray: eachProduct.imageUrls,
+                                productName: eachProduct.imageStorageFileName,
+                              })
+                              setDeleteProductModal(true)
+                              }
                           }
                           className=" text-yellow-500 border-[1px] flex items-center justify-center gap-2 font-sans text-sm rounded-md py-1 px-1 border-yellow-500"
                         >

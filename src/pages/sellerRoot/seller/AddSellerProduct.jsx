@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { CiImageOn } from "react-icons/ci";
-import { SellerContext, useSeller } from "../../../context/SellerContext";
+import { SellerContext } from "../../../context/SellerContext";
 import { BsChevronLeft } from "react-icons/bs";
 import { useUser } from "../../../context/UserContext";
 import { ClipLoader } from "react-spinners";
@@ -52,6 +52,7 @@ function AddSellerProduct() {
     setVariations,
     setImagesToDeleteFromStorageAfterEditing,
     setVariationsToDeleteFromDbAfterEditing,
+    navigateToProductsPage, setNavigateToProductsPage,
     handleFileSelect,
     enterTagEvent,
     handleTagChange,
@@ -69,6 +70,13 @@ function AddSellerProduct() {
   React.useEffect(() => {
     getProductDetailsFromDatabase(paramValue);
   }, [userDetails]);
+
+  React.useEffect(() => {
+    if(navigateToProductsPage){
+      navigate("/seller/products");
+      setNavigateToProductsPage(false);
+    }
+  }, [navigateToProductsPage])
 
   return (
     <React.Fragment>
