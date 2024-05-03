@@ -28,9 +28,7 @@ const SellerProvider = ({ children }) => {
   const [retrievedProductData, setRetrievedProductData] = useState();
   // const navigate = useNavigate();
   const [param, setParam] = useState("");
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [products, setProducts] = useState([]);
-  const { userDetails } = useUser();
+  
 
   const [
     imagesToDeleteFromStorageAfterEditing,
