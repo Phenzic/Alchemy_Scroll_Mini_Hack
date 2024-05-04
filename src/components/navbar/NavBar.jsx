@@ -1,7 +1,10 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import {
+  BsBell,
   BsCart3,
   BsChevronDown,
+  BsHeart,
+  BsHouse,
   BsPerson,
   BsQuestionCircle,
   BsSearch,
@@ -16,7 +19,39 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useUser } from "../../context/UserContext";
 import { useSeller } from "../../context/SellerContext";
+import { useCart } from "../../context/CartContext";
+import { MenuButton } from "../Buttons/MenuButton";
+import { CiLogout } from "react-icons/ci";
+import { signOutUser } from "../../utils/firebase";
+import { iOS } from "../../utils/helper";
 
+const menu = [
+  {
+    icon: <BsHouse className="text-base" />,
+    title: "My Profile",
+    link: "/profile",
+  },
+  {
+    icon: <BsCart3 className="text-base" />,
+    title: "Orders",
+    link: "/orders",
+  },
+  {
+    icon: <BsHeart className="text-base" />,
+    title: "Liked items",
+    link: "/liked-items",
+  },
+  {
+    icon: <BsBell className="text-base" />,
+    title: "Notifications",
+    link: "/notifications",
+  },
+  {
+    icon: <CiLogout className="text-base" />,
+    title: "Log out",
+    link: "/auth/login",
+  },
+];
 const NavBar = () => {
   const { currentUser } = useUser();
   const [isOpen, setOpen] = useState(false);
@@ -24,6 +59,21 @@ const NavBar = () => {
   const { pathname } = useLocation();
   const [showCategoriesNav, setShowCategoriesNav] = useState(true);
   const isMobile = useMediaQuery("min-width: 768px)");
+  const { cartItems } = useCart();
+  const [active, setactive] = useState(
+    menu.findIndex((item) => item.link === `/${pathname.split("/")[2]}`) || 0
+  );
+
+  useLayoutEffect(() => {
+    setactive(
+      menu.findIndex((item) => item.link === `/${pathname.split("/")[2]}`)
+    );
+
+    if (isOpen) {
+      setOpen(false);
+    }
+  }, [pathname]);
+
   useEffect(() => {
     if (pathname == "/" || pathname.includes("categories")) {
       setShowCategoriesNav(true);
@@ -53,11 +103,18 @@ const NavBar = () => {
             </Link>
           </div>
           <div className="flex items-center gap-5 md:hidden">
-            <Link to={"/account"}>
+            <Link to={"/account/profile"}>
               <BsPerson size={21} />
             </Link>
             <Link to={"/cart"}>
-              <BsCart3 size={21} />
+              <span className="relative">
+                <BsCart3 size={21} />
+                {!iOS() && cartItems.length > 0 && (
+                  <div className="bg-[#086047] text-[8px] font-bold text-white w-[17px] h-[17px] flex items-center justify-center rounded-full border-2 border-white absolute -top-1 -right-1.5">
+                    {cartItems.length}
+                  </div>
+                )}
+              </span>
             </Link>
           </div>
           <div className="w-[85%] flex items-center gap-10 max-md:hidden">
@@ -79,15 +136,13 @@ const NavBar = () => {
               </div>
 
               {currentUser ? (
-                <div
-                  className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3"
-                  onClick={() => {
-                    navigate("/account");
-                  }}
+                <Link
+                  className="flex items-center gap-3 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3"
+                  to={"/account/profile"}
                 >
                   <BsPerson size={16} />
                   <p>Account</p>
-                </div>
+                </Link>
               ) : (
                 <Menu as="div" className="relative inline-block text-left">
                   <Menu.Button className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
@@ -139,8 +194,15 @@ const NavBar = () => {
                 </Menu>
               )}
               <Link to={"/cart"}>
-                <div className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
-                  <BsCart3 />
+                <div className="flex items-center gap-3 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
+                  <span className="relative">
+                    <BsCart3 size={17} />
+                    {cartItems.length > 0 && (
+                      <div className="bg-[#086047] text-[8px] font-bold text-white w-[15px] h-[15px] flex items-center justify-center rounded-full border-2 border-white absolute -top-1 -right-1.5">
+                        {cartItems.length}
+                      </div>
+                    )}
+                  </span>
                   <p>Cart</p>
                 </div>
               </Link>
@@ -196,6 +258,68 @@ const NavBar = () => {
                     <BsX className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
+                <div className="mt-6">
+                  <p className="px-6 border-t py-4 uppercase text-sm tracking-wider opacity-70">
+                    My Jamazan Account
+                  </p>
+                  {menu.map((item, index) =>
+                    item.title == "Log out" ? (
+                      currentUser ? (
+                        <div
+                          key={index}
+                          onClick={async () => {
+                            if (item.title == "Log out") {
+                              await signOutUser();
+                            }
+                          }}
+                        >
+                          <MenuButton
+                            active={index === active}
+                            icon={item.icon}
+                            title={item.title}
+                            setactive={setactive}
+                            key={item.title}
+                            index={index}
+                          />
+                        </div>
+                      ) : null
+                    ) : (
+                      <Link
+                        to={`${
+                          "/auth/login" === item.link
+                            ? item.link
+                            : `/account${item.link}`
+                        }`}
+                        key={index}
+                      >
+                        <MenuButton
+                          active={index === active}
+                          icon={item.icon}
+                          title={item.title}
+                          setactive={setactive}
+                          key={item.title}
+                          index={index}
+                        />
+                      </Link>
+                    )
+                  )}
+                </div>
+                {!currentUser && (
+                  <div className="mt-6 border-t px-[30px] py-4">
+                    <Link
+                      to="/auth/login"
+                      className="flex w-full justify-center rounded-md bg-p px-3 py-3 text-sm font-semibold bg-white border leading-6 text-[#086047] shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 items-center disabled:opacity-50 "
+                    >
+                      Login to your account
+                    </Link>
+                    <Link
+                      to="/auth/register"
+                      className="flex w-full justify-center rounded-md bg-p px-3 py-3 text-sm font-semibold bg-[#086047] leading-6 text-white shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 items-center disabled:opacity-50 mt-4"
+                    >
+                      Create an account
+                    </Link>
+                  </div>
+                )}
               </Dialog.Panel>
             </Transition.Child>
           </div>
