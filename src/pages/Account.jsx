@@ -1,16 +1,17 @@
 import React from "react";
 import Sidebar from "../components/Sidebar/Sidebar";
 import OrderHistory from "./account/OrderHistory";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { BsArrowRight } from "react-icons/bs";
 
 const Account = () => {
   const { currentUser } = useUser();
+  const { pathname } = useLocation();
   return (
     <div>
       {currentUser && (
-        <p className="my-5 [word-spacing:6px] px-5">Home {">"} Account</p>
+        <p className="my-5 [word-spacing:6px] px-5"><span className="opacity-70">Account</span> {"/"} <span className="capitalize">{pathname.split("/")[2]}</span></p>
       )}
 
       <div className="flex gap-5 min-h-[80vh] max-md:min-h-full">
