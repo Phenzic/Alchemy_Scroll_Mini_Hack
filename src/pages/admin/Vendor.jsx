@@ -62,7 +62,7 @@ const Vendor = () => {
 
                 <div className="w-full flex flex-wrap items-center justify-between mb-3">
                   <p className="opacity-60">Joined on:</p>
-                  <p>{}</p>
+                  <p>{vendor.createdAt.seconds}</p>
                 </div>
                 <div className="flex gap-3 mt-5">
                   <button
