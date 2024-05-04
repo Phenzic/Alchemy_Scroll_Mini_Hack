@@ -4,14 +4,16 @@ import { BsChevronRight } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import Products from "../../components/admin/Products";
-import { totalUsers } from "../../utils/firebase";
+import { getAllProducts, totalUsers } from "../../utils/firebase";
 
 
 const Vendor = () => {
   const {id}=useParams();
   const [vendor,setVendor] = useState([])
+  const [products,setProducts] = useState([])
+  const date = new Date()
   console.log(id)
-
+  
   useEffect(function(){
     const vendorFunction = async function(){
       const vendor = await totalUsers()
@@ -19,8 +21,18 @@ const Vendor = () => {
         return vendor.uid==id
       })
       setVendor(filter_vendor_based_on_uid);
-      console.log(filter_vendor_based_on_uid);
+      console.log(filter_vendor_based_on_uid[0].createdAt.seconds);
     }
+
+    const allProducts = async function(){
+      const products = await getAllProducts()
+      const filtered_vendor_products = products.filter(function(eachProduct){
+        return eachProduct.sellerId==id
+      })
+      setProducts(filtered_vendor_products)
+      console.log(filtered_vendor_products)
+    }
+    allProducts()
 
     vendorFunction()
   },[])
@@ -62,7 +74,7 @@ const Vendor = () => {
 
                 <div className="w-full flex flex-wrap items-center justify-between mb-3">
                   <p className="opacity-60">Joined on:</p>
-                  <p>{vendor.createdAt.seconds}</p>
+                  <p></p>
                 </div>
                 <div className="flex gap-3 mt-5">
                   <button
@@ -111,7 +123,92 @@ const Vendor = () => {
           </section>
         )
       })}
-      <h3 className="text-[24px] font-semibold mt-10 mb-5">All Products</h3>
+      <div>
+        <h3 className="text-[24px] font-semibold mt-10 mb-5">All Products</h3>
+        <div className=" sm:hidden flex flex-col gap-5">
+            {products.map((eachProduct) => {
+              return (
+                <div key={eachProduct.id} className=" rounded-md py-2 border-2 px-3 flex flex-col gap-5">
+                  <section className=" flex items-center justify-between">
+                    <h1 className=" text-sm text-black font-semibold font-sans">
+                      #{eachProduct.id}
+                    </h1>
+                  </section>
+
+                  <div className=" text-[12px] border-t-[1px] flex flex-col gap-4 py-5">
+                    <section className="flex justify-between text-sm text-gray-700">
+                      <p className=" text-gray-500 font-light text-[12px]">
+                        Product
+                      </p>
+                      <p className=" text-[12px]">
+                        {eachProduct.name}
+                      </p>
+                    </section>
+
+                    <section className="flex justify-between text-sm text-gray-700">
+                      <p className=" text-gray-500 font-light text-[12px]">
+                        Category
+                      </p>
+                      <p className=" text-[12px]">
+                        {eachProduct.category}
+                      </p>
+                    </section>
+
+                    <section className="flex justify-between text-sm text-gray-700">
+                      <p className=" text-gray-500 font-light text-[12px]">
+                        Price(₦)
+                      </p>
+                      <p className=" text-xs">{eachProduct.price.toLocaleString()}</p>
+                    </section>
+
+                    <section className="flex justify-between text-sm text-gray-700">
+                      <p className=" text-gray-500 font-light text-[12px]">
+                        Stock
+                      </p>
+                      <p className=" text-[12px]">{eachProduct.quantity}</p>
+                    </section>
+
+                    <section className="flex justify-between text-sm text-gray-700">
+                      <p className=" text-gray-500 font-light text-[12px]">
+                        Date
+                      </p>
+                      <p className=" text-xs">{eachProduct.date}</p>
+                    </section>
+                    
+                  </div>
+                </div>
+
+              );
+            })}
+          </div>
+          <div className="w-full max-sm:hidden">
+            <div className="relative overflow-x-auto border sm:rounded-lg">
+              <table className="w-full text-sm text-left text-gray-500 md:table-fixed">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+                  <th scope="col" className="px-6 py-3">Product</th>
+                  <th scope="col" className="px-6 py-3">Category</th>
+                  <th scope="col" className="px-6 py-3">Price</th>
+                  <th scope="col" className="px-6 py-3">Stock</th>
+                  <th scope="col" className="px-6 py-3">Date</th>
+                </thead>
+                <tbody className=" px-2 py-4">{
+                products.map(function(eachProduct){
+                  return(
+                    <tr className="rounded-md bg-white border-b cursor-pointer hover:bg-gray-50 " key={eachProduct.id}>
+                      <td className="px-6 py-4">{eachProduct.name}</td>
+                      <td className="px-6 py-4">{eachProduct.category}</td>
+                      <td className="px-6 py-4">{eachProduct.price.toLocaleString()}</td>
+                      <td className="px-6 py-4">{eachProduct.quantity}</td>
+                      <td className="px-6 py-4">{eachProduct.updatedAt.seconds}</td>
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
       <Products />
     </section>
   );

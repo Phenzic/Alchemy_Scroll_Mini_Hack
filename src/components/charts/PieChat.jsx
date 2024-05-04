@@ -33,17 +33,17 @@ export function PieChat({
   const [totalVisits,setTotalVisits] =  useState({laptop:1,phone:5,tablet:3,unknown:2})
   
   useEffect(function(){
-    if(navigator.onLine){
-      const screenCollectionFunction = async function(){
-        const screenCollection = await getScreenCollections()
-        console.log(screenCollection)
-        setTotalVisits(screenCollection[0])
-      }
-      screenCollectionFunction()
-      console.log("true")
-    }else{
-      console.log("folase")
-    }
+    // if(navigator.onLine){
+    //   const screenCollectionFunction = async function(){
+    //     const screenCollection = await getScreenCollections()
+    //     console.log(screenCollection)
+    //     setTotalVisits(screenCollection[0])
+    //   }
+    //   screenCollectionFunction()
+    //   console.log("true")
+    // }else{
+    //   console.log("folase")
+    // }
 
   },[])
 
