@@ -23,6 +23,7 @@ import { useCart } from "../../context/CartContext";
 import { MenuButton } from "../Buttons/MenuButton";
 import { CiLogout } from "react-icons/ci";
 import { signOutUser } from "../../utils/firebase";
+import { iOS } from "../../utils/helper";
 
 const menu = [
   {
@@ -108,7 +109,7 @@ const NavBar = () => {
             <Link to={"/cart"}>
               <span className="relative">
                 <BsCart3 size={21} />
-                {cartItems.length > 0 && (
+                {!iOS() && cartItems.length > 0 && (
                   <div className="bg-[#086047] text-[8px] font-bold text-white w-[17px] h-[17px] flex items-center justify-center rounded-full border-2 border-white absolute -top-1 -right-1.5">
                     {cartItems.length}
                   </div>

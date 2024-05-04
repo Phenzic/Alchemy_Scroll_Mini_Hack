@@ -221,7 +221,14 @@ const Cart = () => {
 
             <div className="mt-6">
               <button
-                onClick={()=> currentUser ? navigate("/checkout") : toast.error("Please login to continue checkout")}
+                onClick={() => {
+                  if (currentUser) {
+                    navigate("/checkout");
+                  } else {
+                    toast.error("Please login to continue checkout");
+                    navigate("/auth/login");
+                  }
+                }}
                 disabled={cartItems.length < 1}
                 className="w-full rounded-md border border-transparent bg-[#086047] px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-[#086047] focus:outline-none focus:ring-2 focus:ring-[#086047] focus:ring-offset-2 focus:ring-offset-gray-50 disabled:opacity-50"
               >

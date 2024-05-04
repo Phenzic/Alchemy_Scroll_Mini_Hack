@@ -75,6 +75,13 @@ const Checkout = () => {
                   category: item.category,
                   image: item.imageUrls[0].url,
                   quantity: item.quantity,
+                  deliveryInfo: {
+                    productHeight: item.productHeight,
+                    productLength: item.productLength,
+                    productSku: item.productSku,
+                    productWeight: item.productWeight,
+                    productWidth: item.productWidth,
+                  },
                 };
                 return { ...newObj };
               }),
