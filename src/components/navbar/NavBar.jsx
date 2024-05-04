@@ -109,7 +109,7 @@ const NavBar = () => {
               <span className="relative">
                 <BsCart3 size={21} />
                 {cartItems.length > 0 && (
-                  <div className="bg-[#086047] text-[8px] font-bold text-white w-[17px] h-[17px] flex items-center justify-center rounded-full border-2 border-white absolute -top-1 -right-1.5">
+                  <div className="bg-[#086047] text-[8px] font-bold text-white w-[17px] h-[17px] flex items-center justify-center rounded-full border-2 border-white absolute top-0 -right-1.5">
                     {cartItems.length}
                   </div>
                 )}
