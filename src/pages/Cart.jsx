@@ -10,6 +10,7 @@ import { useCart } from "../context/CartContext";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useUser } from "../context/UserContext";
 import toast from "react-hot-toast";
+import { numberWithCommas } from "../utils/helper";
 
 const Cart = () => {
   const {
@@ -61,7 +62,7 @@ const Cart = () => {
                     <li key={product.id} className="flex py-6 sm:py-10">
                       <div className="flex-shrink-0 border rounded-lg">
                         <img
-                          src={product.image}
+                          src={product.imageUrls[0].url}
                           className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                         />
                       </div>
@@ -73,9 +74,9 @@ const Cart = () => {
                               <h3 className="text-sm">
                                 <a
                                   href={product.href}
-                                  className="font-medium text-gray-700 hover:text-gray-800"
+                                  className="font-medium text-gray-700 hover:text-gray-800 line-clamp-2"
                                 >
-                                  {product.title}
+                                  {product.name}
                                 </a>
                               </h3>
                             </div>
@@ -90,7 +91,7 @@ const Cart = () => {
                               ) : null} */}
                             </div>
                             <p className="mt-1 text-sm font-medium text-gray-900">
-                              ${product.price}
+                              ${numberWithCommas(product.price)}
                             </p>
                           </div>
 

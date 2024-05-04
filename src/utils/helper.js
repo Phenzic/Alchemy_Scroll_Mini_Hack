@@ -33,3 +33,74 @@ export function timeAgo(timestamp) {
     return seconds < 5 ? "just now" : `${seconds} seconds ago`;
   }
 }
+
+export function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+export function validateEmail(email) {
+  return emailRegex.test(email);
+}
+
+export function capitalizeSentence(sentence) {
+  let words = sentence.split(" ");
+
+  let capitalizedWords = words.map((word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  });
+
+  let capitalizedSentence = capitalizedWords.join(" ");
+
+  return capitalizedSentence;
+}
+
+// const makePayment = async () => {
+//   if (email == "" || selectedAddress == "") {
+//     toast.error(
+//       "Please fill in all fields and make sure an address is selected to continue"
+//     );
+//   } else {
+//     setIsLoading(true);
+//     const stripe = await loadStripe(
+//       "pk_test_51P81xGRsmFh9wreMAPKsFUb4rxicJJyWp347tq7y0qgksvvXJC2EVepIwk2SkzENu8InXzOUSHyAYFV1j0w3BG0q00Gk8PmyRr"
+//     );
+
+//     const body = {
+//       products: cartItems.map((item) => {
+//         let newObj = {
+//           id: item.id,
+//           name: item.name,
+//           price: item.price,
+//           category: item.category,
+//           image: item.imageUrls[0].url,
+//         };
+//         return { ...newObj };
+//       }),
+//       customerEmail: email,
+//       userId: userDetails.uid,
+//       addressId: selectedAddress,
+//     };
+
+//     try {
+//       const response = await axios.post(
+//         `https://jamazan-backend.vercel.app/create-checkout-session`,
+//         body
+//       );
+
+//       const session = await response.data;
+//       const result = stripe.redirectToCheckout({
+//         sessionId: session.id,
+//       });
+
+//       if (result.error) {
+//         toast.error("An error occured while making payment");
+//         console.log(result.error);
+//       }
+//     } catch (error) {
+//       toast.error("An error occured while initializing checkout");
+//       setIsLoading(false)
+//     }
+//   }
+// };

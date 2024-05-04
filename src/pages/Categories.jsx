@@ -1,9 +1,13 @@
 /* eslint-disable react/jsx-key */
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { BsChevronDown, BsPlus, BsX } from "react-icons/bs";
 import ProductCard from "../components/ProductCard";
 import { useParams } from "react-router";
+import ProductLoader from "../components/ProductLoader";
+import { db } from "../utils/firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { capitalizeSentence, numberWithCommas } from "../utils/helper";
 
 const breadcrumbs = [{ id: 1, name: "Men", href: "#" }];
 const filters = [
@@ -78,8 +82,36 @@ function classNames(...classes) {
 
 const Categories = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [fetchingAllProducts, setFetchingAllProducts] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const { id } = useParams();
 
-  const {id} = useParams()
+  const getCategoryProducts = async () => {
+    try {
+      setFetchingAllProducts(true);
+      const q = query(
+        collection(db, "products"),
+        where("category", "==", capitalizeSentence(id))
+      );
+      let temp = [];
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        temp.push({ id: doc.id, ...doc.data() });
+      });
+      console.log(temp);
+      setAllProducts(temp);
+      setFetchingAllProducts(false);
+    } catch (e) {
+      setFetchingAllProducts(true);
+      console.log(e);
+    }
+
+    return {};
+  };
+
+  useEffect(() => {
+    getCategoryProducts();
+  }, [id]);
 
   return (
     <div className="max-md:bg-white">
@@ -196,28 +228,24 @@ const Categories = () => {
             className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
           >
             <ol role="list" className="flex items-center space-x-4 py-4">
-              {breadcrumbs.map((breadcrumb) => (
-                <li key={breadcrumb.id}>
-                  <div className="flex items-center">
-                    <a
-                      href={breadcrumb.href}
-                      className="mr-4 text-sm font-medium text-gray-900"
-                    >
-                      {breadcrumb.name}
-                    </a>
-                    <svg
-                      viewBox="0 0 6 20"
-                      aria-hidden="true"
-                      className="h-5 w-auto text-gray-300"
-                    >
-                      <path
-                        d="M4.878 4.34H3.551L.27 16.532h1.327l3.281-12.19z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </div>
-                </li>
-              ))}
+              <li>
+                <div className="flex items-center">
+                  <p className="mr-4 text-sm font-medium text-gray-900">
+                    Categories
+                  </p>
+                  <svg
+                    viewBox="0 0 6 20"
+                    aria-hidden="true"
+                    className="h-5 w-auto text-gray-300"
+                  >
+                    <path
+                      d="M4.878 4.34H3.551L.27 16.532h1.327l3.281-12.19z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+              </li>
+
               <li className="text-sm">
                 <a
                   href="#"
@@ -234,7 +262,7 @@ const Categories = () => {
         <main className="mx-auto max-w-2xl px-4 lg:max-w-7xl lg:px-8">
           <div className="border-b border-gray-200 pb-10 pt-10">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 capitalize">
-            {id}
+              {id}
             </h1>
             <p className="mt-4 text-base text-gray-500">
               Checkout out the latest release of Basic Tees, new and improved
@@ -309,15 +337,27 @@ const Categories = () => {
               </h2>
 
               <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-3">
-                {products.map((product) => (
-                  <ProductCard
-                    id={product.id}
-                    image={product.imageSrc}
-                    price={product.price}
-                    title={product.name}
-                    category={product.description}
-                  />
-                ))}
+                {fetchingAllProducts ? (
+                  Array.from({ length: 3 }).map((id) => {
+                    return <ProductLoader key={id} />;
+                  })
+                ) : allProducts.length > 0 ? (
+                  allProducts.map((product) => (
+                    <ProductCard
+                      id={product.id}
+                      name={product.name}
+                      key={product.id}
+                      image={product.imageUrls[0].url}
+                      category={product.category}
+                      isSpecialOffer={product.discountRate !== 0 ? true : false}
+                      discount={product.discountRate}
+                      slashedPrice={numberWithCommas(product.discountedPrice)}
+                      price={numberWithCommas(product.price)}
+                    />
+                  ))
+                ) : (
+                  <p>No Product Found</p>
+                )}
               </div>
             </section>
           </div>

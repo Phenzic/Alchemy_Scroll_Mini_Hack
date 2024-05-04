@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import toast from "react-hot-toast";
+import { numberWithCommas } from "../utils/helper";
 
 const CartContext = createContext();
 
@@ -57,6 +58,14 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
+    return numberWithCommas(
+      cartItems
+        .reduce((total, item) => total + item.price * item.quantity, 0)
+        .toFixed(2)
+    );
+  };
+
+  const getCartTotalRaw = () => {
     return cartItems
       .reduce((total, item) => total + item.price * item.quantity, 0)
       .toFixed(2);
@@ -83,6 +92,7 @@ export const CartProvider = ({ children }) => {
         getCartTotal,
         isItemInCart,
         removeItemFromCart,
+        getCartTotalRaw,
       }}
     >
       {children}

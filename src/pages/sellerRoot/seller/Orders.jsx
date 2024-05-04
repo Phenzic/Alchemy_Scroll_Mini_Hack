@@ -58,7 +58,7 @@ const Orders = () => {
                         Product
                       </p>
                       <p className=" text-[12px]">
-                        {eachProduct.title.slice(0, 10)}...
+                        {eachProduct.name.slice(0, 10)}...
                       </p>
                     </section>
                     <section className="flex justify-between text-sm text-gray-700">
