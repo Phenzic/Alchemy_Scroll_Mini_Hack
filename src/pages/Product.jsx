@@ -65,9 +65,9 @@ const Product = ({ isAdmin = false }) => {
   return (
     <section className={`${!isAdmin && "py-14"}`}>
       {loadingProduct ? (
-        <div className="min-h-[60vh] flex items-center justify-center gap-4">
+        <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
           <ClipLoader />
-          <p>Fetching Product Details</p>
+          <p>Loading Product Details</p>
         </div>
       ) : selectedProduct ? (
         <>

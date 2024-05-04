@@ -16,6 +16,7 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useUser } from "../../context/UserContext";
 import { useSeller } from "../../context/SellerContext";
+import { useCart } from "../../context/CartContext";
 
 const NavBar = () => {
   const { currentUser } = useUser();
@@ -24,6 +25,8 @@ const NavBar = () => {
   const { pathname } = useLocation();
   const [showCategoriesNav, setShowCategoriesNav] = useState(true);
   const isMobile = useMediaQuery("min-width: 768px)");
+  const { cartItems } = useCart();
+
   useEffect(() => {
     if (pathname == "/" || pathname.includes("categories")) {
       setShowCategoriesNav(true);
@@ -140,7 +143,14 @@ const NavBar = () => {
               )}
               <Link to={"/cart"}>
                 <div className="flex items-center gap-2 text-sm cursor-pointer hover:bg-black/[5%] rounded-md p-2 px-3">
-                  <BsCart3 />
+                  <span className="relative">
+                    <BsCart3 size={17} />
+                    {cartItems.length > 0 && (
+                      <div className="bg-[#086047] text-[8px] font-bold text-white w-[15px] h-[15px] flex items-center justify-center rounded-full border-2 border-white absolute -top-1 -right-1">
+                        {cartItems.length}
+                      </div>
+                    )}
+                  </span>
                   <p>Cart</p>
                 </div>
               </Link>

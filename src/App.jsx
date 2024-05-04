@@ -89,14 +89,14 @@ function App() {
   return (
     <section className="p-4 py-10">
       {/* Banners */}
-      <div className="grid grid-cols-[70%_30%] max-lg:grid-cols-2 grid-rows-2 h-[450px] w-full gap-5 max-md:h-[300px] max-md:gap-2">
+      <div className="grid grid-cols-[70%_30%] max-lg:grid-cols-2 grid-rows-2 h-[350px] w-full gap-5 max-md:h-[300px] max-md:gap-2">
         <img
-          src="https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png"
+          src="https://bafybeicteimkajecwffgrjuyfvmfpi4dpk3bhrjh2iutu5rzongdpczlxm.ipfs.w3s.link/WhatsApp Image 2024-04-01 at 23.22.47_ab21b449.jpg"
           alt=""
-          className="col-span-1 rounded-xl row-span-2 max-lg:col-span-2 max-lg:row-span-1 h-full object-cover w-full bg-black/10"
+          className="col-span-1 rounded-xl row-span-2 max-lg:col-span-2 max-lg:row-span-1 h-full object-cover w-full bg-black/10 border"
         />
         <img
-          src="https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png"
+          src="https://bafybeicppdthbgb3cmmhb2lqo63lyhh2zd7l6c2mcs2eaqbchwyirtyjo4.ipfs.w3s.link/WhatsApp Image 2024-04-01 at 23.22.47_ee6ea1a6.jpg"
           alt=""
           className="h-full rounded-xl object-cover w-full bg-black/10"
         />
@@ -116,22 +116,24 @@ function App() {
             <BsArrowRight />
           </Link>
         </div>
-        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-6 gap-y-10 xl:gap-x-6 gap-3 rounded-lg">
+        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-4  gap-y-5 xl:gap-x-5 gap-3 rounded-lg">
           {fetchingAllProducts
             ? Array.from({ length: 4 }).map((id) => {
                 return <ProductLoader key={id} />;
               })
-            : allProducts.map((product) => (
-                <ProductCard
-                  id={product.id}
-                  isNew={true}
-                  name={product.name}
-                  key={product.id}
-                  image={product.imageUrls[0].url}
-                  category={product.category}
-                  price={numberWithCommas(product.price)}
-                />
-              ))}
+            : allProducts
+                .slice(0, 8)
+                .map((product) => (
+                  <ProductCard
+                    id={product.id}
+                    isNew={true}
+                    name={product.name}
+                    key={product.id}
+                    image={product.imageUrls[0].url}
+                    category={product.category}
+                    price={numberWithCommas(product.price)}
+                  />
+                ))}
         </div>
       </div>
 
@@ -144,21 +146,23 @@ function App() {
             <BsArrowRight />
           </Link>
         </div>
-        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-6 gap-y-10 xl:gap-x-6 gap-3 rounded-lg">
+        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-4  gap-y-5 xl:gap-x-5 gap-3 rounded-lg">
           {fetchingAllProducts
             ? Array.from({ length: 4 }).map((id) => {
                 return <ProductLoader key={id} />;
               })
-            : allProducts.map((product) => (
-                <ProductCard
-                  id={product.id}
-                  name={product.name}
-                  key={product.id}
-                  image={product.imageUrls[0].url}
-                  category={product.category}
-                  price={numberWithCommas(product.price)}
-                />
-              ))}
+            : allProducts
+                .slice(0, 8)
+                .map((product) => (
+                  <ProductCard
+                    id={product.id}
+                    name={product.name}
+                    key={product.id}
+                    image={product.imageUrls[0].url}
+                    category={product.category}
+                    price={numberWithCommas(product.price)}
+                  />
+                ))}
         </div>
       </div>
 
@@ -173,7 +177,7 @@ function App() {
             <BsArrowRight />
           </Link>
         </div>
-        <div className="mt-6 grid grid-cols-6 max-lg:flex max-lg:flex-nowrap max-lg:overflow-auto rounded-lg gap-5 items-center">
+        <div className="mt-6 grid grid-cols-6 max-lg:flex max-lg:flex-nowrap max-lg:overflow-auto rounded-lg gap-4 items-center">
           {categories.map((category, index) => (
             <CategoriesCard
               key={index}
@@ -227,13 +231,14 @@ function App() {
             <BsArrowRight />
           </Link>
         </div>
-        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-6 gap-y-10 xl:gap-x-6 gap-3 rounded-lg">
+        <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-4  gap-y-5 xl:gap-x-5 gap-3 rounded-lg">
           {fetchingAllProducts
             ? Array.from({ length: 4 }).map((id) => {
                 return <ProductLoader key={id} />;
               })
             : allProducts
                 .filter((dt) => dt.discountRate !== 0)
+                .slice(0, 8)
                 .map((product) => (
                   <ProductCard
                     id={product.id}
