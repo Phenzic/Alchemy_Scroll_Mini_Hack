@@ -24,7 +24,6 @@ const Vendor = () => {
       const testDate = new Date(filter_vendor_based_on_uid[0].createdAt.seconds*1000).toLocaleDateString(undefined,{day:'numeric',year:"numeric",month:'long'})
       setJoinedDate(testDate)
       setVendor(filter_vendor_based_on_uid);
-      console.log(filter_vendor_based_on_uid[0]);
     }
 
     const allProducts = async function(){
@@ -33,9 +32,6 @@ const Vendor = () => {
         return eachProduct.sellerId==id
       })
       setProducts(filtered_vendor_products)
-      const testDate = new Date(filtered_vendor_products[0].updatedAt.seconds*1000).toLocaleDateString(undefined,{day:'numeric',year:"numeric",month:'long'})
-      console.log({...filtered_vendor_products[0],date:testDate})
-      console.log(filtered_vendor_products)
     }
     allProducts()
 
