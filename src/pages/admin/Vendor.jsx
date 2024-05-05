@@ -42,7 +42,7 @@ const Vendor = () => {
       <h3 className="text-[24px] font-semibold ">Vendor Profile</h3>
       <p className="flex items-center gap-2 py-5 pt-0 max-md:text-sm">
         <Link to={-1}>Vendors</Link> <BsChevronRight />
-        <span className="font-semibold capitalize">{vendor.length===0?<p>Vendor</p>:vendor[0].firstName}</span>
+        <span className="font-semibold capitalize">{vendor.length===0?<p>Vendor</p>:vendor[0].businessName}</span>
       </p>
       {vendor.length===0?<p>Loading Vendor</p>:
       vendor.map(function(vendor){
