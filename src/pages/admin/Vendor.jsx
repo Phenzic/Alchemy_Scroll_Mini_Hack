@@ -11,7 +11,8 @@ const Vendor = () => {
   const {id}=useParams();
   const [vendor,setVendor] = useState([])
   const [products,setProducts] = useState([])
-  const date = new Date()
+  const [joinedDate,setJoinedDate] = useState("")
+  
   console.log(id)
   
   useEffect(function(){
@@ -20,8 +21,10 @@ const Vendor = () => {
       const filter_vendor_based_on_uid = vendor.filter(function(vendor){
         return vendor.uid==id
       })
+      const testDate = new Date(filter_vendor_based_on_uid[0].createdAt.seconds*1000).toLocaleDateString(undefined,{day:'numeric',year:"numeric",month:'long'})
+      setJoinedDate(testDate)
       setVendor(filter_vendor_based_on_uid);
-      console.log(filter_vendor_based_on_uid[0].createdAt.seconds);
+      console.log(filter_vendor_based_on_uid[0]);
     }
 
     const allProducts = async function(){
@@ -30,6 +33,8 @@ const Vendor = () => {
         return eachProduct.sellerId==id
       })
       setProducts(filtered_vendor_products)
+      const testDate = new Date(filtered_vendor_products[0].updatedAt.seconds*1000).toLocaleDateString(undefined,{day:'numeric',year:"numeric",month:'long'})
+      console.log({...filtered_vendor_products[0],date:testDate})
       console.log(filtered_vendor_products)
     }
     allProducts()
@@ -41,7 +46,7 @@ const Vendor = () => {
       <h3 className="text-[24px] font-semibold ">Vendor Profile</h3>
       <p className="flex items-center gap-2 py-5 pt-0 max-md:text-sm">
         <Link to={-1}>Vendors</Link> <BsChevronRight />
-        <span className="font-semibold">Pysavant Codes</span>
+        <span className="font-semibold">{vendor.length===0?<p>Vendor</p>:vendor[0].firstName}</span>
       </p>
       {vendor.length===0?<p>Loading Vendor</p>:
       vendor.map(function(vendor){
@@ -74,7 +79,7 @@ const Vendor = () => {
 
                 <div className="w-full flex flex-wrap items-center justify-between mb-3">
                   <p className="opacity-60">Joined on:</p>
-                  <p></p>
+                  <p>{joinedDate}</p>
                 </div>
                 <div className="flex gap-3 mt-5">
                   <button
@@ -158,7 +163,7 @@ const Vendor = () => {
                       <p className=" text-gray-500 font-light text-[12px]">
                         Price(₦)
                       </p>
-                      <p className=" text-xs">{eachProduct.price.toLocaleString()}</p>
+                      <p className=" text-xs">{Number(eachProduct.price).toLocaleString()}</p>
                     </section>
 
                     <section className="flex justify-between text-sm text-gray-700">
@@ -170,9 +175,9 @@ const Vendor = () => {
 
                     <section className="flex justify-between text-sm text-gray-700">
                       <p className=" text-gray-500 font-light text-[12px]">
-                        Date
+                        Discount Price
                       </p>
-                      <p className=" text-xs">{eachProduct.date}</p>
+                      <p className=" text-xs">{Number(eachProduct.discountedPrice).toLocaleString()}</p>
                     </section>
                     
                   </div>
@@ -182,14 +187,16 @@ const Vendor = () => {
             })}
           </div>
           <div className="w-full max-sm:hidden">
-            <div className="relative overflow-x-auto border sm:rounded-lg">
+            {
+              products.length===0?<p>No Products in User Catalog</p>:
+              <div className="relative overflow-x-auto border sm:rounded-lg">
               <table className="w-full text-sm text-left text-gray-500 md:table-fixed">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                   <th scope="col" className="px-6 py-3">Product</th>
                   <th scope="col" className="px-6 py-3">Category</th>
                   <th scope="col" className="px-6 py-3">Price</th>
                   <th scope="col" className="px-6 py-3">Stock</th>
-                  <th scope="col" className="px-6 py-3">Date</th>
+                  <th scope="col" className="px-6 py-3">Discount Price</th>
                 </thead>
                 <tbody className=" px-2 py-4">{
                 products.map(function(eachProduct){
@@ -197,9 +204,9 @@ const Vendor = () => {
                     <tr className="rounded-md bg-white border-b cursor-pointer hover:bg-gray-50 " key={eachProduct.id}>
                       <td className="px-6 py-4">{eachProduct.name}</td>
                       <td className="px-6 py-4">{eachProduct.category}</td>
-                      <td className="px-6 py-4">{eachProduct.price.toLocaleString()}</td>
+                      <td className="px-6 py-4">{Number(eachProduct.price).toLocaleString()}</td>
                       <td className="px-6 py-4">{eachProduct.quantity}</td>
-                      <td className="px-6 py-4">{eachProduct.updatedAt.seconds}</td>
+                      <td className="px-6 py-4">{Number(eachProduct.discountedPrice).toLocaleString()}</td>
                     </tr>
                   )
                 })
@@ -207,6 +214,7 @@ const Vendor = () => {
             </tbody>
               </table>
             </div>
+            }
           </div>
       </div>
       <Products />
