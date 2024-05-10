@@ -35,6 +35,8 @@ const Checkout = () => {
   const makePayment = async () => {
     if (!validateEmail(email)) {
       toast.error("Please enter a valid email");
+    } else if (selectedAddress.length < 1) {
+      toast.error("Please select an address to continue.");
     } else {
       if (!stripe || !elements) {
         return;
@@ -75,6 +77,7 @@ const Checkout = () => {
                   category: item.category,
                   image: item.imageUrls[0].url,
                   quantity: item.quantity,
+                  sellerId: item.sellerId,
                   deliveryInfo: {
                     productHeight: item.productHeight,
                     productLength: item.productLength,
