@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { getScreenCollections } from "../../utils/firebase";
+import {  } from "../../utils/firebase";
 import React, { useLayoutEffect,useEffect, useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import {
@@ -33,18 +33,9 @@ export function PieChat({
   const [totalVisits,setTotalVisits] =  useState({laptop:1,phone:5,tablet:3,unknown:2})
   
   useEffect(function(){
-    // if(navigator.onLine){
-    //   const screenCollectionFunction = async function(){
-    //     const screenCollection = await getScreenCollections()
-    //     console.log(screenCollection)
-    //     setTotalVisits(screenCollection[0])
-    //   }
-    //   screenCollectionFunction()
-    //   console.log("true")
-    // }else{
-    //   console.log("folase")
-    // }
-
+    const getOrders = async function(){
+      const orders = await get
+    }
   },[])
 
   const pieData = {

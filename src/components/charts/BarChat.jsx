@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import {totalUsers} from "../../utils/firebase/index"
+import {getUserOrders, totalUsers} from "../../utils/firebase/index"
 
 
 
@@ -11,28 +11,14 @@ const BarChart = () => {
   const [loadingData,setLoadingData] = useState(false);
   
   useEffect(function(){
-    setLoadingData(true)
-    const all_users = async function(){
-      const data = await totalUsers()
-      const test = data.map(function(each){
-        const timeStampInSeconds = each.createdAt.seconds
-        const date = new Date(timeStampInSeconds*1000)
-        const month = date.getMonth( ) 
-        return (month);       
-      })
-      // console.log(test);
-      // console.log(months[test[0]])
-      // setMonths(function(prev){
-      //   return(
-      //     [...prev,months[test[0]]?.concat(test)]
-      //   )
-      // })
-      setLoadingData(false)
-      
+    console.log("Loaded")
+    const getOrderTest = async function(){
+      const orders = await getUserOrders()
+      console.log(orders)
     }
-    all_users();
-    
+    getOrderTest()
   },[])
+  
 
   const options = {
     chart: {
