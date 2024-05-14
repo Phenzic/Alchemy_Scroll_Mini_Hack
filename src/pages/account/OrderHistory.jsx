@@ -102,54 +102,50 @@ export default function OrderHistory() {
                   </div>
 
                   <div className="-mb-6 mt-6 flow-root divide-y divide-gray-200 border-t border-gray-200">
-                    {order.products.map((product) => (
-                      <div key={product.id} className="py-6 sm:flex">
-                        <div className="flex space-x-4 sm:min-w-0 sm:flex-1 sm:space-x-6 lg:space-x-8">
-                          <img
-                            src={product.image}
-                            className="h-20 w-20 flex-none rounded-md object-cover object-center sm:h-48 sm:w-48"
-                          />
-                          <div className="min-w-0 flex-1 pt-1.5 sm:pt-0">
-                            <h3 className="text-sm font-medium text-gray-900">
-                              <a href={product.href}>{product.name}</a>
-                            </h3>
-                            <p className="truncate text-sm text-gray-500">
-                              <span className="capitalize">
-                                {product.category}
-                              </span>{" "}
-                              <span
-                                className="mx-1 text-gray-400"
-                                aria-hidden="true"
-                              >
-                                x
-                              </span>{" "}
-                              <span>{product.quantity}</span>
-                            </p>
-                            <p className="mt-1 font-medium text-gray-900">
-                              $
-                              {numberWithCommas(
-                                product.price * product.quantity
-                              )}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="mt-6 space-y-4 sm:ml-6 sm:mt-0 sm:w-40 sm:flex-none">
-                          <button
-                            onClick={() => navigate(`/product/${product.id}`)}
-                            type="button"
-                            className="flex w-full items-center justify-center rounded-md border border-transparent bg-[#305c45] px-2.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#305c45ce] focus:outline-none focus:ring-2 focus:ring-[#305c45b5] focus:ring-offset-2 sm:w-full sm:flex-grow-0"
-                          >
-                            Buy again
-                          </button>
-                          <button
-                            type="button"
-                            className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#305c45] focus:ring-offset-2 sm:w-full sm:flex-grow-0"
-                          >
-                            Shop similar
-                          </button>
+                    <div key={order.product.id} className="py-6 sm:flex">
+                      <div className="flex space-x-4 sm:min-w-0 sm:flex-1 sm:space-x-6 lg:space-x-8">
+                        <img
+                          src={order.product.image}
+                          className="h-20 w-20 flex-none rounded-md object-cover object-center sm:h-48 sm:w-48"
+                        />
+                        <div className="min-w-0 flex-1 pt-1.5 sm:pt-0">
+                          <h3 className="text-sm font-medium text-gray-900">
+                            <a href={order.product.href}>{order.product.name}</a>
+                          </h3>
+                          <p className="truncate text-sm text-gray-500">
+                            <span className="capitalize">
+                              {order.product.category}
+                            </span>{" "}
+                            <span
+                              className="mx-1 text-gray-400"
+                              aria-hidden="true"
+                            >
+                              x
+                            </span>{" "}
+                            <span>{order.product.quantity}</span>
+                          </p>
+                          <p className="mt-1 font-medium text-gray-900">
+                            $
+                            {numberWithCommas(order.product.price * order.product.quantity)}
+                          </p>
                         </div>
                       </div>
-                    ))}
+                      <div className="mt-6 space-y-4 sm:ml-6 sm:mt-0 sm:w-40 sm:flex-none">
+                        <button
+                          onClick={() => navigate(`/product/${order.product.id}`)}
+                          type="button"
+                          className="flex w-full items-center justify-center rounded-md border border-transparent bg-[#305c45] px-2.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#305c45ce] focus:outline-none focus:ring-2 focus:ring-[#305c45b5] focus:ring-offset-2 sm:w-full sm:flex-grow-0"
+                        >
+                          Buy again
+                        </button>
+                        <button
+                          type="button"
+                          className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#305c45] focus:ring-offset-2 sm:w-full sm:flex-grow-0"
+                        >
+                          Shop similar
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </section>
               ))
