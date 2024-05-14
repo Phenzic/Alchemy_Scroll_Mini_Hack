@@ -201,6 +201,21 @@ export const getScreenCollections = async function () {
 //     console.log("Error")
 //   }
 // }
+
+export const getOrders = async function(){
+  const ordersCollection = collection(db,"orders")
+  const data = [];
+  try{
+    const orderSnapshot = await getDocs(ordersCollection);
+    orderSnapshot.forEach(function(eachData){
+      data.push(eachData.data())
+    })
+    return data;
+  }catch(error){
+    console.log(error)
+  }
+}
+
 // update screenCollection
 export const updateScreenCollection = async function (object) {
   const screenRef = doc(db, "piechart", "UCTclap25Sp9bDPZUnFx");
@@ -245,8 +260,6 @@ export const getUserOrders = async (userId) => {
 
   return {};
 };
-
-
 
 export const getAllProducts = async () => {
   try {
