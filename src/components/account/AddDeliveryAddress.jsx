@@ -19,6 +19,7 @@ const defaultValue2 = {
   first_name: "",
   last_name: "",
   phone_number: "",
+  street: "",
 };
 
 const cities = [
@@ -43,30 +44,30 @@ export const AddDeliveryAddress = () => {
   const [formField, setFormField] = useState(defaultValue2);
   const [city, setCity] = useState("");
   const [saving, setSaving] = useState(false);
-  const [street, setStreet] = useState("");
+  // const [street, setStreet] = useState("");
   const navigate = useNavigate();
-  const {
-    ready,
-    value,
-    setValue,
-    suggestions: { status, data },
-    clearSuggestions,
-  } = usePlacesAutocomplete({
-    requestOptions: {
-      componentRestrictions: {
-        country: "jm",
-      },
-    },
-  });
+  // const {
+  //   ready,
+  //   value,
+  //   setValue,
+  //   suggestions: { status, data },
+  //   clearSuggestions,
+  // } = usePlacesAutocomplete({
+  //   requestOptions: {
+  //     componentRestrictions: {
+  //       country: "jm",
+  //     },
+  //   },
+  // });
 
-  const handleSelect1 = async (address) => {
-    setValue(address, false);
-    clearSuggestions();
+  // const handleSelect1 = async (address) => {
+  //   setValue(address, false);
+  //   clearSuggestions();
 
-    const results = await getGeocode({ address });
-    const { lat, lng } = await getLatLng(results[0]);
-    console.log(lat, lng, address);
-  };
+  //   const results = await getGeocode({ address });
+  //   const { lat, lng } = await getLatLng(results[0]);
+  //   console.log(lat, lng, address);
+  // };
 
   const clearFields = () => {
     setFormField(defaultValue2);
@@ -141,13 +142,13 @@ export const AddDeliveryAddress = () => {
           );
         })}
 
-        <div className="relative">
+        {/* <div className="relative">
           <label className="block text-sm leading-6 text-start text-gray-600">
             Street Description
           </label>
           <div className="mt-2">
             <input
-              disabled={saving || !ready}
+              disabled={saving}
               id={"street"}
               name={"street"}
               type={"text"}
@@ -174,7 +175,7 @@ export const AddDeliveryAddress = () => {
                 );
               })}
           </div>
-        </div>
+        </div> */}
 
         <div className="">
           <Select
