@@ -8,7 +8,12 @@ import { useNavigate } from "react-router";
 
 const Orders = () => {
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const getOrders = () => {
+
+      
+  }
 
   return (
     <React.Fragment>
@@ -31,7 +36,7 @@ const Orders = () => {
         {/* MOBILE VIEW OF SELLERS ORDER PAGE */}
         <main className=" bg-white px-2 py-5 rounded-md">
           <div className=" sm:hidden flex flex-col gap-5">
-            {productData.slice(0, 5).map((eachProduct) => {
+            {productData.map((eachProduct) => {
               return (
                 <NavLink key={eachProduct.id} to={`${eachProduct.id}`}>
 
@@ -41,10 +46,7 @@ const Orders = () => {
                 >
                   <section className=" flex items-center justify-between">
                     <h1 className=" text-sm text-black font-semibold font-sans">
-                      #{eachProduct.id}
-                      {eachProduct.id + 1}
-                      {eachProduct.id + 2}
-                      {eachProduct.id + 3}
+                    {  eachProduct.title}
                     </h1>
                     <aside className=" gap-3 flex items-center">
                       <FiEdit3 />
@@ -58,7 +60,7 @@ const Orders = () => {
                         Product
                       </p>
                       <p className=" text-[12px]">
-                        {eachProduct.name.slice(0, 10)}...
+                        {/* {eachProduct.name.slice(0, 10)}... */}
                       </p>
                     </section>
                     <section className="flex justify-between text-sm text-gray-700">
