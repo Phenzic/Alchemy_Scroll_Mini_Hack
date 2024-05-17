@@ -13,8 +13,6 @@ const Vendor = () => {
   const [products,setProducts] = useState([])
   const [joinedDate,setJoinedDate] = useState("")
   
-  console.log(id)
-  
   useEffect(function(){
     const vendorFunction = async function(){
       const vendor = await totalUsers()

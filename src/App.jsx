@@ -26,6 +26,40 @@ import { BeatLoader } from "react-spinners";
 import ProductLoader from "./components/ProductLoader";
 
 function App() {
+  
+  // const [laptop,setLaptop]= useLocalStorage("laptop",0);
+  // const [tablet,setTablet]= useLocalStorage("tablet",0);
+  // const [unknown,setUnknown]= useLocalStorage("unknown",0);
+  // const [phone,setPhone]= useLocalStorage("phone",0);
+
+
+  // useEffect(function () {
+  //   const screenCollectionFunction = async function () {
+  //     const screenCollection = await getScreenCollections();
+  //     console.log(screenCollection)
+  //   };
+  //   screenCollectionFunction();
+  //   if(screenWidth >= 1200){
+  //     console.log(laptop)
+  //     console.log("laptop")
+  //     setLaptop(laptop+=1)
+  //   }else if(screenWidth > 600 && screenWidth<1200){
+  //     console.log(tablet)
+  //     console.log("tablet")
+  //   }else if(screenWidth >= 300 && screenWidth<=598){
+  //     console.log(phone)
+  //     console.log("phone")
+  //   }else{
+  //     console.log(unknown)
+  //     console.log("unknown")
+  //   }
+
+  // }, []);
+
+  
+  
+  
+  
   const screenWidth = window.innerWidth;
   const [test, setTest] = useState({
     tablet: 0,

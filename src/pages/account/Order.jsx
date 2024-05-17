@@ -201,29 +201,28 @@ const Order = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {order.products.map((product, idx) => {
-                      return (
-                        <tr key={idx} className="">
+                   
+                        <tr className="">
                           <td className="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                             <div className="font-medium text-slate-700">
-                              {product.name}
+                              {order.product.name}
                             </div>
                             <div className="mt-0.5 text-slate-500 sm:hidden">
-                              1 unit at ${product.price}
+                              1 unit at ${order.product.price}
                             </div>
                           </td>
                           <td className="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
-                            x{product.quantity}
+                            x{order.product.quantity}
                           </td>
                           <td className="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
-                            {product.price}
+                            {order.product.price}
                           </td>
                           <td className="py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                            {product.price * product.quantity}
+                            {order.product.price * order.product.quantity}
                           </td>
                         </tr>
-                      );
-                    })}
+                      
+                  
                   </tbody>
                   <tfoot>
                     <tr>
@@ -241,12 +240,7 @@ const Order = () => {
                         Subtotal
                       </th>
                       <td className="pt-6 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                        {order.products
-                          .reduce(
-                            (total, item) => total + item.price * item.quantity,
-                            0
-                          )
-                          .toFixed(2)}
+                        {(order.product.price * order.product.quantity).toFixed(2)}
                       </td>
                     </tr>
 
@@ -283,12 +277,7 @@ const Order = () => {
                         Total
                       </th>
                       <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                        {order.products
-                          .reduce(
-                            (total, item) => total + item.price * item.quantity,
-                            0
-                          )
-                          .toFixed(2)}
+                      {(order.product.price * order.product.quantity).toFixed(2)}
                       </td>
                     </tr>
                   </tfoot>

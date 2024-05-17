@@ -35,6 +35,8 @@ const Checkout = () => {
   const makePayment = async () => {
     if (!validateEmail(email)) {
       toast.error("Please enter a valid email");
+    } else if (selectedAddress.length < 1) {
+      toast.error("Please select an address to continue.");
     } else {
       if (!stripe || !elements) {
         return;
@@ -64,31 +66,34 @@ const Checkout = () => {
           setIsLoading(false);
         } else {
           if (result.paymentIntent.status === "succeeded") {
-            await addDoc(collection(db, "orders"), {
-              userId: userDetails.uid,
-              paymentIntentId: result.paymentIntent.id,
-              products: cartItems.map((item) => {
-                let newObj = {
-                  id: item.id,
-                  name: item.name,
-                  price: item.price,
-                  category: item.category,
-                  image: item.imageUrls[0].url,
-                  quantity: item.quantity,
-                  deliveryInfo: {
-                    productHeight: item.productHeight,
-                    productLength: item.productLength,
-                    productSku: item.productSku,
-                    productWeight: item.productWeight,
-                    productWidth: item.productWidth,
-                  },
-                };
-                return { ...newObj };
-              }),
-              addressId: selectedAddress,
-              deliveryStatus: "pending",
-              createdOn: serverTimestamp(),
-            }).then((doc) => {
+            await Promise.all(
+              cartItems.map(
+                async (item) =>
+                  await addDoc(collection(db, "orders"), {
+                    userId: userDetails.uid,
+                    productSellerId: item.sellerId,
+                    paymentIntentId: result.paymentIntent.id,
+                    product: {
+                      id: item.id,
+                      name: item.name,
+                      price: item.price,
+                      category: item.category,
+                      image: item.imageUrls[0].url,
+                      quantity: item.quantity,
+                      deliveryInfo: {
+                        productHeight: item.productHeight,
+                        productLength: item.productLength,
+                        productSku: item.productSku,
+                        productWeight: item.productWeight,
+                        productWidth: item.productWidth,
+                      },
+                    },
+                    addressId: selectedAddress,
+                    deliveryStatus: "pending",
+                    createdOn: serverTimestamp(),
+                  })
+              )
+            ).then((doc) => {
               toast.success("Order has been created Successful");
               navigate("/account/checkout-successful");
               setIsLoading(false);
