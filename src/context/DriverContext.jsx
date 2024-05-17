@@ -22,33 +22,21 @@ const DriverProvider = ({ children }) => {
     }
   };
 
-  const fetchUserDetails = async (id) => {
-    const docRef = await getDoc(doc(db, "users", id));
-    if (docRef.exists()) {
-      return docRef.data();
-    } else {
-      return null;
-    }
-  };
-
   const fetchAllOrders = async () => {
     try {
       setFetchingOrders(true);
       const docsRef = await getDocs(collection(db, "orders"));
-      let temp = [];
-      Promise.all(
-        docsRef.forEach(async (data) => {
-          // const addressDetails = await fetchAddressDetails(
-          //   data.data().addressId
-          // );
-          const userDetails = await fetchUserDetails(data.data().userId);
-          temp.push({ ...data.data(), userDetails });
+
+      const temp = await Promise.all(
+        docsRef.docs.map(async (doc) => {
+          const addressDetails = await fetchAddressDetails(
+            doc.data().addressId
+          );
+          return { ...doc.data(), id: doc.id, addressDetails };
         })
-      ).then(() => {
-        setAllOrders(temp);
-        console.log(temp);
-      });
+      );
       setFetchingOrders(false);
+      setAllOrders(temp);
     } catch (error) {
       setFetchingOrders(false);
       console.log(error);
