@@ -16,7 +16,7 @@ const RideHistory = () => {
       <AccountHeader heading="Delivery History" text="" className="" />
 
       <div className="p-5 rounded-md bg-white gap-5 flex flex-col">
-        <CustomerDeliveries />
+        <CustomerDeliveries isDelivered={true} />
       </div>
 
       {/**forward back buttons */}
