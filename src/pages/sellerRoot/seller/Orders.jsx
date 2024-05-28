@@ -1,19 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { productData } from "../../../utils/testData";
 import { FiEdit3 } from "react-icons/fi";
 import { GoTrash } from "react-icons/go";
 import Pagination from "../../../components/pagination/Pagination";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../../../utils/firebase";
+import { useUser } from "../../../context/UserContext";
+import { ClipLoader } from "react-spinners";
+
 
 const Orders = () => {
 
   const navigate = useNavigate();
+  const { userDetails } = useUser();
+  const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(true)
 
-  const getOrders = () => {
 
-      
+  const getOrders = async({snapshot}) => {
+
+    try{
+      const orderData = snapshot.docs.map((order) => ({
+        id:order.id,
+        ...order.data()
+      }))
+
+      setOrders(orderData)
+    }catch (error){
+      console.log(error)
+    }
   }
+
+  useEffect(() => {
+    const ordersCollectionRef = collection(db, "orders");
+    const q = query(ordersCollectionRef, where("productSellerId", "==", userDetails.uid ))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      getOrders({snapshot:snapshot})
+      setLoadingOrders(false)
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   return (
     <React.Fragment>
@@ -36,7 +65,14 @@ const Orders = () => {
         {/* MOBILE VIEW OF SELLERS ORDER PAGE */}
         <main className=" bg-white px-2 py-5 rounded-md">
           <div className=" sm:hidden flex flex-col gap-5">
-            {productData.map((eachProduct) => {
+            {
+                     loadingOrders ? (
+                      <div className="flex gap-4 items-center justify-center py-4 w-full">
+                      <ClipLoader color="#086047" size={30} />
+                      <p>Loading Products</p>
+                    </div>
+                    ): orders.length > 0 ? 
+                    orders.map((eachProduct) => {
               return (
                 <NavLink key={eachProduct.id} to={`${eachProduct.id}`}>
 
@@ -46,7 +82,7 @@ const Orders = () => {
                 >
                   <section className=" flex items-center justify-between">
                     <h1 className=" text-sm text-black font-semibold font-sans">
-                    {  eachProduct.title}
+                    {  eachProduct.product.name }
                     </h1>
                     <aside className=" gap-3 flex items-center">
                       <FiEdit3 />
@@ -117,9 +153,14 @@ const Orders = () => {
                 </div>
                 </NavLink>
               );
-            })}
+            }) : (
+              <div className="w-full h-full flex justify-center items-center">
+                <p className="text-xl text-green-800">No Products.</p>
+              </div>)}
           </div>
           {/* DESKTOP VIEW OF SELLERS ORDER PAGE */}
+
+       
           <div className="w-full max-sm:hidden">
             <div className="relative overflow-x-auto border sm:rounded-lg">
               <table className="w-full text-sm text-left text-gray-500 md:table-fixed">
@@ -149,40 +190,50 @@ const Orders = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {productData.slice(0, 5).map(function (eachProduct) {
-                    return (
-                      <tr
-                        key={eachProduct.id}
-                        onClick={function(){
-                          navigate(`${eachProduct.id}`)
-                        }}
-                        className="bg-white border-b  hover:bg-gray-50 "
-                      >
-                        <td className="px-6 py-4 truncate">
-                          #{eachProduct.id}
-                          {eachProduct.id + 1}
-                          {eachProduct.id + 2}
-                          {eachProduct.id + 3}
-                        </td>
-                        <td className="px-6 py-4 truncate">
-                          {eachProduct.title.slice(0,10)}...
-                        </td>
-                        <td className="px-6 py-4 truncate">16/07/2023</td>
-                        <td className="px-6 py-4 truncate">
-                          Samuel Sampson
-                        </td>
-                        <td className="px-6 py-4 truncate">{eachProduct.price}</td>
-                        <td className="px-6 py-4">
-                          {Math.floor(Math.random() * 2) == 0 ? (
-                            <span className=" text-yellow-400">Pending</span>
-                          ) : (
-                            <span className=" text-green-400">Completed</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4">View →</td>
-                      </tr>
-                    );
-                  })}
+                {
+            loadingOrders ? (
+              <div className="flex gap-4 items-center justify-center py-4 w-full">
+              <ClipLoader color="#086047" size={30} />
+              <p>Loading Products</p>
+            </div>
+            ): orders.length > 0 ?
+            orders.map((order) =>   (
+              <tr
+                key={order.id}
+                onClick={function(){
+                  navigate(`${order.id}`)
+                }}
+                className="bg-white border-b  hover:bg-gray-50 "
+              >
+                <td className="px-6 py-4 truncate">
+                  {order.id}
+           
+                </td>
+                <td className="px-6 py-4 truncate">
+                  {order.product.name}
+                </td>
+                <td className="px-6 py-4 truncate">16/07/2023</td>
+                <td className="px-6 py-4 truncate">
+                  Samuel Sampson
+                </td>
+                <td className="px-6 py-4 truncate">{order.product.price}</td>
+                <td className="px-6 py-4">
+                  {order.deliveryStatus == "pending" ? (
+                    <span className=" text-yellow-400">Pending</span>
+                  ) : (
+                    <span className=" text-green-400">Completed</span>
+                  )}
+                </td>
+                <td className="px-6 py-4">View →</td>
+              </tr>
+            )) : (
+              <div className="w-full h-full flex justify-center items-center">
+                <p className="text-xl text-green-800">No Products.</p>
+              </div>
+            )
+          
+          }
+                
                 </tbody>
               </table>
             </div>

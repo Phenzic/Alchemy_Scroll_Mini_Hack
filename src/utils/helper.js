@@ -67,7 +67,18 @@ export function iOS() {
   ].includes(navigator.platform)
   || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
 }
+export function formatDateToDDMMYYYY(timestamp) {
+  // Create a Date object from the date string
+  const date = timestamp.toDate();
 
+  // Extract the day, month, and year
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+
+  // Format the date as dd/mm/yyyy
+  return `${day}/${month}/${year}`;
+}
 // const makePayment = async () => {
 //   if (email == "" || selectedAddress == "") {
 //     toast.error(
