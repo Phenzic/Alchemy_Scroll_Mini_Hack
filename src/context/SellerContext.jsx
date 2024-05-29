@@ -17,7 +17,8 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { useUser } from "./UserContext";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import toast from "react-hot-toast";
 
 export const SellerContext = createContext();
 
@@ -27,7 +28,7 @@ export const useSeller = () => {
 
 const SellerProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
-  const [navigateToProductsPage, setNavigateToProductsPage] = useState(false)
+  const [navigateToProductsPage, setNavigateToProductsPage] = useState(false);
 
   // const navigate = useNavigate();
   const [param, setParam] = useState("");
@@ -95,6 +96,10 @@ const SellerProvider = ({ children }) => {
     tags: [],
   };
   const [dragOver, setDragOver] = React.useState(false);
+  const [loadingOrder, setLoadingOrder] = useState(false);
+  const [orderUserDetails, setOrderUserDetails] = useState(null);
+  const [order, setOrder] = useState(null);
+  const [deliveryAddress, setdeliveryAddress] = useState(null);
 
   const getProductDetailsFromDatabase = async (urlParam) => {
     setIsLoading(true);
@@ -329,7 +334,7 @@ const SellerProvider = ({ children }) => {
         setVariations([]);
         // navigate("/seller/products");
         setIsLoading(false);
-        setNavigateToProductsPage(true)
+        setNavigateToProductsPage(true);
         return;
       }
 
@@ -343,7 +348,7 @@ const SellerProvider = ({ children }) => {
       setTags([]);
       setVariations([]);
       // navigate("/seller/products");
-      setNavigateToProductsPage(true)
+      setNavigateToProductsPage(true);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -442,7 +447,6 @@ const SellerProvider = ({ children }) => {
     }
   };
 
-
   useEffect(() => {
     console.log(variations);
     console.log(tags);
@@ -459,6 +463,70 @@ const SellerProvider = ({ children }) => {
     imagesToDeleteFromStorageAfterEditing,
   ]);
 
+  //--------------------------------------------------------ORDERS FUNCTIONS---------------------------------------------------
+
+  const fetchOrder = async (id) => {
+    try {
+      setLoadingOrder(true);
+      const res = await getDoc(doc(db, "orders", id));
+      setLoadingOrder(false);
+      if (res.exists()) {
+        setOrder(res.data());
+      }
+
+      // console.log(res.data())
+    } catch (error) {
+      setLoadingOrder(false);
+      toast.error("An error occured while fetching order details");
+    }
+  };
+
+  const fetchDeliveryDetails = async (addressId) => {
+    try {
+      setLoadingOrder(true);
+      const res = await getDoc(doc(db, "addresses", addressId));
+      setLoadingOrder(false);
+
+      setdeliveryAddress(res.data());
+    } catch (error) {
+      setLoadingOrder(false);
+      toast.error("An error occured while fetching order details");
+    }
+  };
+
+  const getUserNameFunc = async(addressId) => {
+    try {
+      const res = await getDoc(doc(db, "addresses", addressId));
+      console.log("RENDERRINNNG")
+      return res.data().first_name;
+    } catch (error) {
+      toast.error("An error occured while fetching order details");
+    }
+  }
+  const fetchUserDetails = async (userId) => {
+    try {
+      setLoadingOrder(true); // Assuming setLoadingOrder is a state setter function
+      const res = await getDoc(doc(db, "users", userId));
+  
+      setLoadingOrder(false); // Stop loading spinner
+  
+      if (res.exists()) {
+        const userDetails = res.data();
+        setOrderUserDetails(userDetails); // Assuming setOrderUserDetails is a state setter function
+      } else {
+        toast.error("No user found with the provided ID");
+      }
+    } catch (error) {
+      setLoadingOrder(false); // Ensure loading spinner is stopped in case of error
+      toast.error("An error occurred while fetching order details");
+    }
+  }
+  const subTotalCalculations = () => {
+    return (
+      parseFloat(order.product.price) * parseFloat(order.product.quantity) + 100
+    );
+  };
+
   const values = {
     categories,
     isLoading,
@@ -473,7 +541,20 @@ const SellerProvider = ({ children }) => {
     setVariations,
     Adddd,
     tags,
+    loadingOrder,
+    orderUserDetails,
+    order,
+    setOrder,
+    deliveryAddress,
+    setdeliveryAddress,
     setTags,
+    getUserNameFunc,
+    fetchUserDetails,
+    setOrderUserDetails,
+    setLoadingOrder,
+    fetchOrder,
+    fetchDeliveryDetails,
+    subTotalCalculations,
     tagsToDeleteFromDbAfterEditing,
     setTagsToDeleteFromDbAfterEditing,
     setImagesToDeleteFromStorageAfterEditing,
@@ -482,7 +563,8 @@ const SellerProvider = ({ children }) => {
     setDeleteProductModal,
     productToDeleteDetails,
     setProductToDeleteDetails,
-    navigateToProductsPage, setNavigateToProductsPage,
+    navigateToProductsPage,
+    setNavigateToProductsPage,
     deleteProductFromDatabase,
     setVariationsToDeleteFromDbAfterEditing,
     deleteParticularObjectFromStorage,
@@ -506,7 +588,7 @@ const SellerProvider = ({ children }) => {
 };
 
 SellerProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default SellerProvider;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { productData } from "../../../utils/testData";
@@ -10,76 +10,46 @@ import { TbCurrentLocation } from "react-icons/tb";
 import { FaShippingFast } from "react-icons/fa";
 import { IoCheckboxOutline } from "react-icons/io5";
 import mastercard from "../../../assets/mastercardicon.png";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../utils/firebase";
-import toast from "react-hot-toast";
-import { formatDateToDDMMYYYY, numberWithCommas, timeAgo } from "../../../utils/helper";
+
+import {
+  formatDateToDDMMYYYY,
+  numberWithCommas,
+  timeAgo,
+} from "../../../utils/helper";
+import { SellerContext } from "../../../context/SellerContext";
 
 function SellerOrder() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loadingOrder, setLoadingOrder] = useState(false);
-  const [order, setOrder] = useState(null);
-  const [deliveryAddress, setdeliveryAddress] = useState(null);
-  const [userDetails, setUserDetails] = useState(null);
-  const [loadingUserDetails, setLoadingUserDetails] = useState(false);
-  const [loadingAddress, setLoadingAddress] = useState(false);
 
-  const fetchOrder = async () => {
-    try {
-      setLoadingOrder(true);
-      const res = await getDoc(doc(db, "orders", id));
-      setLoadingOrder(false);
-      if (res.exists()) {
-        setOrder(res.data());
-      }
-      // console.log(res.data())
-    } catch (error) {
-      setLoadingOrder(false);
-      toast.error("An error occured while fetching order details");
-    }
-  };
+  const {
+    fetchUserDetails,
+    loadingOrder,
+    orderUserDetails,
+    // setOrderUserDetails,
+    setLoadingOrder,
+    order,
+    // setOrder,
+    deliveryAddress,
+    // setdeliveryAddress,
+    fetchOrder,
+    fetchDeliveryDetails,
+    subTotalCalculations,
+  } = useContext(SellerContext);
 
-  const fetchDeliveryDetails = async (addressId) => {
-    try {
-      setLoadingOrder(true);
-      const res = await getDoc(doc(db, "addresses", addressId));
-      setLoadingOrder(false);
-
-      setdeliveryAddress(res.data());
-    } catch (error) {
-      setLoadingOrder(false);
-      toast.error("An error occured while fetching order details");
-    }
-  };
-
-  const fetchUserDetails = async (userId) => {
-    try {
-      setLoadingOrder(true);
-      const res = await getDoc(doc(db, "users", userId));
-      setLoadingOrder(false);
-
-      setUserDetails(res.data());
-    } catch (error) {
-      setLoadingOrder(false);
-      toast.error("An error occured while fetching order details");
-    }
-  };
-
-  const subTotalCalculations = () => {
-    return (parseFloat(order.product.price) * parseFloat(order.product.quantity)) + 100
-  }
 
   useEffect(() => {
     if (order) {
       fetchDeliveryDetails(order.addressId);
       fetchUserDetails(order.userId);
+      console.log("FROM SELLER ORDER")
       console.log(order);
     }
-  }, [order]);
+  }, []);
 
   useEffect(() => {
-    fetchOrder();
+    
+    fetchOrder(id);
   }, [id]);
 
   return (
@@ -125,7 +95,7 @@ function SellerOrder() {
               </div>
               <span className="text-sm">Fetching order details...</span>
             </div>
-          ) : !order || !deliveryAddress || !userDetails ? (
+          ) : !order || !deliveryAddress || !orderUserDetails ? (
             <p className="py-5">This Order does not exist</p>
           ) : (
             <>
@@ -145,7 +115,7 @@ function SellerOrder() {
                     </div>
                     <div className=" flex justify-between">
                       <p className=" text-gray-500 font-semibold">Email</p>
-                      <p>{userDetails.email}</p>
+                      <p>{orderUserDetails.email}</p>
                     </div>
                     <div className=" flex justify-between">
                       <p className=" text-gray-500 font-semibold">Phone</p>
@@ -232,7 +202,9 @@ function SellerOrder() {
                   </div>
                   <div className=" flex justify-between">
                     <p className=" text-gray-500 font-semibold">Total</p>
-                    <p>{`₦${numberWithCommas(subTotalCalculations() + 1000)}`}</p>
+                    <p>{`₦${numberWithCommas(
+                      subTotalCalculations() + 1000
+                    )}`}</p>
                   </div>
                 </main>
               </div>
@@ -263,7 +235,9 @@ function SellerOrder() {
                       <span className=" font-medium text-sm">Order</span>
                     </header>
                     <p className=" px-10">Customer placed order</p>
-                    <p className=" px-10">{formatDateToDDMMYYYY(order.createdOn)}</p>
+                    <p className=" px-10">
+                      {formatDateToDDMMYYYY(order.createdOn)}
+                    </p>
                   </section>
                   <section className=" text-gray-500 text-sm space-y-2">
                     <header className=" text-black flex items-center gap-3">
