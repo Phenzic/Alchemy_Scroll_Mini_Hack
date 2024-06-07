@@ -72,7 +72,12 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const signOutUser = async () => await signOut(auth);
+export const signOutUser = async () => {
+  await signOut(auth);
+  localStorage.removeItem("authUser");
+  localStorage.removeItem("userDetails");
+  window.location.reload();
+};
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
@@ -98,12 +103,18 @@ export const createUserDocumentFromAuth = async (userAuth, username) => {
         uid: userAuth.uid,
         userRole: "user",
       });
+      return {
+        email,
+        createdAt,
+        username,
+        transactions: [],
+        uid: userAuth.uid,
+        userRole: "user",
+      };
     } catch (error) {
-      console.log("error creating the user", error.message);
+      throw new Error("Failed to create details: " + error);
     }
   }
-
-  return userDocRef;
 };
 
 // create user details
@@ -134,12 +145,20 @@ export const createSellerDocumentFromAuth = async (
         uid: userAuth.uid,
         userRole: "seller",
       });
+      return {
+        email,
+        createdAt,
+        username,
+        businessName: business_name,
+        phoneNumber: phone_number,
+        transactions: [],
+        uid: userAuth.uid,
+        userRole: "seller",
+      };
     } catch (error) {
-      console.log("error creating the user", error.message);
+      throw new Error("Failed to create details: " + error);
     }
   }
-
-  return userDocRef;
 };
 
 // get all users in  collection
@@ -159,18 +178,20 @@ export const totalUsers = async () => {
 
 // get user details
 export const getUserDetails = async (userAuth) => {
-  if (!userAuth) return "";
+  if (!userAuth) return null;
+
   try {
     const userDocRef = doc(db, "users", userAuth.uid);
     const userSnapshot = await getDoc(userDocRef);
+
     if (userSnapshot.exists()) {
       return userSnapshot.data();
+    } else {
+      return null;
     }
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    throw new Error("Failed to fetch user details: " + error);
   }
-
-  return {};
 };
 
 // get screen collection
@@ -202,19 +223,19 @@ export const getScreenCollections = async function () {
 //   }
 // }
 
-export const getOrders = async function(){
-  const ordersCollection = collection(db,"orders")
+export const getOrders = async function () {
+  const ordersCollection = collection(db, "orders");
   const data = [];
-  try{
+  try {
     const orderSnapshot = await getDocs(ordersCollection);
-    orderSnapshot.forEach(function(eachData){
-      data.push(eachData.data())
-    })
+    orderSnapshot.forEach(function (eachData) {
+      data.push(eachData.data());
+    });
     return data;
-  }catch(error){
-    console.log(error)
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
 // update screenCollection
 export const updateScreenCollection = async function (object) {

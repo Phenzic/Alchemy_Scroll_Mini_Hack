@@ -18,8 +18,12 @@ export const useUser = () => {
 };
 
 const UserProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userDetails, setUserDetails] = useState({});
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("authUser"))
+  );
+  const [userDetails, setUserDetails] = useState(
+    JSON.parse(localStorage.getItem("userDetails"))
+  );
   const [deliveryAddresses, setDeliveryAddresses] = useState([]);
   const [loadingAddress, setLoadingAddress] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
@@ -52,22 +56,35 @@ const UserProvider = ({ children }) => {
 
   useEffect(() => {
     fetchAllProducts();
-    if (Object.keys(userDetails).length > 0) {
+    if (userDetails && Object.keys(userDetails).length > 0) {
       fetchAddresses();
       fetchOrders();
     }
   }, [currentUser, userDetails]);
 
   useEffect(() => {
-    auth.onAuthStateChanged(async (user) => {
-      localStorage.setItem("authUser", JSON.stringify(user));
-      setCurrentUser(user);
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        localStorage.setItem("authUser", JSON.stringify(user));
+        setCurrentUser(user);
+      }
+
+      const userLocDetails = localStorage.getItem("userDetails");
+
+      if (user && userLocDetails && userLocDetails !== undefined) {
+        setUserDetails(JSON.parse(userLocDetails));
+      }
 
       if (user) {
         const userData = await getUserDetails(user);
-        setUserDetails(userData);
+        if (userData) {
+          setUserDetails(userData);
+          localStorage.setItem("userDetails", JSON.stringify(userData));
+        }
       }
     });
+
+    return () => unsubscribe();
   }, [auth]);
 
   const value = {

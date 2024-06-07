@@ -16,10 +16,10 @@ const AuthRoot = () => {
   useEffect(() => {
     if (!currentUser) {
       navigate("/auth/login");
-    } else {
-      navigate("/");
+    } else if (currentUser && userDetails) {
+      navigate("/account/profile");
     }
-  }, [currentUser]);
+  }, [currentUser, userDetails]);
 
   return (
     <div className="flex">

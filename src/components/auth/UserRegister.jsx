@@ -8,6 +8,7 @@ import {
   createUserDocumentFromAuth,
 } from "../../utils/firebase";
 import { getName } from "../../utils/helper";
+import { useUser } from "../../context/UserContext";
 
 const defaultValue = {
   username: "",
@@ -16,6 +17,7 @@ const defaultValue = {
   confirm_password: "",
 };
 const UserRegister = () => {
+  const { setUserDetails } = useUser();
   const [state, setstate] = useState("unloaded");
   const [formField, setFormField] = useState(defaultValue);
 
@@ -48,7 +50,9 @@ const UserRegister = () => {
         password
       );
 
-      await createUserDocumentFromAuth(user, username);
+      const data = await createUserDocumentFromAuth(user, username);
+      setUserDetails(data);
+      localStorage.setItem("userDetails", JSON.stringify(data));
       setIsLoading(false);
       toast.success("Welcome to JAMAZAN");
       navigate("/");

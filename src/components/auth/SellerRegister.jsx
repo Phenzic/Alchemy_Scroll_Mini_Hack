@@ -9,6 +9,7 @@ import {
 import toast from "react-hot-toast";
 import { getName } from "../../utils/helper";
 import { Input } from "../input";
+import { useUser } from "../../context/UserContext";
 
 const defaultValue = {
   username: "",
@@ -20,6 +21,7 @@ const defaultValue = {
 };
 
 const SellerRegister = () => {
+  const { setUserDetails } = useUser();
   const [formField, setFormField] = useState(defaultValue);
   const [state, setstate] = useState("unloaded");
 
@@ -59,12 +61,14 @@ const SellerRegister = () => {
         password
       );
 
-      await createSellerDocumentFromAuth(
+      const data = await createSellerDocumentFromAuth(
         user,
         username,
         business_name,
         phone_number
       );
+      setUserDetails(data);
+      localStorage.setItem("userDetails", JSON.stringify(data));
       setIsLoading(false);
       toast.success("Welcome to JAMAZAN");
       navigate("/seller/dashboard");
