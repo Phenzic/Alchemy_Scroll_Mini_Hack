@@ -13,7 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { Cross as Hamburger } from "hamburger-react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/newlogo.png";
 import { useLocation, useNavigate } from "react-router";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
@@ -99,7 +99,15 @@ const NavBar = () => {
               <Hamburger rounded size={24} toggled={isOpen} toggle={setOpen} />
             </div>
             <Link to={"/"}>
-              <img className="w-[170px] max-md:w-[150px]" src={logo} alt="" />
+              <div className="w-[12rem] h-[5rem]" style={{
+                backgroundImage: `url(${logo})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                scale: "1.3"
+              }}>
+
+              </div>
             </Link>
           </div>
           <div className="flex items-center gap-5 md:hidden">
