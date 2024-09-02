@@ -1,4 +1,4 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import logo from "../../assets/newlogo.png";
 import { Link } from "react-router-dom";
 
