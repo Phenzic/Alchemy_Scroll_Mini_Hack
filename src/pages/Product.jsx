@@ -80,22 +80,28 @@ const Product = ({ isAdmin = false }) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 px-4 max-md:px-4 md:items-center">
             <div className="w-full space-y-4">
               <div className="flex items-center justify-center h-[400px] bg-white rounded-xl border">
-                <img
-                  className="rounded-3xl w-full h-full object-contain"
-                  src={selectedProduct.imageUrls[indexValue].url}
-                  alt=""
-                />
+                {selectedProduct.imageUrls.length > 0 && (
+                  <img
+                    className="rounded-3xl w-full h-full object-contain"
+                    src={selectedProduct.imageUrls[indexValue].url}
+                    alt=""
+                  />
+                )}
               </div>
               <ul className="flex gap-3 items-center justify-center">
-                {selectedProduct.imageUrls.map((item, index) => (
-                  <li key={index} onClick={() => setIndexValue(index)}>
-                    <img
-                      className="w-[130px] h-[130px] object-contain cursor-pointer bg-white border rounded-xl bottom-2 hover:opacity-40 hover:border-[#086047] transition duration-200 ease-in-out p-4"
-                      src={item.url}
-                      alt=""
-                    />
-                  </li>
-                ))}
+                {selectedProduct.imageUrls.length > 0 ? (
+                  selectedProduct.imageUrls.map((item, index) => (
+                    <li key={index} onClick={() => setIndexValue(index)}>
+                      <img
+                        className="w-[130px] h-[130px] object-contain cursor-pointer bg-white border rounded-xl bottom-2 hover:opacity-40 hover:border-[#086047] transition duration-200 ease-in-out p-4"
+                        src={item.url}
+                        alt=""
+                      />
+                    </li>
+                  ))
+                ) : (
+                  <h1>No Images Found</h1>
+                )}
               </ul>
             </div>
             <div className="w-full py-16 max-md:p-4">

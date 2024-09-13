@@ -266,8 +266,41 @@ const SellerProvider = ({ children }) => {
   };
 
   //////////////////////////////////////////////////////////////// ADDING PRODUCT TO DATABASE //////////////////////////////////////////////////////////////////
+
+  const validateProductDetails = (details) => {
+    for (const key in details) {
+      // Skip validation for these keys
+      if (
+        ["imageStorageFileName", "imageUrls", "tags", "variations"].includes(
+          key
+        )
+      ) {
+        continue;
+      }
+
+      if (
+        details[key] === "" ||
+        details[key] === 0 ||
+        (Array.isArray(details[key]) && details[key].length === 0)
+      ) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const addProductToDatabase = async (uid) => {
     try {
+      if (
+        !validateProductDetails(productDetails) || // Check if the product details are invalid
+        (selectedFiles.length === 0 && productDetails.imageUrls.length === 0) || // Check if both selectedFiles and imageUrls are empty
+        (variations.length === 0 && productDetails.variations.length === 0) || // Check if both variations arrays are empty
+        (tags.length === 0 && productDetails.tags.length === 0) // Check if both tags arrays are empty
+      ) {
+        toast.error("Fill all fields");
+        return;
+      }
+
       setIsLoading(true);
       const collectionRef = collection(db, "products");
       let downloadURLs = [];
@@ -494,22 +527,22 @@ const SellerProvider = ({ children }) => {
     }
   };
 
-  const getUserNameFunc = async(addressId) => {
+  const getUserNameFunc = async (addressId) => {
     try {
       const res = await getDoc(doc(db, "addresses", addressId));
-      console.log("RENDERRINNNG")
+      console.log("RENDERRINNNG");
       return res.data().first_name;
     } catch (error) {
       toast.error("An error occured while fetching order details");
     }
-  }
+  };
   const fetchUserDetails = async (userId) => {
     try {
       setLoadingOrder(true); // Assuming setLoadingOrder is a state setter function
       const res = await getDoc(doc(db, "users", userId));
-  
+
       setLoadingOrder(false); // Stop loading spinner
-  
+
       if (res.exists()) {
         const userDetails = res.data();
         setOrderUserDetails(userDetails); // Assuming setOrderUserDetails is a state setter function
@@ -520,7 +553,7 @@ const SellerProvider = ({ children }) => {
       setLoadingOrder(false); // Ensure loading spinner is stopped in case of error
       toast.error("An error occurred while fetching order details");
     }
-  }
+  };
   const subTotalCalculations = () => {
     return (
       parseFloat(order.product.price) * parseFloat(order.product.quantity) + 100

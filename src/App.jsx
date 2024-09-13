@@ -131,7 +131,7 @@ function App() {
                     isNew={true}
                     name={product.name}
                     key={product.id}
-                    image={product.imageUrls[0].url}
+                    image={product.imageUrls }
                     category={product.category}
                     price={numberWithCommas(product.price)}
                   />
@@ -160,7 +160,7 @@ function App() {
                     id={product.id}
                     name={product.name}
                     key={product.id}
-                    image={product.imageUrls[0].url}
+                    image={product.imageUrls}
                     category={product.category}
                     price={numberWithCommas(product.price)}
                   />
@@ -246,7 +246,7 @@ function App() {
                     id={product.id}
                     name={product.name}
                     key={product.id}
-                    image={product.imageUrls[0].url}
+                    image={product.imageUrls}
                     category={product.category}
                     isSpecialOffer
                     discount={product.discountRate}
