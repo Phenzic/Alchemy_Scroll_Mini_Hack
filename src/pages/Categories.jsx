@@ -347,7 +347,7 @@ const Categories = () => {
                       id={product.id}
                       name={product.name}
                       key={product.id}
-                      image={product.imageUrls[0].url}
+                      image={ product.imageUrls }
                       category={product.category}
                       isSpecialOffer={product.discountRate !== 0 ? true : false}
                       discount={product.discountRate}

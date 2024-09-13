@@ -30,8 +30,9 @@ const ProductCard = ({
         </div>
       )}
       <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-md bg-black/10 lg:aspect-none group-hover:opacity-75 max-h-60 min-h-60 max-lg:min-h-[150px] max-lg:max-h-[150px] h-full">
+        
         <img
-          src={image}
+          src={image.length > 0 ? image[0].url : "https://placehold.co/600x400" }
           className="h-full w-full object-cover object-center lg:h-full lg:w-full"
         />
       </div>
