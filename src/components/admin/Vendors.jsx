@@ -1,6 +1,7 @@
 import React, { useEffect,useState } from "react";
 import { useNavigate } from "react-router";
 import { totalUsers } from "../../utils/firebase";
+import SpiningAnimation from "../loaders/SpiningAnimation";
 
 const Vendors = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Vendors = () => {
   return (
     <>
       <div className=" w-full grid grid-cols-3 gap-4 max-xl:grid-cols-2 max-lg:grid-cols-1">
-        {vendors.length===0?<p>Loading Vendors</p>:vendors.map((eachVendor) => {
+        {vendors.length===0?<SpiningAnimation/>:vendors.map((eachVendor) => {
             return (
               <div
                 className="bg-white border cursor-pointer rounded-lg p-5 flex flex-col items-center"

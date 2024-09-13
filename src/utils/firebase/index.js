@@ -37,15 +37,15 @@ import {
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDZ66atUo9ldac_rdj_y1m5MucDmPQkqEo",
-  authDomain: "campushostels-756c8.firebaseapp.com",
-  databaseURL: "https://campushostels-756c8-default-rtdb.firebaseio.com",
-  projectId: "campushostels-756c8",
-  storageBucket: "campushostels-756c8.appspot.com",
-  messagingSenderId: "559872753013",
-  appId: "1:559872753013:web:22c33f238813968f39273c",
-  measurementId: "G-EZX82DZ5CJ"
+  apiKey: "AIzaSyBCibR01qLKpujYEMyDb1BZY685Vn4hTW8",
+  authDomain: "jamazan-d4bc5.firebaseapp.com",
+  projectId: "jamazan-d4bc5",
+  storageBucket: "jamazan-d4bc5.appspot.com",
+  messagingSenderId: "398959050641",
+  appId: "1:398959050641:web:7103966401fd9144e6e430",
+  measurementId: "G-6JHPVBQ83J"
 };
+
 
 const firebaseApp = initializeApp(firebaseConfig);
 

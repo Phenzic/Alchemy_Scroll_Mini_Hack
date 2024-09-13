@@ -56,42 +56,10 @@ function App() {
 
   // }, []);
 
-  
-  
-  
-  
-  const screenWidth = window.innerWidth;
-  const [test, setTest] = useState({
-    tablet: 0,
-    phone: 0,
-    laptop: 0,
-    unknown: 0,
-  });
+
   const { allProducts, fetchingAllProducts } = useUser();
 
-  useEffect(function () {
-    const screenCollectionFunction = async function () {
-      const screenCollection = await getScreenCollections();
-      setTest(screenCollection[0]);
-    };
-    screenCollectionFunction();
-    console.log(test);
-
-    if (screenWidth >= 1200) {
-      updateScreenCollection({ laptop: (test.laptop += 1) });
-      console.log("Laptop");
-    } else if (screenWidth > 500 && screenWidth < 1200) {
-      updateScreenCollection({ tablet: (test.tablet += 1) });
-      console.log("Tablet");
-    } else if (screenWidth >= 300 && screenWidth < 500) {
-      updateScreenCollection({ phone: (test.phone += 1) });
-
-      console.log("Phone");
-    } else {
-      console.log("Unknown");
-      updateScreenCollection({ unknown: (test.unknown += 1) });
-    }
-  }, []);
+  
 
   const categories = [
     {
