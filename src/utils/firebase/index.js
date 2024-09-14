@@ -209,19 +209,6 @@ export const getScreenCollections = async function () {
   }
 };
 
-// export const getOrders = async function(){
-//   const data = [];
-//   const orderCollection = collection(db,"orders")
-//   try{
-//     const orderSnapshot = await getDocs(orderCollection);
-//     orderSnapshot.forEach(function(eachData){
-//       data.push(eachData.data())
-//     });
-//     return data;
-//   }catch(error){
-//     console.log("Error")
-//   }
-// }
 
 export const getOrders = async function () {
   const ordersCollection = collection(db, "orders");
@@ -297,3 +284,4 @@ export const getAllProducts = async () => {
 
   return {};
 };
+
