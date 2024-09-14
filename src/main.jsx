@@ -49,6 +49,8 @@ import RideHistory from "./pages/driver/RideHistory";
 import AvaliableRides from "./pages/driver/AvaliableRides";
 import DriversWallet from "./pages/driver/DriversWallet";
 import ViewOrdersDriver from "./pages/driver/ViewOrdersDriver";
+import Configure from "./pages/Configure";
+import ConfigureProvider from "./context/ConfigureContext";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +77,10 @@ const router = createBrowserRouter([
       {
         path: "categories/:id",
         element: <Categories />,
+      },
+      {
+        path: "configure",
+        element: <Configure />,
       },
     ],
   },
@@ -238,21 +244,24 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {},
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Toaster />
-    <UserProvider>
-      <AdminProvider>
-        <SellerProvider>
-          <CartProvider>
-            <NextUIProvider>
-              <RouterProvider router={router} />
-            </NextUIProvider>
-          </CartProvider>
-        </SellerProvider>
-      </AdminProvider>
-    </UserProvider>
+    <ConfigureProvider>
+      <UserProvider>
+        <AdminProvider>
+          <SellerProvider>
+            <CartProvider>
+              <NextUIProvider>
+                <RouterProvider router={router} />
+              </NextUIProvider>
+            </CartProvider>
+          </SellerProvider>
+        </AdminProvider>
+      </UserProvider>
+    </ConfigureProvider>
   </React.StrictMode>
 );

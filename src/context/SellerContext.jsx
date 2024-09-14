@@ -480,21 +480,21 @@ const SellerProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(variations);
-    console.log(tags);
-    console.log(productDetails);
-    console.log("Selected Files:", selectedFiles);
-    console.log(
-      "images to delete from storage" + imagesToDeleteFromStorageAfterEditing
-    );
-  }, [
-    variations,
-    tags,
-    productDetails,
-    selectedFiles,
-    imagesToDeleteFromStorageAfterEditing,
-  ]);
+  // useEffect(() => {
+  //   console.log(variations);
+  //   console.log(tags);
+  //   console.log(productDetails);
+  //   console.log("Selected Files:", selectedFiles);
+  //   console.log(
+  //     "images to delete from storage" + imagesToDeleteFromStorageAfterEditing
+  //   );
+  // }, [
+  //   variations,
+  //   tags,
+  //   productDetails,
+  //   selectedFiles,
+  //   imagesToDeleteFromStorageAfterEditing,
+  // ]);
 
   //--------------------------------------------------------ORDERS FUNCTIONS---------------------------------------------------
 
