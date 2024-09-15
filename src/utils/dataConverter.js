@@ -4,3 +4,9 @@ export const dateConverter = (date)=>{
     return dateConverted.toLocaleDateString()
 
 }
+
+export const getMonth = (month)=>{
+    const test = month*1000;
+    const dateConverted = new Date(test);
+    return dateConverted.getMonth()+1;
+}

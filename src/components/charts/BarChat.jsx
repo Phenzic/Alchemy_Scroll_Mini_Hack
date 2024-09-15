@@ -1,12 +1,52 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import {getOrders} from "../../utils/firebase/index"
+import { getMonth } from "../../utils/dataConverter";
 
 const BarChart = () => {  
   const [loadingData,setLoadingData] = useState(false);
-
+  const [months, setMonths] = useState({jan: 0,feb: 0,mar: 0,apr: 0,may: 0,jun: 0,jul: 0,aug: 0,sep: 0,oct: 0,nov: 0,dec: 0})
   
+
+  const filterOrders = (dataTest) => {
+    const monthCounts = {
+      jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0,
+      jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0
+    };
+
+    dataTest.forEach(month => {
+      switch (month) {
+        case 1: monthCounts.jan++; break;
+        case 2: monthCounts.feb++; break;
+        case 3: monthCounts.mar++; break;
+        case 4: monthCounts.apr++; break;
+        case 5: monthCounts.may++; break;
+        case 6: monthCounts.jun++; break;
+        case 7: monthCounts.jul++; break;
+        case 8: monthCounts.aug++; break;
+        case 9: monthCounts.sep++; break;
+        case 10: monthCounts.oct++; break;
+        case 11: monthCounts.nov++; break;
+        case 12: monthCounts.dec++; break;
+        default: break;
+      }
+    });
+    setMonths(monthCounts);
+  };
+  
+  const fetchOrders = async ()=>{
+    const orders = await getOrders();
+    const timeStamp = orders.map((eachOrder)=>getMonth(eachOrder.createdOn.seconds))
+    filterOrders(timeStamp)
+  }
+
+  useEffect(()=>{
+    fetchOrders()
+  },[])
+
+    
+
 
   const options = {
     chart: {
@@ -62,7 +102,7 @@ const BarChart = () => {
   const series = [
     {
       name: "Amount",
-      data: [0,7,8,1,9,8,9],
+      data: [months.jan,months.feb,months.mar,months.apr,months.may,months.jun,months.jul,months.aug,months.sep,months.oct,months.nov,months.dec],
     },
   ];
 
