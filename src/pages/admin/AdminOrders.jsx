@@ -17,21 +17,21 @@ const options = [
     url: "/confirmed",
   },
   {
-    text: "Processing",
-    url: "/processing",
+    text: "Pending",
+    url: "/pending",
   },
-  {
-    text: "Picked",
-    url: "/picked",
-  },
-  {
-    text: "Shipping",
-    url: "/shipping",
-  },
-  {
-    text: "Shipped",
-    url: "/shipped",
-  },
+  // {
+  //   text: "Picked",
+  //   url: "/picked",
+  // },
+  // {
+  //   text: "Shipping",
+  //   url: "/shipping",
+  // },
+  // {
+  //   text: "Shipped",
+  //   url: "/shipped",
+  // },
   {
     text: "Cancelled",
     url: "/cancelled",
@@ -63,7 +63,7 @@ const AdminOrders = () => {
           ))}
         </div>
 
-        <Orders />
+        <Orders option={options[active].text}/>
       </div>
 
       {/**forward back buttons */}
