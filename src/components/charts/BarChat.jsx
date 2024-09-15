@@ -18,8 +18,11 @@ const BarChart = () => {
   const [oct,setOct] = useState([])
   const [nov,setNov] = useState([])
   const [dec,setDec] = useState([])
+
   useEffect(function(){
     const getOrderTest = async function(){
+
+
       const orders = await getOrders()
       const orders_date = orders.map(function(eachOrder){
         const date = new Date(eachOrder.createdOn.seconds*1000).getMonth();

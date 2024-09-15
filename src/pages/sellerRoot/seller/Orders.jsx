@@ -9,7 +9,7 @@ import { collection, doc, getDoc, onSnapshot, query, where } from "firebase/fire
 import { db } from "../../../utils/firebase";
 import { useUser } from "../../../context/UserContext";
 import { ClipLoader } from "react-spinners";
-import { formatDateToDDMMYYYY } from "../../../utils/helper";
+import { formatDateToDDMMYYYY, numberWithCommas } from "../../../utils/helper";
 import { SellerContext } from "../../../context/SellerContext";
 import { useUserName } from "../../../hooks/useUserName";
 import toast from "react-hot-toast";
@@ -22,7 +22,7 @@ const Orders = () => {
   const [userNames, setUserNames] = useState({});
   const [loadingUserNames, setLoadingUserNames] = useState(true);
 
-  const { getUserNameFunc } = useContext(SellerContext);
+  // const { getUserNameFunc } = useContext(SellerContext);
 
   const getOrders = async ({ snapshot }) => {
     try {
@@ -52,32 +52,32 @@ const Orders = () => {
   }, []);
 
   
-  useEffect(() => {
-    const fetchUserNames = async () => {
-      try {
-        const userNamesMap = {};
-        for (const order of orders) {
-          const res = await getDoc(doc(db, "addresses", order.addressId));
-          if (res.exists()) {
-            userNamesMap[order.addressId] = `${res.data().first_name} ${res.data().last_name}` ;
-          } else {
-            userNamesMap[order.addressId] = 'No user found';
-          }
-        }
-        setUserNames(userNamesMap);
-        console.log("user maps")
-        console.log(userNamesMap)
-        setLoadingUserNames(false);
-      } catch (error) {
-        toast.error("An error occurred while fetching user details");
-        setLoadingUserNames(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUserNames = async () => {
+  //     try {
+  //       const userNamesMap = {};
+  //       for (const order of orders) {
+  //         const res = await getDoc(doc(db, "addresses", order.addressId));
+  //         if (res.exists()) {
+  //           userNamesMap[order.addressId] = `${res.data().first_name} ${res.data().last_name}` ;
+  //         } else {
+  //           userNamesMap[order.addressId] = 'No user found';
+  //         }
+  //       }
+  //       setUserNames(userNamesMap);
+  //       console.log("user maps")
+  //       console.log(userNamesMap)
+  //       setLoadingUserNames(false);
+  //     } catch (error) {
+  //       toast.error("An error occurred while fetching user details");
+  //       setLoadingUserNames(false);
+  //     }
+  //   };
 
-    if (orders.length > 0) {
-      fetchUserNames();
-    }
-  }, [orders]);
+  //   if (orders.length > 0) {
+  //     fetchUserNames();
+  //   }
+  // }, [orders]);
 
   return (
     <React.Fragment>
@@ -140,15 +140,21 @@ const Orders = () => {
                         </section>
                         <section className="flex justify-between text-sm text-gray-700">
                           <p className=" text-gray-500 font-light text-[12px]">
-                            Customer name
+                            Order Id
                           </p>
-                          <p className=" text-[12px]"> {userNames[eachProduct.addressId] || 'Loading...'}</p>
+                          <p className=" text-[12px]"> {eachProduct.product.id}</p>
                         </section>
                         <section className="flex justify-between text-sm text-gray-700">
                           <p className=" text-gray-500 font-light text-[12px]">
                             Revenue(₦)
                           </p>
-                          <p className=" text-xs">{eachProduct.price}</p>
+                          <p className=" text-xs">{numberWithCommas(eachProduct.product.price) }</p>
+                        </section>
+                        <section className="flex justify-between text-sm text-gray-700">
+                          <p className=" text-gray-500 font-light text-[12px]">
+                            User Id
+                          </p>
+                          <p className=" text-xs">{eachProduct.userId }</p>
                         </section>
                         {/* <section className="flex justify-between text-sm text-gray-700">
                           <p className=" text-gray-500 font-light text-[12px]">
@@ -206,7 +212,7 @@ const Orders = () => {
                       Date
                     </th>
                     <th scope={"col"} className=" px-8 py-5">
-                      Customer
+                      User ID
                     </th>
                     <th scope={"col"} className=" px-1 py-5">
                       Revenue (₦)
@@ -231,7 +237,7 @@ const Orders = () => {
                       return (
                         <tr
                           key={order.id}
-                          onClick={function () {
+                          onClick={() =>  {
                             navigate(`${order.id}`);
                           }}
                           className="bg-white border-b  hover:bg-gray-50 "
@@ -244,7 +250,7 @@ const Orders = () => {
                             {formatDateToDDMMYYYY(order.createdOn)}
                           </td>
                           <td className="px-6 py-4 truncate">
-                            {userNames[order.addressId] || 'Loading...'}
+                            {order.userId}
                           </td>
                           <td className="px-6 py-4 truncate">
                             {order.product.price}

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { db, storage } from "../utils/firebase";
 import {
   addDoc,
@@ -498,34 +498,30 @@ const SellerProvider = ({ children }) => {
 
   //--------------------------------------------------------ORDERS FUNCTIONS---------------------------------------------------
 
-  const fetchOrder = async (id) => {
+  const fetchOrder = useCallback((async (id) => {
     try {
       setLoadingOrder(true);
       const res = await getDoc(doc(db, "orders", id));
+      setOrder(res.data());
+      console.log("order set");
       setLoadingOrder(false);
-      if (res.exists()) {
-        setOrder(res.data());
-      }
-
-      // console.log(res.data())
     } catch (error) {
       setLoadingOrder(false);
       toast.error("An error occured while fetching order details");
     }
-  };
+  }), []);
 
-  const fetchDeliveryDetails = async (addressId) => {
+  const fetchDeliveryDetails = useCallback((async (addressId) => {
     try {
       setLoadingOrder(true);
       const res = await getDoc(doc(db, "addresses", addressId));
       setLoadingOrder(false);
-
       setdeliveryAddress(res.data());
     } catch (error) {
       setLoadingOrder(false);
       toast.error("An error occured while fetching order details");
     }
-  };
+  }), [order]);
 
   const getUserNameFunc = async (addressId) => {
     try {
@@ -536,7 +532,7 @@ const SellerProvider = ({ children }) => {
       toast.error("An error occured while fetching order details");
     }
   };
-  const fetchUserDetails = async (userId) => {
+  const fetchUserDetails = useCallback((async (userId) => {
     try {
       setLoadingOrder(true); // Assuming setLoadingOrder is a state setter function
       const res = await getDoc(doc(db, "users", userId));
@@ -553,12 +549,31 @@ const SellerProvider = ({ children }) => {
       setLoadingOrder(false); // Ensure loading spinner is stopped in case of error
       toast.error("An error occurred while fetching order details");
     }
-  };
+  }),[order]);
   const subTotalCalculations = () => {
     return (
       parseFloat(order.product.price) * parseFloat(order.product.quantity) + 100
     );
   };
+
+  const fetchAllRelatedOrderFunction =  useCallback((() => {
+    try {
+      // await fetchOrder(id);
+
+      if (order) {
+        console.log("order is loadeed");
+        fetchDeliveryDetails(order.addressId);
+        fetchUserDetails(order.userId);
+      }
+      console.log("Checking 12");
+    } catch (error) {
+      toast.error(error);
+    }
+  }), [order]);
+
+  useEffect(() => {
+    fetchAllRelatedOrderFunction();
+  }, [order]);
 
   const values = {
     categories,
@@ -614,6 +629,7 @@ const SellerProvider = ({ children }) => {
     addProductToDatabase,
     handleDeleteItemsFromArray,
     handleDrop,
+    fetchAllRelatedOrderFunction,
   };
   return (
     <SellerContext.Provider value={values}>{children}</SellerContext.Provider>

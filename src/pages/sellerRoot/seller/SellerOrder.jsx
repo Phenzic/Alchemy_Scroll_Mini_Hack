@@ -23,32 +23,31 @@ function SellerOrder() {
   const navigate = useNavigate();
 
   const {
-    fetchUserDetails,
+    // fetchUserDetails,
     loadingOrder,
     orderUserDetails,
     // setOrderUserDetails,
-    setLoadingOrder,
+    // setLoadingOrder,
     order,
     // setOrder,
     deliveryAddress,
     // setdeliveryAddress,
     fetchOrder,
-    fetchDeliveryDetails,
+    // fetchDeliveryDetails,
     subTotalCalculations,
+    // fetchAllRelatedOrderFunction,
   } = useContext(SellerContext);
 
+  // useEffect(() => {
+  //   if (order) {
+  //     fetchDeliveryDetails(order.addressId);
+  //     fetchUserDetails(order.userId);
+  //     console.log("FROM SELLER ORDER")
+  //     console.log(order);
+  //   }
+  // }, []);
 
   useEffect(() => {
-    if (order) {
-      fetchDeliveryDetails(order.addressId);
-      fetchUserDetails(order.userId);
-      console.log("FROM SELLER ORDER")
-      console.log(order);
-    }
-  }, []);
-
-  useEffect(() => {
-    
     fetchOrder(id);
   }, [id]);
 

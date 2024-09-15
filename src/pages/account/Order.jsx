@@ -1,59 +1,31 @@
-import { Button } from "@nextui-org/react";
-import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect } from "react";
+import  { useContext, useEffect } from "react";
 import { useState } from "react";
 import { BsBagCheck } from "react-icons/bs";
 import { IoCubeOutline } from "react-icons/io5";
 import { PiCaretLeftLight } from "react-icons/pi";
 import { useNavigate, useParams } from "react-router";
-import { db } from "../../utils/firebase";
-import toast from "react-hot-toast";
+// import { db } from "../../utils/firebase";
+// import toast from "react-hot-toast";
 import { timeAgo } from "../../utils/helper";
+import { SellerContext } from "../../context/SellerContext";
 
 const Order = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loadingOrder, setLoadingOrder] = useState(false);
-  const [order, setOrder] = useState(null);
-  const [deliveryAddress, setdeliveryAddress] = useState(null);
+
   const [loadingAddress, setLoadingAddress] = useState(false);
+  const {
+    
+    loadingOrder,
 
-  const fetchOrder = async () => {
-    try {
-      setLoadingOrder(true);
-      const res = await getDoc(doc(db, "orders", id));
-      setLoadingOrder(false);
-      if (res.exists()) {
-        setOrder(res.data());
-      }
-    } catch (error) {
-      setLoadingOrder(false);
-      toast.error("An error occured while fetching order details");
-    }
-  };
+    order,
+    deliveryAddress,
+    fetchOrder,
+  } = useContext(SellerContext);
 
-  const fetchDeliveryDetails = async (addressId) => {
-    try {
-      setLoadingAddress(true);
-      const res = await getDoc(doc(db, "addresses", addressId));
-      setLoadingAddress(false);
-      if (res.exists()) {
-        setdeliveryAddress(res.data());
-      }
-    } catch (error) {
-      setLoadingAddress(false);
-      toast.error("An error occured while fetching order details");
-    }
-  };
 
   useEffect(() => {
-    if (order) {
-      fetchDeliveryDetails(order.addressId);
-    }
-  }, [order]);
-
-  useEffect(() => {
-    fetchOrder();
+    fetchOrder(id);
   }, [id]);
 
   return (
