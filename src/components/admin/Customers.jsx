@@ -25,6 +25,9 @@ const Customers = () => {
 
   return (
     <>
+    {
+      users.length===0?<div className=' flex flex-col justify-center items-center py-2 '><ClipLoader/></div>:
+
       <div className=" w-full">
         <div className="relative overflow-x-auto border sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500">
@@ -49,7 +52,7 @@ const Customers = () => {
               </tr>
             </thead>
             <tbody>
-              {users.length===0?<ClipLoader/>:users.map((eachUser)=>{
+              {users.map((eachUser)=>{
                 return(
                   <tr
                       className="bg-white border-b cursor-pointer hover:bg-gray-50 "
@@ -68,6 +71,7 @@ const Customers = () => {
           </table>
         </div>
       </div>
+    }
     </>
   );
 };

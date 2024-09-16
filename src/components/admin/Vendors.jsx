@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import { useEffect,useState } from "react";
 import { useNavigate } from "react-router";
 import { totalUsers } from "../../utils/firebase";
 import {ClipLoader} from "react-spinners"
@@ -24,8 +24,7 @@ const Vendors = () => {
     <>
       <div className=" w-full grid grid-cols-3 gap-4 max-xl:grid-cols-2 max-lg:grid-cols-1">
         {vendors.length===0?<div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
-          <ClipLoader />
-          <p>Loading Product Details</p>
+          <div className=' flex flex-col justify-center items-center py-2 '><ClipLoader/></div>
         </div>:vendors.map((eachVendor) => {
             return (
               <div

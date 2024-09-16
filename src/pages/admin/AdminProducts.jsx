@@ -7,7 +7,6 @@ const AdminProducts = () => {
   return(
     <React.Fragment>
       <div className=" flex flex-col gap-5 p-5 h-[89vh] max-h-[89vh] overflow-auto">
-        {/* Product Header Section */}
         <div className="  justify-between  px-5 py-5 flex flex-col md:flex-row gap-5 ">
           <section className="  flex gap-5 items-center">
             <p className=" font-semibold">Products</p>
@@ -23,7 +22,6 @@ const AdminProducts = () => {
               }
             </div>
           </section>
-          {/* <FakeUserComponent/> */}
         </div>
 
         <section className="px-5 py-3 bg-white gap-5 flex flex-col ">
@@ -38,29 +36,6 @@ const AdminProducts = () => {
     </React.Fragment>
   )
 
-// import { AccountHeader } from "../../components/account/AccountHeader";
-// import Pagination from "../../components/pagination/Pagination";
-// import Products from "../../components/admin/Products";
-
-// const AdminProducts = () => {
-//   const [active, setactive] = useState(0);
-
-//   return (
-//     <div className="flex flex-col gap-5 p-6 overflow-auto">
-//       <AccountHeader heading="Products" text="" className="" />
-
-//       <div className="p-5 rounded-md bg-white gap-5 flex flex-col">
-//         <Products />
-//       </div>
-
-//       {/**forward back buttons */}
-
-//       <div className="">
-//         <Pagination />
-//       </div>
-//     </div>
-//   );
-// >>>>>>> f982c5e3be5b112f299f4faa31bc867ae95151bf
 };
 
 export default AdminProducts;
