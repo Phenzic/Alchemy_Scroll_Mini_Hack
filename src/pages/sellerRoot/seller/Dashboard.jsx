@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { productData } from '../../../utils/testData'
 import Pagination from "../../../components/pagination/Pagination"
 import { PieChat } from '../../../components/charts/PieChat'
 import BarChat from "../../../components/charts/BarChat"
 import SellerInfo from '../SellerInfo'
+import { useUser } from '../../../context/UserContext'
+import { SellerContext } from '../../../context/SellerContext'
+
+
 
 const Dashboard = () => {
+    const {
+    getSellerOrders,
+
+    } = useContext(SellerContext)
   return (
     <React.Fragment>
       <div className="pt-0 rounded-md">
+  
         {/* SELLER INFO  */}
         <section>
           <SellerInfo/>
@@ -16,7 +25,7 @@ const Dashboard = () => {
         
         {/* WHERE DASHBOARD ANALYTICS WOULD BE */}
         <div className="flex gap-10 overflow-hidden justify-between bg-white p-4 py-6 rounded-2xl w-[100%] h-fit border overflow-x-auto max-lg:flex-col max-lg:items-center">
-          <BarChat />
+          <BarChat getOrdersFunc={getSellerOrders}/>
           <PieChat />
       </div><br />
         

@@ -1,8 +1,28 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { totalUsers } from "../../utils/firebase";
+import {dateConverter} from "../../utils/dataConverter"
+import {ClipLoader} from "react-spinners"
+
 
 const Customers = () => {
   const navigate = useNavigate();
+  
+  const [users, setUsers] = useState([])
+  
+  useEffect(()=>{
+    const users = async function(){
+      const data = await totalUsers()
+      const usersData = data.filter((eachUser)=>{
+        return eachUser.userRole === "user" 
+      }) 
+      setUsers(usersData)
+    }
+  
+    users()
+  },[])
+
+
   return (
     <>
       <div className=" w-full">
@@ -29,23 +49,21 @@ const Customers = () => {
               </tr>
             </thead>
             <tbody>
-              {Array(10)
-                .fill()
-                .map((_, key) => {
-                  return (
-                    <tr
+              {users.length===0?<ClipLoader/>:users.map((eachUser)=>{
+                return(
+                  <tr
                       className="bg-white border-b cursor-pointer hover:bg-gray-50 "
-                      key={key}
+                      key={eachUser}
                     >
-                      <td className="px-6 py-4">Pysavant Codes</td>
-                      <td className="px-6 py-4">uwak123@384.com</td>
-                      <td className="px-6 py-4">+234938504853</td>
-                      <td className="px-6 py-4">24/10/2024</td>
+                      <td className="px-6 py-4">{eachUser.username}</td>
+                      <td className="px-6 py-4">{eachUser.email}</td>
+                      <td className="px-6 py-4">{eachUser.phoneNumber}</td>
+                      <td className="px-6 py-4">{dateConverter(eachUser.createdAt.seconds)}</td>
                       <td className="px-6 py-4 text-green-500">Active</td>
                       
                     </tr>
-                  );
-                })}
+                )
+              })}
             </tbody>
           </table>
         </div>

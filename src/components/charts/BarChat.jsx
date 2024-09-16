@@ -1,89 +1,100 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import {getOrders} from "../../utils/firebase/index"
+import { getOrders } from "../../utils/firebase/index";
+import { getMonth } from "../../utils/dataConverter";
+import PropTypes from "prop-types"
 
-const BarChart = () => {  
-  const [loadingData,setLoadingData] = useState(false);
+const BarChart = ({getOrdersFunc}) => {
+  const [loadingData, setLoadingData] = useState(false);
+  const [months, setMonths] = useState({
+    jan: 0,
+    feb: 0,
+    mar: 0,
+    apr: 0,
+    may: 0,
+    jun: 0,
+    jul: 0,
+    aug: 0,
+    sep: 0,
+    oct: 0,
+    nov: 0,
+    dec: 0,
+  });
 
-  const [jan,setJan] = useState([])
-  const [feb,setFeb] = useState([])
-  const [march,setMarch] = useState([])
-  const [april,setApril] = useState([])
-  const [may,setMay] = useState([])
-  const [june,setJune] = useState([])
-  const [july,setJuly] = useState([])
-  const [aug,setAug] = useState([])
-  const [sept,setSept] = useState([])
-  const [oct,setOct] = useState([])
-  const [nov,setNov] = useState([])
-  const [dec,setDec] = useState([])
+  const filterOrders = (dataTest) => {
+    const monthCounts = {
+      jan: 0,
+      feb: 0,
+      mar: 0,
+      apr: 0,
+      may: 0,
+      jun: 0,
+      jul: 0,
+      aug: 0,
+      sep: 0,
+      oct: 0,
+      nov: 0,
+      dec: 0,
+    };
 
-  useEffect(function(){
-    const getOrderTest = async function(){
+    dataTest.forEach((month) => {
+      switch (month) {
+        case 1:
+          monthCounts.jan++;
+          break;
+        case 2:
+          monthCounts.feb++;
+          break;
+        case 3:
+          monthCounts.mar++;
+          break;
+        case 4:
+          monthCounts.apr++;
+          break;
+        case 5:
+          monthCounts.may++;
+          break;
+        case 6:
+          monthCounts.jun++;
+          break;
+        case 7:
+          monthCounts.jul++;
+          break;
+        case 8:
+          monthCounts.aug++;
+          break;
+        case 9:
+          monthCounts.sep++;
+          break;
+        case 10:
+          monthCounts.oct++;
+          break;
+        case 11:
+          monthCounts.nov++;
+          break;
+        case 12:
+          monthCounts.dec++;
+          break;
+        default:
+          break;
+      }
+    });
+    console.log(monthCounts)
+    setMonths(monthCounts);
+  };
 
+  const fetchOrders = async () => {
+    const orders = getOrdersFunc ? await getOrdersFunc() :  await getOrders();
+    const timeStamp = orders.map((eachOrder) =>
+      getMonth(eachOrder.createdOn.seconds)
+    );
+    filterOrders(timeStamp);
+  };
 
-      const orders = await getOrders()
-      const orders_date = orders.map(function(eachOrder){
-        const date = new Date(eachOrder.createdOn.seconds*1000).getMonth();
-        return date
-      })
-      console.log(orders_date)
-      orders_date.map(function(date){
-        if(date===0){
-          setJan(function(prev){
-            return [...prev,date]
-          })       
-        }else if(date===1){
-          setFeb(function(prev){
-            return [...prev,date]
-          })
-        }else if(date===2){
-          setMarch(function(prev){
-            return [...prev,date]
-          })
-        }else if(date===3){
-          setApril(function(prev){
-            return [...prev,date]
-          })
-        }else if(date===4){
-          setMay(function(prev){
-            return [...prev,date]
-          })
-        }else if (date===5){
-          setJune(function(prev){
-            return [...prev,date]
-          })
-        }else if (date===6){
-          setJuly(function(prev){
-            return [...prev,date]
-          })
-        }else if (date===7){
-          setAug(function(prev){
-            return [...prev,date]
-          })
-        }else if (date===8){
-          setSept(function(prev){
-            return [...prev,date]
-          })
-        }else if (date===9){
-          setOct(function(prev){
-            return [...prev,date]
-          })
-        }else if (date===10){
-          setNov(function(prev){
-            return [...prev,date]
-          })
-        }else{
-          setDec(function(prev){
-            return [...prev,date]
-          })
-        }
-      })
-    }
-    getOrderTest()
-  },[])
-  
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   const options = {
     chart: {
@@ -139,24 +150,42 @@ const BarChart = () => {
   const series = [
     {
       name: "Amount",
-      data: [jan.length,feb.length,march.length,april.length,may.length,june.length,july.length,aug.length,sept.length,oct.length,nov.length,dec.length],
+      data: [
+        months.jan,
+        months.feb,
+        months.mar,
+        months.apr,
+        months.may,
+        months.jun,
+        months.jul,
+        months.aug,
+        months.sep,
+        months.oct,
+        months.nov,
+        months.dec,
+      ],
     },
   ];
 
   return (
     <React.Fragment>
-      {
-        loadingData?<p>Loading the Admin BarChart</p>:
-      <ReactApexChart
-      className={"w-full"}
-      options={options}
-      series={series}
-      type="bar"
-      height={350}
-      />
-      }
+      {loadingData ? (
+        <p>Loading the Admin BarChart</p>
+      ) : (
+        <ReactApexChart
+          className={"w-full"}
+          options={options}
+          series={series}
+          type="bar"
+          height={350}
+        />
+      )}
     </React.Fragment>
   );
 };
+
+BarChart.propTypes = {
+  getOrdersFunc: PropTypes.func
+}
 
 export default BarChart;

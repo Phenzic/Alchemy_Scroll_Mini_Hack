@@ -27,39 +27,8 @@ import ProductLoader from "./components/ProductLoader";
 
 function App() {
   
-  // const [laptop,setLaptop]= useLocalStorage("laptop",0);
-  // const [tablet,setTablet]= useLocalStorage("tablet",0);
-  // const [unknown,setUnknown]= useLocalStorage("unknown",0);
-  // const [phone,setPhone]= useLocalStorage("phone",0);
-
-
-  // useEffect(function () {
-  //   const screenCollectionFunction = async function () {
-  //     const screenCollection = await getScreenCollections();
-  //     console.log(screenCollection)
-  //   };
-  //   screenCollectionFunction();
-  //   if(screenWidth >= 1200){
-  //     console.log(laptop)
-  //     console.log("laptop")
-  //     setLaptop(laptop+=1)
-  //   }else if(screenWidth > 600 && screenWidth<1200){
-  //     console.log(tablet)
-  //     console.log("tablet")
-  //   }else if(screenWidth >= 300 && screenWidth<=598){
-  //     console.log(phone)
-  //     console.log("phone")
-  //   }else{
-  //     console.log(unknown)
-  //     console.log("unknown")
-  //   }
-
-  // }, []);
-
-
   const { allProducts, fetchingAllProducts } = useUser();
 
-  
 
   const categories = [
     {
@@ -120,8 +89,8 @@ function App() {
         </div>
         <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-4  gap-y-5 xl:gap-x-5 gap-3 rounded-lg">
           {fetchingAllProducts
-            ? Array.from({ length: 4 }).map((id) => {
-                return <ProductLoader key={id} />;
+            ? Array.from({ length: 4 }).map((id,index) => {
+                return <ProductLoader key={id+index+"#**#"} />;
               })
             : allProducts
                 .slice(0, 8)
@@ -150,8 +119,8 @@ function App() {
         </div>
         <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-4  gap-y-5 xl:gap-x-5 gap-3 rounded-lg">
           {fetchingAllProducts
-            ? Array.from({ length: 4 }).map((id) => {
-                return <ProductLoader key={id} />;
+            ? Array.from({ length: 4 }).map((id, index) => {
+                return <ProductLoader key={id+index+"#**#"} />;
               })
             : allProducts
                 .slice(0, 8)

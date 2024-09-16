@@ -6,8 +6,11 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { v4 } from "uuid";
 import {
@@ -571,6 +574,23 @@ const SellerProvider = ({ children }) => {
     }
   }), [order]);
 
+  const getSellerOrders = async () => {
+    const ordersCollection = collection(db, "orders");
+    const q = query(ordersCollection, where("productSellerId", "==", userDetails.uid));
+    const data = [];
+    try {
+      const orderSnapshot = await getDocs(q);
+      orderSnapshot.forEach(function (eachData) {
+        data.push(eachData.data());
+      });
+      console.log("seller order", data)
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
   useEffect(() => {
     fetchAllRelatedOrderFunction();
   }, [order]);
@@ -630,6 +650,8 @@ const SellerProvider = ({ children }) => {
     handleDeleteItemsFromArray,
     handleDrop,
     fetchAllRelatedOrderFunction,
+    getSellerOrders,
+    getCategoriesFromDb,
   };
   return (
     <SellerContext.Provider value={values}>{children}</SellerContext.Provider>

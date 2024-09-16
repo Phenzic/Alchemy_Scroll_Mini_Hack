@@ -35,6 +35,7 @@ import {
   ref,
 } from "firebase/database";
 import { getStorage } from "firebase/storage";
+import { useUser } from "../../context/UserContext";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBCibR01qLKpujYEMyDb1BZY685Vn4hTW8",
@@ -60,6 +61,8 @@ export const auth = getAuth();
 export const db = getFirestore();
 export const storage = getStorage(firebaseApp);
 export const rdb = getDatabase(firebaseApp);
+
+
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
@@ -209,19 +212,6 @@ export const getScreenCollections = async function () {
   }
 };
 
-// export const getOrders = async function(){
-//   const data = [];
-//   const orderCollection = collection(db,"orders")
-//   try{
-//     const orderSnapshot = await getDocs(orderCollection);
-//     orderSnapshot.forEach(function(eachData){
-//       data.push(eachData.data())
-//     });
-//     return data;
-//   }catch(error){
-//     console.log("Error")
-//   }
-// }
 
 export const getOrders = async function () {
   const ordersCollection = collection(db, "orders");
@@ -231,11 +221,16 @@ export const getOrders = async function () {
     orderSnapshot.forEach(function (eachData) {
       data.push(eachData.data());
     });
+    console.log("seller order", data)
+
     return data;
   } catch (error) {
     console.log(error);
   }
 };
+
+
+
 
 // update screenCollection
 export const updateScreenCollection = async function (object) {
@@ -297,3 +292,4 @@ export const getAllProducts = async () => {
 
   return {};
 };
+
