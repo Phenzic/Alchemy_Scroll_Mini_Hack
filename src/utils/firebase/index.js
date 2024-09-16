@@ -268,7 +268,7 @@ export const getUserOrders = async (userId) => {
 
   return {};
 };
-
+// Gets products
 export const getAllProducts = async () => {
   try {
     const q = collection(db, "products");

@@ -20,18 +20,6 @@ const options = [
     text: "Pending",
     url: "/pending",
   },
-  // {
-  //   text: "Picked",
-  //   url: "/picked",
-  // },
-  // {
-  //   text: "Shipping",
-  //   url: "/shipping",
-  // },
-  // {
-  //   text: "Shipped",
-  //   url: "/shipped",
-  // },
   {
     text: "Cancelled",
     url: "/cancelled",

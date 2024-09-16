@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useNavigate } from "react-router";
 import {getOrders} from "../../utils/firebase/index"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {ClipLoader} from "react-spinners"
 
 
@@ -29,7 +29,7 @@ const Orders = ({option}) => {
   return (
     <>
       {
-       orders.length===0?<ClipLoader/>:
+       orders.length===0?<div className=' flex flex-col justify-center items-center py-2 '><ClipLoader/></div>:
        <div className=" w-full">
         <div className="relative overflow-x-auto border sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500">
