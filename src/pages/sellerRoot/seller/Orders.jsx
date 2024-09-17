@@ -1,83 +1,36 @@
 import React, { useContext, useEffect, useState } from "react";
-import { productData } from "../../../utils/testData";
-import { FiEdit3 } from "react-icons/fi";
-import { GoTrash } from "react-icons/go";
 import Pagination from "../../../components/pagination/Pagination";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router";
-import { collection, doc, getDoc, onSnapshot, query, where } from "firebase/firestore";
-import { db } from "../../../utils/firebase";
-import { useUser } from "../../../context/UserContext";
+
 import { ClipLoader } from "react-spinners";
 import { formatDateToDDMMYYYY, numberWithCommas } from "../../../utils/helper";
 import { SellerContext } from "../../../context/SellerContext";
-import { useUserName } from "../../../hooks/useUserName";
-import toast from "react-hot-toast";
 
 const Orders = () => {
-  const navigate = useNavigate();
-  const { userDetails } = useUser();
-  const [orders, setOrders] = useState([]);
-  const [loadingOrders, setLoadingOrders] = useState(true);
-  const [userNames, setUserNames] = useState({});
-  const [loadingUserNames, setLoadingUserNames] = useState(true);
+  const navigate = useNavigate();`
 
-  // const { getUserNameFunc } = useContext(SellerContext);
+  const [loadingOrders, setLoadingOrders] = useState(false);
 
-  const getOrders = async ({ snapshot }) => {
+  const { getSellerOrders, sellerOrders } = useContext(SellerContext);
+
+  const getOrders = async () => {
     try {
-      const orderData = snapshot.docs.map((order) => ({
-        id: order.id,
-        ...order.data(),
-      }));
-
-      setOrders(orderData);
+      getSellerOrders();
+      setLoadingOrders(false);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    const ordersCollectionRef = collection(db, "orders");
-    const q = query(
-      ordersCollectionRef,
-      where("productSellerId", "==", userDetails.uid)
-    );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      getOrders({ snapshot: snapshot });
+    if (!sellerOrders) {
+      setLoadingOrders(true);
+
+      getSellerOrders();
       setLoadingOrders(false);
-    });
-
-    return () => unsubscribe();
+    }
   }, []);
-
-  
-  // useEffect(() => {
-  //   const fetchUserNames = async () => {
-  //     try {
-  //       const userNamesMap = {};
-  //       for (const order of orders) {
-  //         const res = await getDoc(doc(db, "addresses", order.addressId));
-  //         if (res.exists()) {
-  //           userNamesMap[order.addressId] = `${res.data().first_name} ${res.data().last_name}` ;
-  //         } else {
-  //           userNamesMap[order.addressId] = 'No user found';
-  //         }
-  //       }
-  //       setUserNames(userNamesMap);
-  //       console.log("user maps")
-  //       console.log(userNamesMap)
-  //       setLoadingUserNames(false);
-  //     } catch (error) {
-  //       toast.error("An error occurred while fetching user details");
-  //       setLoadingUserNames(false);
-  //     }
-  //   };
-
-  //   if (orders.length > 0) {
-  //     fetchUserNames();
-  //   }
-  // }, [orders]);
 
   return (
     <React.Fragment>
@@ -105,8 +58,8 @@ const Orders = () => {
                 <ClipLoader color="#086047" size={30} />
                 <p>Loading Products</p>
               </div>
-            ) : orders.length > 0 ? (
-              orders.map((eachProduct) => {
+            ) : sellerOrders && sellerOrders.length > 0 ? (
+              sellerOrders.map((eachProduct) => {
                 return (
                   <NavLink key={eachProduct.id} to={`${eachProduct.id}`}>
                     <div
@@ -136,25 +89,32 @@ const Orders = () => {
                           <p className=" text-gray-500 font-light text-[12px]">
                             Date
                           </p>
-                          <p className=" text-xs">{formatDateToDDMMYYYY(eachProduct.createdOn)}</p>
+                          <p className=" text-xs">
+                            {formatDateToDDMMYYYY(eachProduct.createdOn)}
+                          </p>
                         </section>
                         <section className="flex justify-between text-sm text-gray-700">
                           <p className=" text-gray-500 font-light text-[12px]">
                             Order Id
                           </p>
-                          <p className=" text-[12px]"> {eachProduct.product.id}</p>
+                          <p className=" text-[12px]">
+                            {" "}
+                            {eachProduct.product.id}
+                          </p>
                         </section>
                         <section className="flex justify-between text-sm text-gray-700">
                           <p className=" text-gray-500 font-light text-[12px]">
                             Revenue(₦)
                           </p>
-                          <p className=" text-xs">{numberWithCommas(eachProduct.product.price) }</p>
+                          <p className=" text-xs">
+                            {numberWithCommas(eachProduct.product.price)}
+                          </p>
                         </section>
                         <section className="flex justify-between text-sm text-gray-700">
                           <p className=" text-gray-500 font-light text-[12px]">
                             User Id
                           </p>
-                          <p className=" text-xs">{eachProduct.userId }</p>
+                          <p className=" text-xs">{eachProduct.userId}</p>
                         </section>
                         {/* <section className="flex justify-between text-sm text-gray-700">
                           <p className=" text-gray-500 font-light text-[12px]">
@@ -169,7 +129,7 @@ const Orders = () => {
                             Status
                           </p>
                           <p className=" text-xs">
-                          {eachProduct.deliveryStatus == "pending" ? (
+                            {eachProduct.deliveryStatus == "pending" ? (
                               <span className=" text-yellow-400">Pending</span>
                             ) : (
                               <span className=" text-green-400">Completed</span>
@@ -231,13 +191,12 @@ const Orders = () => {
                       <ClipLoader color="#086047" size={30} />
                       <p>Loading Products</p>
                     </div>
-                  ) : orders.length > 0 ? (
-                    orders.map((order) => {
-                   
+                  ) : sellerOrders && sellerOrders.length > 0 ? (
+                    sellerOrders.map((order) => {
                       return (
                         <tr
                           key={order.id}
-                          onClick={() =>  {
+                          onClick={() => {
                             navigate(`${order.id}`);
                           }}
                           className="bg-white border-b  hover:bg-gray-50 "
@@ -249,9 +208,7 @@ const Orders = () => {
                           <td className="px-6 py-4 truncate">
                             {formatDateToDDMMYYYY(order.createdOn)}
                           </td>
-                          <td className="px-6 py-4 truncate">
-                            {order.userId}
-                          </td>
+                          <td className="px-6 py-4 truncate">{order.userId}</td>
                           <td className="px-6 py-4 truncate">
                             {order.product.price}
                           </td>

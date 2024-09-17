@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import WalletCard from "../../../components/seller/WalletCard";
 import AddAddress from "./AddAddress";
 import { useNavigate } from "react-router";
 import { useUser } from "../../../context/UserContext";
+import { SellerContext } from "../../../context/SellerContext";
 
 function Profile() {
   const navigate = useNavigate();
   const [displayAddress, setDisplayAddress] = useState(false);
   const { userDetails } = useUser();
+  const {sellerOrders, getSellerOrders} = useContext(SellerContext)
 
   const handleAddressTrigger = (e) => {
     e.preventDefault();
     setDisplayAddress(!displayAddress);
   };
+
+  useEffect(() => {
+    if(!sellerOrders){
+      getSellerOrders()
+    }
+  }, [])
   return (
     <React.Fragment>
       <div className=" bg-white px-2 py-1 rounded-md ">
@@ -42,7 +50,7 @@ function Profile() {
           </section>
           <section className=" justify-around flex flex-col rounded-md px-3 py-4 h-[132px] bg-gray-50 ">
             <p className=" font-semibold text-gray-600">Orders this month</p>
-            <p className=" text-2xl text-gray-600">200</p>
+            <p className=" text-2xl text-gray-600">{sellerOrders ? sellerOrders.length : 0}</p>
           </section>
         </div>
         <div className=" py-5 px-2 space-y-4 divide-y-2">

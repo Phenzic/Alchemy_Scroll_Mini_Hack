@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { db, storage } from "../utils/firebase";
 import {
   addDoc,
@@ -53,6 +59,8 @@ const SellerProvider = ({ children }) => {
     fileArray: " ",
     productName: "",
   });
+  const [sellerOrders, setSellerOrders] = useState(null);
+
   const { userDetails } = useUser();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -501,7 +509,7 @@ const SellerProvider = ({ children }) => {
 
   //--------------------------------------------------------ORDERS FUNCTIONS---------------------------------------------------
 
-  const fetchOrder = useCallback((async (id) => {
+  const fetchOrder = useCallback(async (id) => {
     try {
       setLoadingOrder(true);
       const res = await getDoc(doc(db, "orders", id));
@@ -512,19 +520,22 @@ const SellerProvider = ({ children }) => {
       setLoadingOrder(false);
       toast.error("An error occured while fetching order details");
     }
-  }), []);
+  }, []);
 
-  const fetchDeliveryDetails = useCallback((async (addressId) => {
-    try {
-      setLoadingOrder(true);
-      const res = await getDoc(doc(db, "addresses", addressId));
-      setLoadingOrder(false);
-      setdeliveryAddress(res.data());
-    } catch (error) {
-      setLoadingOrder(false);
-      toast.error("An error occured while fetching order details");
-    }
-  }), [order]);
+  const fetchDeliveryDetails = useCallback(
+    async (addressId) => {
+      try {
+        setLoadingOrder(true);
+        const res = await getDoc(doc(db, "addresses", addressId));
+        setLoadingOrder(false);
+        setdeliveryAddress(res.data());
+      } catch (error) {
+        setLoadingOrder(false);
+        toast.error("An error occured while fetching order details");
+      }
+    },
+    [order]
+  );
 
   const getUserNameFunc = async (addressId) => {
     try {
@@ -535,31 +546,35 @@ const SellerProvider = ({ children }) => {
       toast.error("An error occured while fetching order details");
     }
   };
-  const fetchUserDetails = useCallback((async (userId) => {
-    try {
-      setLoadingOrder(true); // Assuming setLoadingOrder is a state setter function
-      const res = await getDoc(doc(db, "users", userId));
 
-      setLoadingOrder(false); // Stop loading spinner
+  const fetchUserDetails = useCallback(
+    async (userId) => {
+      try {
+        setLoadingOrder(true); // Assuming setLoadingOrder is a state setter function
+        const res = await getDoc(doc(db, "users", userId));
 
-      if (res.exists()) {
-        const userDetails = res.data();
-        setOrderUserDetails(userDetails); // Assuming setOrderUserDetails is a state setter function
-      } else {
-        toast.error("No user found with the provided ID");
+        setLoadingOrder(false); // Stop loading spinner
+
+        if (res.exists()) {
+          const userDetails = res.data();
+          setOrderUserDetails(userDetails); // Assuming setOrderUserDetails is a state setter function
+        } else {
+          toast.error("No user found with the provided ID");
+        }
+      } catch (error) {
+        setLoadingOrder(false); // Ensure loading spinner is stopped in case of error
+        toast.error("An error occurred while fetching order details");
       }
-    } catch (error) {
-      setLoadingOrder(false); // Ensure loading spinner is stopped in case of error
-      toast.error("An error occurred while fetching order details");
-    }
-  }),[order]);
+    },
+    [order]
+  );
   const subTotalCalculations = () => {
     return (
       parseFloat(order.product.price) * parseFloat(order.product.quantity) + 100
     );
   };
 
-  const fetchAllRelatedOrderFunction =  useCallback((() => {
+  const fetchAllRelatedOrderFunction = useCallback(() => {
     try {
       // await fetchOrder(id);
 
@@ -572,24 +587,30 @@ const SellerProvider = ({ children }) => {
     } catch (error) {
       toast.error(error);
     }
-  }), [order]);
+  }, [order]);
 
   const getSellerOrders = async () => {
     const ordersCollection = collection(db, "orders");
-    const q = query(ordersCollection, where("productSellerId", "==", userDetails.uid));
+    const q = query(
+      ordersCollection,
+      where("productSellerId", "==", userDetails.uid)
+    );
     const data = [];
     try {
       const orderSnapshot = await getDocs(q);
       orderSnapshot.forEach(function (eachData) {
-        data.push(eachData.data());
+        data.push({
+          id:eachData.id,
+          ...eachData.data(),
+        });
       });
-      console.log("seller order", data)
-      return data;
+      setSellerOrders(data);
+      console.log("Orders Go")
+      return data
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   useEffect(() => {
     fetchAllRelatedOrderFunction();
@@ -652,6 +673,7 @@ const SellerProvider = ({ children }) => {
     fetchAllRelatedOrderFunction,
     getSellerOrders,
     getCategoriesFromDb,
+    sellerOrders,
   };
   return (
     <SellerContext.Provider value={values}>{children}</SellerContext.Provider>

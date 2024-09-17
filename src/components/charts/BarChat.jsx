@@ -85,6 +85,7 @@ const BarChart = ({getOrdersFunc}) => {
   };
 
   const fetchOrders = async () => {
+    
     const orders = getOrdersFunc ? await getOrdersFunc() :  await getOrders();
     const timeStamp = orders.map((eachOrder) =>
       getMonth(eachOrder.createdOn.seconds)
