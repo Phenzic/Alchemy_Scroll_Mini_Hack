@@ -1,7 +1,6 @@
 import BarChat from "../../components/charts/BarChat";
 import { PieChat } from "../../components/charts/PieChat";
-import Orders from "../../components/admin/Orders";
-import { AccountHeader } from "../../components/account/AccountHeader";
+import AdminOrders from "./AdminOrders";
 
 const AdminDashboard = () => {
   return (
@@ -18,12 +17,7 @@ const AdminDashboard = () => {
       </div>
 
       <div className="p-5 bg-white rounded-2xl border">
-        <AccountHeader
-          heading="Recent Orders"
-          text=""
-          className="mb-5"
-        />
-        <Orders />
+        <AdminOrders/>
       </div>
 
 

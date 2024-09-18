@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import {  } from "../../utils/firebase";
-import React, { useLayoutEffect,useEffect, useState } from "react";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { useEffect, useState } from "react";
+import {getPieChartCollection} from "../../utils/firebase/index"
+import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,38 +24,48 @@ ChartJS.register(
 
 export function PieChat({
   // totalVisits = {
-  //   dextop: 3000,
-  //   mobile: 4500,
-  //   tablet: 10000,
-  //   unknown: 89,
+  //   dextop: 300,
+  //   mobile: 300,
+  //   tablet: 200,
+  //   unknown: 100,
   // },
   graphData,
-}) {
-  const [totalVisits,setTotalVisits] =  useState({laptop:1,phone:5,tablet:3,unknown:2})
-  
-  useEffect(function(){
-    const getOrders = async function(){
-      const orders = await get
-    }
-  },[])
+})
 
-  const pieData = {
-    labels: ["Laptop", "Mobile", "Tablet", "Unknown"],
+ {
+
+  const [totalVisits, setTotalVisits] = useState([])
+
+
+
+    const pieData = {
+    labels: ["Mobile", "Desktop", "Unknown", "Tablet"],
     datasets: [
       {
         label: "Number of visitors",
-        data: [
-          totalVisits.laptop,
-          totalVisits.phone,
-          totalVisits.tablet,
-          totalVisits.unknown,
-        ],
+        data: totalVisits.map((eachVisitor)=> eachVisitor.visitors),
         backgroundColor: ["#E6A960", "#47A8BD", "#305C45", "#EDF7D2"],
         borderColor: ["transparent", "transparent"],
         borderWidth: 1,
       },
     ],
   };
+
+
+  useEffect(()=>{
+    const fetchPieChart = async()=>{
+      try{
+        const piechartData = await getPieChartCollection();
+        setTotalVisits(piechartData);
+      }catch(error){
+        console.log(error);
+      }
+    }
+
+    fetchPieChart()
+  },[])
+
+
   return (
     <div className="">
       <Doughnut

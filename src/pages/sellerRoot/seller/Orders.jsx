@@ -8,7 +8,7 @@ import { formatDateToDDMMYYYY, numberWithCommas } from "../../../utils/helper";
 import { SellerContext } from "../../../context/SellerContext";
 
 const Orders = () => {
-  const navigate = useNavigate();`
+  const navigate = useNavigate();
 
   const [loadingOrders, setLoadingOrders] = useState(false);
 

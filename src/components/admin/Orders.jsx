@@ -14,7 +14,6 @@ const Orders = ({option}) => {
       const orders = await getOrders();
       const lowerCaseOption = option.toLowerCase();
       const filteredOrders = lowerCaseOption == "all"?orders :orders.filter((order)=> order.deliveryStatus==lowerCaseOption);
-      
       setOrders(filteredOrders)
       
     }catch(error){
@@ -22,7 +21,6 @@ const Orders = ({option}) => {
     }
   }
   useEffect(()=>{
-
     fetchOrders()
   },[ option])
 
@@ -58,7 +56,7 @@ const Orders = ({option}) => {
               {orders.map((eachOrder, key) => {
                   return (
                     <tr
-                    onClick={()=> navigate(`/admin/orders/${key}`)}
+                    onClick={()=> navigate(`/admin/orders/${eachOrder.collectionId}`)}
                       className="bg-white border-b cursor-pointer hover:bg-gray-50 "
                       key={key}
                     >

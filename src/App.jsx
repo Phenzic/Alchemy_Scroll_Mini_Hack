@@ -19,16 +19,28 @@ import {
 import { CiApple, CiDumbbell } from "react-icons/ci";
 import CategoriesCard from "./components/CategoriesCard";
 import { Link } from "react-router-dom";
-import { getScreenCollections, updateScreenCollection } from "./utils/firebase";
+
 import { useUser } from "./context/UserContext";
 import { numberWithCommas } from "./utils/helper";
 import { BeatLoader } from "react-spinners";
 import ProductLoader from "./components/ProductLoader";
+import { desktopPieChart, mobilePieChart, tabletPieChart, unknownPieChart } from "./utils/pieChartFunctions";
 
 function App() {
   
   const { allProducts, fetchingAllProducts } = useUser();
-
+  useEffect(()=>{
+    const screenWidth = window.innerWidth;
+    if(screenWidth>=350 && screenWidth<=600){
+      mobilePieChart()
+    }else if( screenWidth>630 && screenWidth<=900){
+      tabletPieChart()
+    }else if( screenWidth>1000 && screenWidth<=1800){
+      desktopPieChart()    
+    }else{
+      unknownPieChart()
+    }
+  },[])
 
   const categories = [
     {
@@ -90,7 +102,7 @@ function App() {
         <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-4  gap-y-5 xl:gap-x-5 gap-3 rounded-lg">
           {fetchingAllProducts
             ? Array.from({ length: 4 }).map((id,index) => {
-                return <ProductLoader key={id+index+"#**#"} />;
+                return <ProductLoader key={index} />;
               })
             : allProducts
                 .slice(0, 8)
@@ -120,7 +132,7 @@ function App() {
         <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-4  gap-y-5 xl:gap-x-5 gap-3 rounded-lg">
           {fetchingAllProducts
             ? Array.from({ length: 4 }).map((id, index) => {
-                return <ProductLoader key={id+index+"#**#"} />;
+                return <ProductLoader key={index} />;
               })
             : allProducts
                 .slice(0, 8)
@@ -204,8 +216,8 @@ function App() {
         </div>
         <div className="mt-6 grid grid-cols-4 max-lg:flex flex-nowrap overflow-x-auto gap-x-4  gap-y-5 xl:gap-x-5 gap-3 rounded-lg">
           {fetchingAllProducts
-            ? Array.from({ length: 4 }).map((id) => {
-                return <ProductLoader key={id} />;
+            ? Array.from({ length: 4 }).map((id, index) => {
+                return <ProductLoader key={index} />;
               })
             : allProducts
                 .filter((dt) => dt.discountRate !== 0)

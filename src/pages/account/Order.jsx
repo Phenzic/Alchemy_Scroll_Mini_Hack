@@ -15,19 +15,17 @@ const Order = () => {
 
   const [loadingAddress, setLoadingAddress] = useState(false);
   const {
-    
     loadingOrder,
-
     order,
     deliveryAddress,
     fetchOrder,
   } = useContext(SellerContext);
 
 
+
   useEffect(() => {
     fetchOrder(id);
   }, [id]);
-
   return (
     <section className="p-7 min-h-[50vh] max-md:p-4 max-[1088px]:flex-col gap-7 max-md:py-4 w-full">
       <div className="flex pb-4 pt-0 max-md:p-0 max-md:pb-4 border-b-default-400 border-b w-full items-center gap-x-4 max-md:flex-col max-md:items-start">
@@ -70,7 +68,7 @@ const Order = () => {
                     className={`${
                       order.deliveryStatus == "pending"
                         ? "text-orange-400"
-                        : order.deliveryStatus == "rejected"
+                        : order.deliveryStatus == "cancelled"
                         ? "text-red-500"
                         : "text-[#53A178]"
                     } bg-[#F1F1F1] px-2 p-0.5 text-sm rounded-md ml-2 capitalize font-medium`}
@@ -89,6 +87,10 @@ const Order = () => {
                   </div>
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-mamiblack/60">Shipping Method</p>
+                    <p className="text-mamiblack">Home delivery</p>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-mamiblack/60">Seller</p>
                     <p className="text-mamiblack">Home delivery</p>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import BarChat from "../../components/charts/BarChat";
 import { PieChat } from "../../components/charts/PieChat";
-import Orders from "../../components/admin/Orders";
+import AdminOrders from "./AdminOrders";
 import { AccountHeader } from "../../components/account/AccountHeader";
 
 const AdminAnalytics = () => {
@@ -24,12 +24,10 @@ const AdminAnalytics = () => {
           text=""
           className="mb-5"
         />
-        <Orders />
       </div>
 
       <div className="p-5 bg-white rounded-2xl border">
-        <AccountHeader heading="Recent orders" text="" className="mb-5" />
-        <Orders />
+        <AdminOrders />
       </div>
     </div>
   );
