@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import {
   BsBell,
   BsCart3,
@@ -11,7 +11,6 @@ import {
   BsX,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { CgMenuLeftAlt } from "react-icons/cg";
 import { Cross as Hamburger } from "hamburger-react";
 import logo from "../../assets/newlogo.png";
 import { useLocation, useNavigate } from "react-router";
