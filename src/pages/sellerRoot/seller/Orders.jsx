@@ -8,20 +8,12 @@ import { formatDateToDDMMYYYY, numberWithCommas } from "../../../utils/helper";
 import { SellerContext } from "../../../context/SellerContext";
 
 const Orders = () => {
-  const navigate = useNavigate();`
+  const navigate = useNavigate();
 
   const [loadingOrders, setLoadingOrders] = useState(false);
 
   const { getSellerOrders, sellerOrders } = useContext(SellerContext);
 
-  const getOrders = async () => {
-    try {
-      getSellerOrders();
-      setLoadingOrders(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     if (!sellerOrders) {

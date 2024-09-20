@@ -53,7 +53,7 @@ function Profile() {
             <p className=" text-2xl text-gray-600">{sellerOrders ? sellerOrders.length : 0}</p>
           </section>
         </div>
-        <div className=" py-5 px-2 space-y-4 divide-y-2">
+        {/* <div className=" py-5 px-2 space-y-4 divide-y-2">
           <p className=" font-semibold">Delivery address</p>
           <section className=" text-gray-700 text-sm pt-4 space-y-2">
             <p>Address:9, shobande street, 4th avenue Festac ope</p>
@@ -76,7 +76,7 @@ function Profile() {
           {displayAddress && (
             <AddAddress cancel_address_trigger={handleAddressTrigger} />
           )}
-        </div>
+        </div> */}
       </div>
     </React.Fragment>
   );
