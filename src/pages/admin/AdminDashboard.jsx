@@ -9,7 +9,6 @@ const AdminDashboard = () => {
   const [totalOrders, setTotalOrders] = useState(0)
   const [totalSales, setTotalSales] = useState(0);
   const [yesterOrders, setYesterdayOrders] = useState(0);
-  const today = new Date()
 
   const fetchOrders = async()=>{
     const orders = await getOrders();
@@ -33,7 +32,6 @@ const AdminDashboard = () => {
   }
 
   useEffect(()=>{
-    console.log(today.getDay())
     fetchOrders();
   },[])
 
