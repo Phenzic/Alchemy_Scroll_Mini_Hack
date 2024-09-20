@@ -93,6 +93,7 @@ const BarChart = ({getOrdersFunc}) => {
   };
 
   useEffect(() => {
+    
     fetchOrders();
   }, []);
 

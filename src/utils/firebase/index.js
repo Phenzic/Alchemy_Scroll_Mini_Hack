@@ -198,6 +198,25 @@ export const getUserDetails = async (userAuth) => {
   }
 };
 
+// get user details
+export const getUserDetailsWithUid = async (uid) => {
+  if (!uid) return null;
+
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userSnapshot = await getDoc(userDocRef);
+
+    if (userSnapshot.exists()) {
+      return userSnapshot.data();
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw new Error("Failed to fetch user details: " + error);
+  }
+};
+
+
 // get screen collection
 export const getScreenCollections = async function () {
   const data = [];

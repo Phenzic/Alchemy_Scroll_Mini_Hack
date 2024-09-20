@@ -14,14 +14,6 @@ const Orders = () => {
 
   const { getSellerOrders, sellerOrders } = useContext(SellerContext);
 
-  const getOrders = async () => {
-    try {
-      getSellerOrders();
-      setLoadingOrders(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     if (!sellerOrders) {
