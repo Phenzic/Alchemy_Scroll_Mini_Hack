@@ -10,3 +10,4 @@ export const getMonth = (month)=>{
     const dateConverted = new Date(test);
     return dateConverted.getMonth()+1;
 }
+

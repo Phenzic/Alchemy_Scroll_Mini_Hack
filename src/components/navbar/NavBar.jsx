@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import {
   BsBell,
   BsCart3,
@@ -11,7 +11,6 @@ import {
   BsX,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { CgMenuLeftAlt } from "react-icons/cg";
 import { Cross as Hamburger } from "hamburger-react";
 import logo from "../../assets/newlogo.png";
 import { useLocation, useNavigate } from "react-router";
@@ -336,17 +335,11 @@ const NavBar = () => {
       {showCategoriesNav && (
         <div className="border-b border-b-black/20 bg-white overflow-auto whitespace-nowrap">
           <div className="flex items-center justify-between p-4 py-4 max-w-[1280px] mx-auto text-[13px] text-[#086047] gap-4 ">
-            {/* <div className="flex items-center gap-2">
-              <div>
-                <CgMenuLeftAlt size={22} />
-              </div>
-              All Categories
-            </div> */}
             {categories.length < 1
-              ? Array.from({ length: 10 }).map((id) => {
+              ? Array.from({ length: 10 }).map((id,index) => {
                   return (
                     <div
-                      key={id}
+                      key={index}
                       className="w-[60px] rounded-sm h-[15px] animate-pulse bg-black/[7%]"
                     ></div>
                   );

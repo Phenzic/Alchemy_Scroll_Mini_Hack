@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { getOrders } from "../../utils/firebase/index";
 import { getMonth } from "../../utils/dataConverter";
@@ -80,7 +80,6 @@ const BarChart = ({getOrdersFunc}) => {
           break;
       }
     });
-    console.log(monthCounts)
     setMonths(monthCounts);
   };
 

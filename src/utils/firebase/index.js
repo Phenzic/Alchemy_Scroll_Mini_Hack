@@ -32,6 +32,7 @@ import {
   get,
   getDatabase,
   orderByChild,
+  QueryConstraint,
   ref,
 } from "firebase/database";
 import { getStorage } from "firebase/storage";
@@ -238,7 +239,7 @@ export const getOrders = async function () {
   try {
     const orderSnapshot = await getDocs(ordersCollection);
     orderSnapshot.forEach(function (eachData) {
-      data.push(eachData.data());
+      data.push({...eachData.data(), collectionId:eachData.id});
     });
     console.log("seller order", data)
 
@@ -248,19 +249,15 @@ export const getOrders = async function () {
   }
 };
 
-
-
-
-// update screenCollection
-export const updateScreenCollection = async function (object) {
-  const screenRef = doc(db, "piechart", "UCTclap25Sp9bDPZUnFx");
-  try {
-    const updateScreen = await updateDoc(screenRef, object);
-    return updateScreen;
-  } catch (error) {
+export const getOrder = async (documentId)=>{
+  const orderRef = doc(db,"orders", documentId);
+  try{
+    const orderDocument = await getDoc(orderRef);
+    return orderDocument.data();
+  }catch(error){
     console.log(error);
   }
-};
+}
 
 // get user delivery address
 
@@ -279,6 +276,19 @@ export const getUserDeliveryAddress = async (userId) => {
 
   return {};
 };
+
+export const getUsersAddress = async(id)=>{
+  const addressRef = doc(db,"addresses", id);
+  try{
+    const address = await getDoc(addressRef);
+    return address.data()
+  }catch(error){
+    console.log(error);
+  } 
+}
+
+
+
 
 export const getUserOrders = async (userId) => {
   try {
@@ -312,3 +322,71 @@ export const getAllProducts = async () => {
   return {};
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// PIECHART CODE 
+export const getPieChartCollection = async ()=>{
+  const pichart = collection(db, "piechart");
+  try{
+    const querySnapshot = await getDocs(pichart);
+    const data = querySnapshot.docs.map(doc => doc.data());
+    return data;
+  }catch(error){
+    console.log(error)
+  }
+}
+
+export const updateMobile = async (addedData)=>{
+  const mobileRef = doc(db,"piechart", "BAFUsuWGoYvABmPTE8ti");
+  try{
+    await updateDoc(mobileRef,{visitors: addedData})
+  }catch(error){
+    console.log(error)
+  }
+}
+export const updateDesktop = async (addedData)=>{
+  const desktopRef = doc(db,"piechart", "FtFLxdJBDaKNA64us0Zw");
+  try{
+    await updateDoc(desktopRef,{visitors: addedData})
+  }catch(error){
+    console.log(error)
+  }
+}
+export const updateTablet = async (addedData)=>{
+  const tabletRef = doc(db,"piechart", "iDgIWalHtWApuL9nhh95");
+  try{
+    await updateDoc(tabletRef,{visitors: addedData})
+  }catch(error){
+    console.log(error)
+  }
+}
+export const updateUnknown = async (addedData)=>{
+  const unknownRef = doc(db,"piechart", "PLDHxovPDazSV0DRYSdH");
+  try{
+    await updateDoc(unknownRef,{visitors: addedData})
+  }catch(error){
+    console.log(error)
+  }
+}

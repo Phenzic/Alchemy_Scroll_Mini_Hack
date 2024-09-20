@@ -211,7 +211,6 @@ const Vendor = () => {
             }
           </div>
       </div>
-      <Products />
     </section>
   );
 };
