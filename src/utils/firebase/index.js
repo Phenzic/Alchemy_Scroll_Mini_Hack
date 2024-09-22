@@ -323,6 +323,26 @@ export const getAllProducts = async () => {
 };
 
 
+export const addRestriction = async (id)=>{
+  const vendorRef = doc(db,"users", id);
+  try{
+    await updateDoc(vendorRef,{isRestricted:true});
+    const snapshot = await getDoc(vendorRef);
+    const data = snapshot.data()
+    return data;
+  }catch(error){
+    console.log(error);
+  }
+}
+export const removeRestriction = async (id)=>{
+  const vendorRef = doc(db,"users", id);
+  try{
+    await updateDoc(vendorRef,{isRestricted:false})
+  }catch(error){
+    console.log(error);
+  }
+}
+
 
 
 
