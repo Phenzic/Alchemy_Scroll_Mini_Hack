@@ -14,7 +14,7 @@ export const ProfileComponent = () => {
     <div className="md-p-[3rem] p-4 text-[#313638] w-full gap-5 flex flex-col">
       <div className="flex md:items-center justify-between flex-col md:flex-row gap-3">
         <AccountHeader
-          heading={`Hello, ${userDetails?.username}`}
+          heading={`Hello, ${userDetails.firstName ? userDetails.firstName : userDetails?.username}`}
           text={`${userDetails?.phoneNumber || ""} | ${userDetails?.email}`}
         />
 

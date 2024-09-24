@@ -88,7 +88,7 @@ export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
 
 // create user details
-export const createUserDocumentFromAuth = async (userAuth, username) => {
+export const createUserDocumentFromAuth = async (userAuth, username, firstName, lastName) => {
   if (!userAuth) return;
 
   const userDocRef = doc(db, "users", userAuth.uid);
@@ -103,6 +103,8 @@ export const createUserDocumentFromAuth = async (userAuth, username) => {
         email,
         createdAt,
         username,
+        firstName,
+        lastName,
         transactions: [],
         uid: userAuth.uid,
         userRole: "user",
@@ -111,6 +113,8 @@ export const createUserDocumentFromAuth = async (userAuth, username) => {
         email,
         createdAt,
         username,
+        firstName,
+        lastName,
         transactions: [],
         uid: userAuth.uid,
         userRole: "user",
@@ -125,6 +129,8 @@ export const createUserDocumentFromAuth = async (userAuth, username) => {
 export const createSellerDocumentFromAuth = async (
   userAuth,
   username,
+  firstName,
+  lastName,
   business_name,
   phone_number
 ) => {
@@ -143,6 +149,8 @@ export const createSellerDocumentFromAuth = async (
         email,
         createdAt,
         username,
+        firstName,
+        lastName,
         businessName: business_name,
         phoneNumber: phone_number,
         transactions: [],
@@ -153,6 +161,8 @@ export const createSellerDocumentFromAuth = async (
         email,
         createdAt,
         username,
+        firstName,
+        lastName,
         businessName: business_name,
         phoneNumber: phone_number,
         transactions: [],

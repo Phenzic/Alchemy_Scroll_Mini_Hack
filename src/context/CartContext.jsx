@@ -1,6 +1,17 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { getDoc, onSnapshot } from "firebase/firestore";
+import { doc, arrayUnion, updateDoc } from "firebase/firestore";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import toast from "react-hot-toast";
 import { numberWithCommas } from "../utils/helper";
+import { useUser } from "./UserContext";
+import { db } from "../utils/firebase";
+import { update } from "lodash";
 
 const CartContext = createContext();
 
@@ -14,6 +25,9 @@ export const CartProvider = ({ children }) => {
       ? JSON.parse(localStorage.getItem("cartItems"))
       : []
   );
+
+  const [loading, setLoading] = useState(false);
+  const { userDetails } = useUser();
 
   const isItemInCart = (item) => {
     return cartItems.find((cartItem) => cartItem.id === item?.id);
@@ -71,13 +85,97 @@ export const CartProvider = ({ children }) => {
       .toFixed(2);
   };
 
+  // Replace getCartItemsFromFirebase with a real-time listener
   useEffect(() => {
-    const data = localStorage.getItem("cartItems");
-    if (data) {
-      setCartItems(JSON.parse(data));
-    }
-  }, []);
+    const docRef = doc(db, "users", userDetails.uid);
 
+    const unsubscribe = onSnapshot(
+      docRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data && data.cartItems) {
+            setCartItems(data.cartItems);
+          } else {
+            setCartItems([]);
+          }
+        } else {
+          setCartItems([]);
+        }
+      },
+      (error) => {
+        toast.error("Error fetching cart items: " + error.message);
+      }
+    );
+
+    // Cleanup function to unsubscribe when the component unmounts
+    return () => unsubscribe();
+  }, [db, userDetails.uid]);
+
+  // Modify addCartItemsFromFirebase
+  const addCartItemsFromFirebase = async (item) => {
+    try {
+      setLoading(true)
+      const docRef = doc(db, "users", userDetails.uid);
+
+      await updateDoc(docRef, {
+        cartItems: cartItems.some((cartItem) => cartItem.id === item.id)
+          ? cartItems.map((cartItem) =>
+              cartItem.id === item.id
+                ? { ...cartItem, quantity: cartItem.quantity + 1 }
+                : cartItem
+            )
+          : [...cartItems, { ...item, quantity: 1 }],
+      });
+
+      toast.success("Item added to cart");
+      setLoading(false)
+    } catch (error) {
+      toast.error("Error adding item to cart: " + error.message);
+      setLoading(true)
+    }
+  };
+
+  const reduceProductQuantityFromFirebase = async (item) => {
+    try {
+      setLoading(true)
+      const docRef = doc(db, "users", userDetails.uid);
+      if (isItemInCart(item).quantity === 1) {
+        await removeCartItemsFromFirebase(item);
+      } else {
+        await updateDoc(docRef, {
+          cartItems: cartItems.map((cartItem) =>
+            cartItem.id === item.id
+              ? { ...cartItem, quantity: cartItem.quantity - 1 }
+              : cartItem
+          ),
+        });
+      }
+
+      toast.success("Item quantity reduced");
+      setLoading(false)
+    } catch (error) {
+      toast.error("Error reducing item quantity: " + error.message);
+      setLoading(false)
+    }
+  };
+  // Modify removeCartItemsFromFirebase
+  const removeCartItemsFromFirebase = async (item) => {
+    try {
+      setLoading(true);
+      const docRef = doc(db, "users", userDetails.uid);
+
+      await updateDoc(docRef, {
+        cartItems: cartItems.filter((cartItem) => cartItem.id !== item.id),
+      });
+
+      toast.success("Item removed from cart");
+      setLoading(false);
+    } catch (error) {
+      toast.error("Error removing item from cart: " + error.message);
+      setLoading(false)
+    }
+  };
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
@@ -92,7 +190,11 @@ export const CartProvider = ({ children }) => {
         getCartTotal,
         isItemInCart,
         removeItemFromCart,
+        reduceProductQuantityFromFirebase,
         getCartTotalRaw,
+        addCartItemsFromFirebase,
+        loading,
+        removeCartItemsFromFirebase,
       }}
     >
       {children}

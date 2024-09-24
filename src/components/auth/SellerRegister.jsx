@@ -12,6 +12,8 @@ import { Input } from "../input";
 import { useUser } from "../../context/UserContext";
 
 const defaultValue = {
+  first_name: "",
+  last_name: "",
   username: "",
   business_name: "",
   email_address: "",
@@ -40,6 +42,8 @@ const SellerRegister = () => {
       password,
       confirm_password,
       username,
+      first_name,
+      last_name,
       business_name,
       phone_number,
     } = formField;
@@ -64,6 +68,8 @@ const SellerRegister = () => {
       const data = await createSellerDocumentFromAuth(
         user,
         username,
+        first_name,
+        last_name,
         business_name,
         phone_number
       );

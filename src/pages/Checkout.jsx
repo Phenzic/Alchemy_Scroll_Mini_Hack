@@ -92,6 +92,8 @@ const Checkout = () => {
                     deliveryStatus: "pending",
                     createdOn: serverTimestamp(),
                   })
+
+                  
               )
             ).then((doc) => {
               toast.success("Order has been created Successful");

@@ -11,13 +11,15 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { useUser } from "../context/UserContext";
 import toast from "react-hot-toast";
 import { numberWithCommas } from "../utils/helper";
+import { ClipLoader } from "react-spinners";
 
 const Cart = () => {
   const {
     cartItems,
-    addToCart,
-    removeFromCart,
-    removeItemFromCart,
+    loading,
+    reduceProductQuantityFromFirebase,
+    removeCartItemsFromFirebase,
+    addCartItemsFromFirebase,
     getCartTotal,
   } = useCart();
   const { currentUser } = useUser();
@@ -102,12 +104,15 @@ const Cart = () => {
                             >
                               Quantity, {product.quantity}
                             </label>
-                            <div className=" flex gap-4 items-center justify-evenly bg-black/[3%] rounded-lg px-3 py-2 select-none text-sm w-fit">
+                            {loading ? 
+                            ( <div className=" flex gap-4 items-center justify-center bg-black/[3%] rounded-lg px-3 py-2 select-none text-sm w-fit">
+                              <ClipLoader  size={17}/>
+                            </div>):( <div className=" flex gap-4 items-center justify-evenly bg-black/[3%] rounded-lg px-3 py-2 select-none text-sm w-fit">
                               <FaMinus
                                 className="flex items-center justify-center text-sm font-semibold text-[#086047] cursor-pointer"
                                 onClick={() =>
                                   product.quantity > 1
-                                    ? removeFromCart(product)
+                                    ? reduceProductQuantityFromFirebase(product)
                                     : {}
                                 }
                               />
@@ -116,13 +121,15 @@ const Cart = () => {
                               </p>
                               <FaPlus
                                 className="flex items-center justify-center text-[#086047] text-sm font-semibold cursor-pointer"
-                                onClick={() => addToCart(product)}
+                                onClick={() => addCartItemsFromFirebase(product)}
                               />
-                            </div>
+                            </div>)
+                          }
+                           
 
                             <div className="absolute right-0 top-0">
                               <button
-                                onClick={() => removeItemFromCart(product)}
+                                onClick={() => removeCartItemsFromFirebase(product)}
                                 type="button"
                                 className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                               >

@@ -11,8 +11,10 @@ import { getName } from "../../utils/helper";
 import { useUser } from "../../context/UserContext";
 
 const defaultValue = {
-  username: "",
+  first_name: "",
+  last_name: "",
   email_address: "",
+  username: "",
   password: "",
   confirm_password: "",
 };
@@ -31,7 +33,7 @@ const UserRegister = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setstate("loading");
-    const { email_address, password, confirm_password, username } = formField;
+    const { email_address, password, confirm_password, username, first_name, last_name } = formField;
 
     if (password !== confirm_password) {
       toast.error("passwords do not match");
@@ -50,7 +52,7 @@ const UserRegister = () => {
         password
       );
 
-      const data = await createUserDocumentFromAuth(user, username);
+      const data = await createUserDocumentFromAuth(user, username, first_name, last_name);
       setUserDetails(data);
       localStorage.setItem("userDetails", JSON.stringify(data));
       setIsLoading(false);

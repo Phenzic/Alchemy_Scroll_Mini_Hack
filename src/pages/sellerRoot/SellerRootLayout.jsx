@@ -29,9 +29,9 @@ const SellerRootLayout = () => {
     if (currentUser && userDetails && userDetails.userRole !== "seller") {
       navigate("/account/profile");
       toast.error("You have to be a seller to access seller's panel.");
-    } else if (!currentUser && !userDetails && userDetails.userRole !== "seller") {
+    } else if (!currentUser || !userDetails  || userDetails.userRole !== 'seller' ) {
       navigate("/auth/login");
-      toast.error("You have to login as a seller to access this panel.");
+      // toast.error("You have to login as a seller to access this panel.");
     }
   }, [currentUser, userDetails]);
 

@@ -216,7 +216,7 @@ const Orders = () => {
                       );
                     })
                   ) : (
-                    <div className="w-full h-full flex justify-center items-center">
+                    <div className="w-full h-full flex justify-center items-center py-4">
                       <p className="text-xl text-green-800">No Products.</p>
                     </div>
                   )}

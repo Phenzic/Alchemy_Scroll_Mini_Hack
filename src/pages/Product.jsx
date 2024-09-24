@@ -15,7 +15,14 @@ function classNames(...classes) {
 }
 
 const Product = ({ isAdmin = false }) => {
-  const { addToCart, isItemInCart, removeFromCart } = useCart();
+  const {
+loading,
+    reduceProductQuantityFromFirebase,
+
+    addCartItemsFromFirebase,
+    isItemInCart,
+
+  } = useCart();
   const [indexValue, setIndexValue] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loadingProduct, setLoadingProduct] = useState(false);
@@ -26,7 +33,17 @@ const Product = ({ isAdmin = false }) => {
     setLoadingProduct(true);
     const ref = await getDoc(doc(db, "products", id));
     if (ref.exists()) {
-      setSelectedProduct({ id, ...ref.data() });
+      const sellerDetails = await getDoc(doc(db, "users", ref.data().sellerId));
+      console.log(sellerDetails);
+      if (sellerDetails.exists()) {
+        var seller = sellerDetails.data();
+        setSelectedProduct({ id, ...ref.data(), seller:{
+          businessName: seller.businessName,
+          email: seller.email,
+          phone: seller.phoneNumber,
+     
+        } });
+      }
     }
     setLoadingProduct(false);
   };
@@ -34,6 +51,9 @@ const Product = ({ isAdmin = false }) => {
   useEffect(() => {
     fetchProduct();
   }, []);
+  useEffect(() => {
+    console.log(selectedProduct);
+  }, [selectedProduct]);
 
   const tabs = ["Product Details", "Customer Reviews"];
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
@@ -105,7 +125,7 @@ const Product = ({ isAdmin = false }) => {
               </ul>
             </div>
             <div className="w-full py-16 max-md:p-4">
-              <p className="text-[#086047] font-bold mb-5">James Store</p>
+              <p className="text-[#086047] font-bold mb-5">{selectedProduct?.seller?.businessName}</p>
               <h1 className="text-black text-4xl font-extrabold mb-6">
                 {selectedProduct?.name}
               </h1>
@@ -126,20 +146,22 @@ const Product = ({ isAdmin = false }) => {
               {/* <h1 className="text-slate-400 text-lg font-semibold line-through mb-10">
             $250
           </h1> */}
-              {!isAdmin && (
+              {!isAdmin && loading ?(<div className="flex justify-start items-center gap-6">
+                <ClipLoader /> 
+              </div>) : (
                 <div className="flex justify-start items-center gap-6">
                   {isItemInCart(selectedProduct) && (
                     <div className=" flex gap-4 items-center justify-evenly bg-black/[3%] rounded-lg px-4 py-3 select-none">
                       <FaMinus
                         className="flex items-center justify-center text-lg font-semibold text-[#086047] cursor-pointer"
-                        onClick={() => removeFromCart(selectedProduct)}
+                        onClick={() => reduceProductQuantityFromFirebase(selectedProduct)}
                       />
                       <p className="mx-4 w-3 text-black-50 font-semibold">
                         {isItemInCart(selectedProduct).quantity}
                       </p>
                       <FaPlus
                         className="flex items-center justify-center text-[#086047] text-lg font-semibold cursor-pointer"
-                        onClick={() => addToCart(selectedProduct)}
+                        onClick={() => addCartItemsFromFirebase(selectedProduct)}
                       />
                     </div>
                   )}
@@ -153,7 +175,7 @@ const Product = ({ isAdmin = false }) => {
                     <div>
                       <button
                         onClick={() => {
-                          addToCart(selectedProduct);
+                          addCartItemsFromFirebase(selectedProduct);
                         }}
                         className=" bg-[#086047] hover:bg-[#086047]/80 text-white py-3 px-6 rounded-lg flex items-center gap-3 font-semibold"
                       >

@@ -1,17 +1,23 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router";
+// import {Prompt} from "react-router-dom"
 import { CiImageOn } from "react-icons/ci";
 import { SellerContext } from "../../../context/SellerContext";
 import { BsChevronLeft } from "react-icons/bs";
 import { useUser } from "../../../context/UserContext";
 import { ClipLoader } from "react-spinners";
+import Modal from "../../../components/seller/Modal";
+import useBeforeUnload from "../../../utils/useBeforeUnload";
 
 function AddSellerProduct() {
+  useBeforeUnload("You have unsaved changes. Are you sure you want to leave?");
   const { userDetails } = useUser();
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const paramValue = params.get("param");
+  const [openBackModal, setOpenBackModal] = useState(false);
+  const [isBlocking, setIsBlocking] = useState(false);
 
   React.useEffect(() => {
     let isMounted = true;
@@ -52,7 +58,8 @@ function AddSellerProduct() {
     setVariations,
     setImagesToDeleteFromStorageAfterEditing,
     setVariationsToDeleteFromDbAfterEditing,
-    navigateToProductsPage, setNavigateToProductsPage,
+    navigateToProductsPage,
+    setNavigateToProductsPage,
     handleFileSelect,
     enterTagEvent,
     handleTagChange,
@@ -72,14 +79,25 @@ function AddSellerProduct() {
   }, [userDetails]);
 
   React.useEffect(() => {
-    if(navigateToProductsPage){
+    if (navigateToProductsPage) {
       navigate("/seller/products");
       setNavigateToProductsPage(false);
     }
-  }, [navigateToProductsPage])
+  }, [navigateToProductsPage]);
 
   return (
     <React.Fragment>
+      <Modal
+        actionButtonText="Go Back"
+        setOpen={setOpenBackModal}
+        open={openBackModal}
+        modalTitle={`Exit Page`}
+        confirmation={false}
+        actionFunction={() => {
+          navigate(-1);
+        }}
+        modalDescription="Are You Sure You Want To Exit This Page"
+      />
       {isLoading ? (
         <div className="w-full h-screen flex gap-4 justify-center items-center">
           <ClipLoader color="#086047" />
@@ -91,7 +109,7 @@ function AddSellerProduct() {
             <button
               className=" bg-[#305C45]/[5%] border text-lg font-bold px-3 py-2 mb-3 rounded-lg flex items-center gap-4"
               onClick={() => {
-                navigate(-1);
+                setOpenBackModal(true);
               }}
             >
               <BsChevronLeft /> Back
@@ -615,7 +633,6 @@ function AddSellerProduct() {
                 >
                   Cancel
                 </button>
-
               </section>
             </main>
           </div>
