@@ -1,10 +1,10 @@
 import { Button, Spinner } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BsChevronRight } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import Products from "../../components/admin/Products";
-import { getAllProducts, totalUsers } from "../../utils/firebase";
+import { getAllProducts, totalUsers, addRestriction, removeRestriction } from "../../utils/firebase";
 
 
 const Vendor = () => {
@@ -13,36 +13,58 @@ const Vendor = () => {
   const [products,setProducts] = useState([])
   const [joinedDate,setJoinedDate] = useState("")
   
+  const vendorFunction = async function(){
+    const vendor = await totalUsers()
+    const filter_vendor_based_on_uid = vendor.filter(function(vendor){
+      return vendor.uid==id
+    })
+    const testDate = new Date(filter_vendor_based_on_uid[0].createdAt.seconds*1000).toLocaleDateString(undefined,{day:'numeric',year:"numeric",month:'long'})
+    setJoinedDate(testDate)
+    setVendor(filter_vendor_based_on_uid);
+  }
+  
+  const allProducts = async function(){
+    const products = await getAllProducts()
+    const filtered_vendor_products = products.filter(function(eachProduct){
+      return eachProduct.sellerId==id
+    })
+    setProducts(filtered_vendor_products)
+  }
+
   useEffect(function(){
-    const vendorFunction = async function(){
-      const vendor = await totalUsers()
-      const filter_vendor_based_on_uid = vendor.filter(function(vendor){
-        return vendor.uid==id
-      })
-      const testDate = new Date(filter_vendor_based_on_uid[0].createdAt.seconds*1000).toLocaleDateString(undefined,{day:'numeric',year:"numeric",month:'long'})
-      setJoinedDate(testDate)
-      setVendor(filter_vendor_based_on_uid);
-    }
 
-    const allProducts = async function(){
-      const products = await getAllProducts()
-      const filtered_vendor_products = products.filter(function(eachProduct){
-        return eachProduct.sellerId==id
-      })
-      setProducts(filtered_vendor_products)
-    }
     allProducts()
-
     vendorFunction()
+    
   },[])
+
+
+  const findVendor = async (id) => {
+    const vendors = await totalUsers();
+    const vendor = vendors.find((vendor) => vendor.uid === id);
+  
+    if (vendor && vendor.isRestricted) {
+      await removeRestriction(id);
+    } else {
+      await addRestriction(id);
+    }
+  
+    setVendor([{...vendor,isRestricted:!vendor.isRestricted}])
+  };
+// BUTTON
+  const restrictVendor = ()=>{
+    findVendor(id);
+  }
+
+
   return (
     <section className="p-5 text-mamiblack">
       <h3 className="text-[24px] font-semibold ">Vendor Profile</h3>
       <p className="flex items-center gap-2 py-5 pt-0 max-md:text-sm">
         <Link to={-1}>Vendors</Link> <BsChevronRight />
-        <span className="font-semibold capitalize">{vendor.length===0?<p>Vendor</p>:vendor[0].businessName}</span>
+        <span className="font-semibold capitalize">{vendor.length===0?<p>Vendor</p>:vendor[0]?.businessName}</span>
       </p>
-      {vendor.length===0?<p>Loading Vendor</p>:
+      {vendor.length===0 ?<p>Loading Vendor</p>:
       vendor.map(function(vendor){
         return(
           <section key={vendor.uid} className="grid grid-cols-3 gap-4 grid-flow-row-dense max-xl:grid-cols-2 max-lg:grid-cols-1">
@@ -58,7 +80,7 @@ const Vendor = () => {
               <div className="p-5 text-sm">
                 <div className="w-full flex flex-wrap items-center justify-between mb-3">
                   <p className="opacity-60">Store Name:</p>
-                  <p>{vendor.businessName}</p>
+                  <p>{vendor?.businessName}</p>
                 </div>
                 <div className=" space-y-2 w-full flex flex-wrap items-center justify-between mb-3">
                   <p className="opacity-60">Store Description:</p>
@@ -75,13 +97,16 @@ const Vendor = () => {
                   <p className="opacity-60">Joined on:</p>
                   <p>{joinedDate}</p>
                 </div>
+                <div className="w-full flex flex-wrap items-center justify-between mb-3">
+                  <p className="opacity-60">Restricted:</p>
+                  <p>{vendor.isRestricted?"Restricted":"Not Restricted"}</p>
+                </div>
                 <div className="flex gap-3 mt-5">
-                  <button
-                    // onClick={() => navigate(`${key}`)}
+                  <button onClick={restrictVendor}
                     type="button"
-                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-[#F32013] px-2.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#F32013] focus:outline-none focus:ring-2 focus:ring-[#F32013] focus:ring-offset-2 sm:w-full sm:flex-grow-0"
+                    className={`flex w-full items-center justify-center rounded-md border border-transparent ${vendor.isRestricted?"text-[#F32013] bg-[#ffff] border-[1px] border-[#F32013] hover:bg-[#ffff] focus:outline-none focus:ring-2 focus:ring-[#ffff] focus:ring-offset-2":"text-white bg-[#F32013] hover:bg-[#F32013] focus:outline-none focus:ring-2 focus:ring-[#F32013] focus:ring-offset-2"} px-2.5 py-2 text-sm font-medium  shadow-sm  sm:w-full sm:flex-grow-0`}
                   >
-                    Restrict Vendor
+                    {vendor.isRestricted?"Cancel Restriction":"Restrict Vendor"}
                   </button>
                 </div>
               </div>
