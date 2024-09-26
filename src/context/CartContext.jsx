@@ -21,9 +21,7 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(
-    localStorage.getItem("cartItems")
-      ? JSON.parse(localStorage.getItem("cartItems"))
-      : []
+    []
   );
 
   const [loading, setLoading] = useState(false);
@@ -111,7 +109,7 @@ export const CartProvider = ({ children }) => {
 
     // Cleanup function to unsubscribe when the component unmounts
     return () => unsubscribe();
-  }, [db,]);
+  }, [db, userDetails && userDetails.uid]);
 
   // Modify addCartItemsFromFirebase
   const addCartItemsFromFirebase = async (item) => {
@@ -177,9 +175,9 @@ export const CartProvider = ({ children }) => {
       setLoading(false)
     }
   };
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+  // useEffect(() => {
+  //   localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  // }, [cartItems]);
 
   return (
     <CartContext.Provider
