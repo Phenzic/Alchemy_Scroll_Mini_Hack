@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { BsArrowRight, BsCheck, BsClock, BsX } from "react-icons/bs";
@@ -11,7 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { numberWithCommas, validateEmail } from "../utils/helper";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import CardInput from "../components/CardInput";
 
@@ -31,6 +31,28 @@ const Checkout = () => {
   const [selectedAddress, setSelectedAddress] = useState("");
   const stripe = useStripe();
   const elements = useElements();
+
+  const subtractProductQty = async (item, qtyToSubtract) => {
+    // console.log("THE CART",cartItems[0])
+    try {
+      const docRef = doc(db, "products", item.id);
+      const docSnap = await getDoc(docRef); // Only fetch the array field
+
+      if (docSnap.exists()) {
+        const arrayField = docSnap.get('quantity');
+        const newValue = Number(arrayField) - qtyToSubtract;
+        updateDoc(docRef, {
+          quantity: newValue.toString() // Update the 'name' field with the new value
+        })
+      }
+    } catch (error) {
+      toast.error(error);
+      console.log(error);
+    }
+  };
+
+
+  
 
   const makePayment = async () => {
     if (!validateEmail(email)) {
@@ -68,7 +90,7 @@ const Checkout = () => {
           if (result.paymentIntent.status === "succeeded") {
             await Promise.all(
               cartItems.map(
-                async (item) =>
+                async (item) =>{
                   await addDoc(collection(db, "orders"), {
                     userId: userDetails.uid,
                     productSellerId: item.sellerId,
@@ -92,8 +114,9 @@ const Checkout = () => {
                     deliveryStatus: "pending",
                     createdOn: serverTimestamp(),
                   })
-
-                  
+                  await subtractProductQty(item, item.quantity)
+                
+                }
               )
             ).then((doc) => {
               toast.success("Order has been created Successful");
@@ -112,6 +135,8 @@ const Checkout = () => {
 
   return (
     <>
+
+    <button className="p-6 bg-slate-700" onClick={subtractProductQty}>Click me</button>
       {currentUser ? (
         <div className="">
           <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 max-md:pt-5 sm:px-6 lg:max-w-7xl lg:px-8">

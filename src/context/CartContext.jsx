@@ -87,6 +87,7 @@ export const CartProvider = ({ children }) => {
 
   // Replace getCartItemsFromFirebase with a real-time listener
   useEffect(() => {
+    if (!userDetails?.uid) return;
     const docRef = doc(db, "users", userDetails.uid);
 
     const unsubscribe = onSnapshot(
@@ -110,7 +111,7 @@ export const CartProvider = ({ children }) => {
 
     // Cleanup function to unsubscribe when the component unmounts
     return () => unsubscribe();
-  }, [db, userDetails.uid]);
+  }, [db,]);
 
   // Modify addCartItemsFromFirebase
   const addCartItemsFromFirebase = async (item) => {
