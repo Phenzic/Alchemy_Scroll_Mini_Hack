@@ -9,6 +9,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { numberWithCommas } from "../utils/helper";
 import { BeatLoader, ClipLoader } from "react-spinners";
+import RelatedProducts from "../components/RelatedProducts";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -187,6 +188,9 @@ loading,
                 </div>
               )}
             </div>
+          </div>
+          <div>
+            <RelatedProducts category={selectedProduct.category} id={id}/>
           </div>
           <div className="mt-14 bg-white p-10 border rounded-xl">
             <div className="flex gap-10 items-center font-semibold border-b mb-10">

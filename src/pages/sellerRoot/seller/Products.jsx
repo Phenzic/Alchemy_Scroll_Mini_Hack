@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect,  useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 // import product from "../../../assets/shirt1.jpeg";
 import { CiEdit } from "react-icons/ci";
