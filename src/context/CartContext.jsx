@@ -111,7 +111,7 @@ export const CartProvider = ({ children }) => {
 
     // Cleanup function to unsubscribe when the component unmounts
     return () => unsubscribe();
-  }, [db,]);
+  }, [db]);
 
   // Modify addCartItemsFromFirebase
   const addCartItemsFromFirebase = async (item) => {
